@@ -1,0 +1,17 @@
+/* You can add global styles to this file, and also import other style files */
+@import '~codemirror/lib/codemirror';
+@import '~codemirror/theme/material';
+
+
+.diseñoTabla tr:nth-child(even) {
+  background-color: #263238;
+}
+
+.diseñoTabla tbody tr:nth-child(odd) {
+  background-color: #454d55;
+}
+
+.scroll {
+  max-height: 35vh;
+  overflow-y: auto;
+}
