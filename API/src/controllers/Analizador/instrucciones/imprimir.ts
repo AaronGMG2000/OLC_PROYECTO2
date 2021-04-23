@@ -5,7 +5,7 @@ import Entorno from "../tablaSimbolo/Entorno";
 import Tipo, { tipos } from "../tablaSimbolo/tipo";
 
 export default class Imprimir extends Instruccion {
-    public exp: Expresion | undefined;
+    public exp: Expresion | any;
     constructor(linea:number, columna:number, exp?:Expresion){
         super(linea, columna);
         this.exp = exp;
@@ -15,9 +15,10 @@ export default class Imprimir extends Instruccion {
         if (this.exp) {
             var result = this.exp.getValor(arbol, tabla);
             if (result.Tipo.tipos!=tipos.ERROR) {
-                arbol.consola+=result.valor;
+                arbol.consola+=result.valor + "\n";
             }
         }
+        //ERROR
     }
 
 }

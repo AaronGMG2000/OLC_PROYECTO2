@@ -1,36 +1,21 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const tipo_1 = __importStar(require("../tablaSimbolo/tipo"));
+exports.OperadorAritmetico = void 0;
+const Excepcion_1 = __importDefault(require("../exceptions/Excepcion"));
+const tipo_1 = require("../tablaSimbolo/tipo");
 const expresion_1 = require("./expresion");
 const literal_1 = __importDefault(require("./literal"));
 class Aritmetica extends expresion_1.Expresion {
-    constructor(linea, columna, valor, Tipo, iz, TipoOperacion, der) {
+    constructor(operador, linea, columna, valor, Tipo, iz, der) {
         super(linea, columna, valor, Tipo);
-        this.ExpresionDerecha = der;
+        if (der) {
+            this.ExpresionDerecha = der;
+        }
         this.ExpresionIzquierda = iz;
-        this.TipoOperacion = TipoOperacion;
+        this.operador = operador;
     }
     getValor(arbol, tabla) {
         var izquierda;
@@ -41,47 +26,482 @@ class Aritmetica extends expresion_1.Expresion {
         if (this.ExpresionDerecha) {
             derecha = this.ExpresionDerecha.getValor(arbol, tabla);
         }
-        switch (this.TipoOperacion) {
-            case "+":
+        switch (this.operador) {
+            case OperadorAritmetico.SUMA:
                 if (izquierda && derecha) {
                     switch (izquierda.Tipo.tipos) {
                         case tipo_1.tipos.ENTERO:
                             switch (derecha.Tipo.tipos) {
                                 case tipo_1.tipos.ENTERO:
-                                    return new literal_1.default(this.linea, this.columna, Number(izquierda.valor) + Number(derecha.valor), new tipo_1.default(tipo_1.tipos.ENTERO));
-                                case tipo_1.tipos.DECIMAL:
-                                    return new literal_1.default(this.linea, this.columna, (Number(izquierda.valor) + Number(derecha.valor)).toFixed(15), new tipo_1.default(tipo_1.tipos.DECIMAL));
+                                    console.log("entro");
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor + derecha.valor, tipo_1.tipos.ENTERO);
+                                case tipo_1.tipos.DOBLE:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor + derecha.valor, tipo_1.tipos.DOBLE);
                                 case tipo_1.tipos.BOOLEANO:
-                                    return;
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor + derecha.valor, tipo_1.tipos.ENTERO);
                                 case tipo_1.tipos.CADENA:
-                                        | ;
-                                    return;
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor + derecha.valor, tipo_1.tipos.CADENA);
                                 case tipo_1.tipos.CARACTER:
-                                    return;
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor + derecha.valor.charCodeAt(), tipo_1.tipos.ENTERO);
                                 default:
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            }
+                            break;
+                        case tipo_1.tipos.DOBLE:
+                            switch (derecha.Tipo.tipos) {
+                                case tipo_1.tipos.ENTERO:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor + derecha.valor, tipo_1.tipos.DOBLE);
+                                case tipo_1.tipos.DOBLE:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor + derecha.valor, tipo_1.tipos.DOBLE);
+                                case tipo_1.tipos.BOOLEANO:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor + derecha.valor, tipo_1.tipos.DOBLE);
+                                case tipo_1.tipos.CADENA:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor + derecha.valor, tipo_1.tipos.CADENA);
+                                case tipo_1.tipos.CARACTER:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor + derecha.valor.charCodeAt(), tipo_1.tipos.DOBLE);
+                                default:
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            }
+                            break;
+                        case tipo_1.tipos.BOOLEANO:
+                            switch (derecha.Tipo.tipos) {
+                                case tipo_1.tipos.ENTERO:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor + derecha.valor, tipo_1.tipos.ENTERO);
+                                case tipo_1.tipos.DOBLE:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor + derecha.valor, tipo_1.tipos.DOBLE);
+                                case tipo_1.tipos.CADENA:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor + derecha.valor, tipo_1.tipos.CADENA);
+                                case tipo_1.tipos.BOOLEANO:
+                                    arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar suma entre 2 booleanos", this.linea, this.columna));
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                case tipo_1.tipos.CARACTER:
+                                    arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar suma entre un booleano y un caracter", this.linea, this.columna));
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                default:
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            }
+                            break;
+                        case tipo_1.tipos.CADENA:
+                            switch (derecha.Tipo.tipos) {
+                                case tipo_1.tipos.ENTERO:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor + derecha.valor, tipo_1.tipos.CADENA);
+                                case tipo_1.tipos.DOBLE:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor + derecha.valor, tipo_1.tipos.CADENA);
+                                case tipo_1.tipos.BOOLEANO:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor + derecha.valor, tipo_1.tipos.CADENA);
+                                case tipo_1.tipos.CADENA:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor + derecha.valor, tipo_1.tipos.CADENA);
+                                case tipo_1.tipos.CARACTER:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor + derecha.valor, tipo_1.tipos.CADENA);
+                                default:
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            }
+                            break;
+                        case tipo_1.tipos.CARACTER:
+                            switch (derecha.Tipo.tipos) {
+                                case tipo_1.tipos.ENTERO:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor.charCodeAt() + derecha.valor, tipo_1.tipos.ENTERO);
+                                case tipo_1.tipos.DOBLE:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor.charCodeAt() + derecha.valor, tipo_1.tipos.DOBLE);
+                                case tipo_1.tipos.CADENA:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor + derecha.valor, tipo_1.tipos.CADENA);
+                                case tipo_1.tipos.CARACTER:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor + derecha.valor, tipo_1.tipos.CADENA);
+                                case tipo_1.tipos.BOOLEANO:
+                                    arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar suma entre un booleano y un caracter", this.linea, this.columna));
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                default:
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            }
+                            break;
+                        default:
+                            return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                    }
+                }
+                break;
+            case OperadorAritmetico.RESTA:
+                if (izquierda && derecha) {
+                    switch (izquierda.Tipo.tipos) {
+                        case tipo_1.tipos.ENTERO:
+                            switch (derecha.Tipo.tipos) {
+                                case tipo_1.tipos.ENTERO:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor - derecha.valor, tipo_1.tipos.ENTERO);
+                                case tipo_1.tipos.DOBLE:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor - derecha.valor, tipo_1.tipos.DOBLE);
+                                case tipo_1.tipos.BOOLEANO:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor - derecha.valor, tipo_1.tipos.ENTERO);
+                                case tipo_1.tipos.CARACTER:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor - derecha.valor.charCodeAt(), tipo_1.tipos.ENTERO);
+                                case tipo_1.tipos.BOOLEANO:
+                                    arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar una resta entre int y boolean", this.linea, this.columna));
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                default:
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
                                     break;
                             }
                             break;
+                        case tipo_1.tipos.DOBLE:
+                            switch (derecha.Tipo.tipos) {
+                                case tipo_1.tipos.ENTERO:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor - derecha.valor, tipo_1.tipos.DOBLE);
+                                case tipo_1.tipos.DOBLE:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor - derecha.valor, tipo_1.tipos.DOBLE);
+                                case tipo_1.tipos.BOOLEANO:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor - derecha.valor, tipo_1.tipos.DOBLE);
+                                case tipo_1.tipos.CARACTER:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor - derecha.valor.charCodeAt(), tipo_1.tipos.DOBLE);
+                                case tipo_1.tipos.BOOLEANO:
+                                    arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar una resta entre un double y un boolean", this.linea, this.columna));
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                default:
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            }
+                            break;
+                        case tipo_1.tipos.BOOLEANO:
+                            switch (derecha.Tipo.tipos) {
+                                case tipo_1.tipos.ENTERO:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor - derecha.valor, tipo_1.tipos.ENTERO);
+                                case tipo_1.tipos.DOBLE:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor - derecha.valor, tipo_1.tipos.DOBLE);
+                                case tipo_1.tipos.CARACTER:
+                                    arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar una resta entre un booleano y un caracter", this.linea, this.columna));
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                case tipo_1.tipos.CADENA:
+                                    arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar una resta entre un booleano y un string", this.linea, this.columna));
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                case tipo_1.tipos.BOOLEANO:
+                                    arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar una resta entre 2 booleanos", this.linea, this.columna));
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                default:
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                    break;
+                            }
+                            break;
+                        case tipo_1.tipos.CARACTER:
+                            switch (derecha.Tipo.tipos) {
+                                case tipo_1.tipos.ENTERO:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor.charCodeAt() - derecha.valor, tipo_1.tipos.ENTERO);
+                                case tipo_1.tipos.DOBLE:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor.charCodeAt() - derecha.valor, tipo_1.tipos.DOBLE);
+                                case tipo_1.tipos.CARACTER:
+                                    arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar una resta entre 2 caracteres", this.linea, this.columna));
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                case tipo_1.tipos.CADENA:
+                                    arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar una resta entre un caracter y un string", this.linea, this.columna));
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                case tipo_1.tipos.BOOLEANO:
+                                    arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar una resta entre un caracter y un boolean", this.linea, this.columna));
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                default:
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                    break;
+                            }
+                            break;
+                        case tipo_1.tipos.BOOLEANO:
+                            arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar una resta con un string", this.linea, this.columna));
+                            return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
                         default:
                             break;
                     }
                 }
+                else if (!derecha && izquierda) {
+                    switch (izquierda.Tipo.tipos) {
+                        case tipo_1.tipos.ENTERO:
+                            return new literal_1.default(this.linea, this.columna, -izquierda.valor, tipo_1.tipos.ENTERO);
+                        case tipo_1.tipos.DOBLE:
+                            return new literal_1.default(this.linea, this.columna, -izquierda.valor, tipo_1.tipos.DOBLE);
+                        case tipo_1.tipos.CADENA:
+                            arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar negación a un string", this.linea, this.columna));
+                            return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                        case tipo_1.tipos.BOOLEANO:
+                            arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar negación a un booleano", this.linea, this.columna));
+                            return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                        case tipo_1.tipos.CARACTER:
+                            arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar negación a un caracter", this.linea, this.columna));
+                            return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                        default:
+                            return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            break;
+                    }
+                }
+                else {
+                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                }
                 break;
-            case "-":
+            case OperadorAritmetico.MULTIPLICACION:
+                if (izquierda && derecha) {
+                    switch (izquierda.Tipo.tipos) {
+                        case tipo_1.tipos.ENTERO:
+                            switch (derecha.Tipo.tipos) {
+                                case tipo_1.tipos.ENTERO:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor * derecha.valor, tipo_1.tipos.ENTERO);
+                                case tipo_1.tipos.DOBLE:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor * derecha.valor, tipo_1.tipos.DOBLE);
+                                case tipo_1.tipos.CARACTER:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor * derecha.valor, tipo_1.tipos.ENTERO);
+                                case tipo_1.tipos.CADENA:
+                                    arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar una multiplicación entre int y string", this.linea, this.columna));
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                case tipo_1.tipos.BOOLEANO:
+                                    arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar una multiplicación entre int y un booleano", this.linea, this.columna));
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                default:
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            }
+                        case tipo_1.tipos.DOBLE:
+                            switch (derecha.Tipo.tipos) {
+                                case tipo_1.tipos.ENTERO:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor * derecha.valor, tipo_1.tipos.DOBLE);
+                                case tipo_1.tipos.DOBLE:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor * derecha.valor, tipo_1.tipos.DOBLE);
+                                case tipo_1.tipos.CARACTER:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor * derecha.valor, tipo_1.tipos.DOBLE);
+                                case tipo_1.tipos.CADENA:
+                                    arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar una multiplicación double y cadena", this.linea, this.columna));
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                case tipo_1.tipos.BOOLEANO:
+                                    arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar una multiplicación entre double y boolean", this.linea, this.columna));
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                default:
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            }
+                        case tipo_1.tipos.CARACTER:
+                            switch (derecha.Tipo.tipos) {
+                                case tipo_1.tipos.ENTERO:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor.charCodeAt() * derecha.valor, tipo_1.tipos.ENTERO);
+                                case tipo_1.tipos.DOBLE:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor.charCodeAt() * derecha.valor, tipo_1.tipos.DOBLE);
+                                case tipo_1.tipos.CARACTER:
+                                    arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar una multiplicación entre caracteres", this.linea, this.columna));
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                case tipo_1.tipos.CADENA:
+                                    arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar una multiplicación entre caracter y string", this.linea, this.columna));
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                case tipo_1.tipos.BOOLEANO:
+                                    arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar una multiplicación entre caracter y boolean", this.linea, this.columna));
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                default:
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            }
+                        case tipo_1.tipos.CADENA:
+                            arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar una multiplicación con un string", this.linea, this.columna));
+                            return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                        case tipo_1.tipos.BOOLEANO:
+                            arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar una multiplicación con un boolean", this.linea, this.columna));
+                            return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                        default:
+                            return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                    }
+                }
+                else {
+                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                }
+            case OperadorAritmetico.DIVISION:
+                if (izquierda && derecha) {
+                    switch (izquierda.Tipo.tipos) {
+                        case tipo_1.tipos.ENTERO:
+                            switch (derecha.Tipo.tipos) {
+                                case tipo_1.tipos.ENTERO:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor / derecha.valor, tipo_1.tipos.DOBLE);
+                                case tipo_1.tipos.DOBLE:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor / derecha.valor, tipo_1.tipos.DOBLE);
+                                case tipo_1.tipos.CARACTER:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor / derecha.valor.charCodeAt(), tipo_1.tipos.DOBLE);
+                                case tipo_1.tipos.CADENA:
+                                    arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar una división entre un int y un string", this.linea, this.columna));
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                case tipo_1.tipos.BOOLEANO:
+                                    arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar una división entre un int y un boolean", this.linea, this.columna));
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                default:
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                    break;
+                            }
+                            break;
+                        case tipo_1.tipos.DOBLE:
+                            switch (derecha.Tipo.tipos) {
+                                case tipo_1.tipos.ENTERO:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor / derecha.valor, tipo_1.tipos.DOBLE);
+                                case tipo_1.tipos.DOBLE:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor / derecha.valor, tipo_1.tipos.DOBLE);
+                                case tipo_1.tipos.CARACTER:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor / derecha.valor.charCodeAt(), tipo_1.tipos.DOBLE);
+                                case tipo_1.tipos.CADENA:
+                                    arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar una división entre un double y un string", this.linea, this.columna));
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                case tipo_1.tipos.BOOLEANO:
+                                    arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar una división entre un double y un boolean", this.linea, this.columna));
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                default:
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                    break;
+                            }
+                            break;
+                        case tipo_1.tipos.CARACTER:
+                            switch (derecha.Tipo.tipos) {
+                                case tipo_1.tipos.ENTERO:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor.charCodeAt() / derecha.valor, tipo_1.tipos.DOBLE);
+                                case tipo_1.tipos.DOBLE:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor.charCodeAt() / derecha.valor, tipo_1.tipos.DOBLE);
+                                case tipo_1.tipos.CADENA:
+                                    arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar una división entre un caracter y un string", this.linea, this.columna));
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                case tipo_1.tipos.CARACTER:
+                                    arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar una división entre un 2 caracter", this.linea, this.columna));
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                case tipo_1.tipos.BOOLEANO:
+                                    arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar una división entre un caracter y un boolean", this.linea, this.columna));
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                default:
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                    break;
+                            }
+                            break;
+                        case tipo_1.tipos.CADENA:
+                            arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar una división con string", this.linea, this.columna));
+                            return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                        case tipo_1.tipos.BOOLEANO:
+                            arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar una división con boolean", this.linea, this.columna));
+                            return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                        default:
+                            break;
+                    }
+                }
+                else {
+                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                }
                 break;
-            case "*":
+            case OperadorAritmetico.POTENCIA:
+                if (izquierda && derecha) {
+                    switch (izquierda.Tipo.tipos) {
+                        case tipo_1.tipos.ENTERO:
+                            switch (derecha.Tipo.tipos) {
+                                case tipo_1.tipos.ENTERO:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor ^ derecha.valor, tipo_1.tipos.ENTERO);
+                                case tipo_1.tipos.DOBLE:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor ^ derecha.valor, tipo_1.tipos.DOBLE);
+                                case tipo_1.tipos.BOOLEANO:
+                                    arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar una potencia entre un int y un boolean", this.linea, this.columna));
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                case tipo_1.tipos.CADENA:
+                                    arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar una potencia entre un int y un string", this.linea, this.columna));
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                case tipo_1.tipos.CARACTER:
+                                    arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar una potencia entre un int y un cadacter", this.linea, this.columna));
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                default:
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                    break;
+                            }
+                            break;
+                        case tipo_1.tipos.DOBLE:
+                            switch (derecha.Tipo.tipos) {
+                                case tipo_1.tipos.ENTERO:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor ^ derecha.valor, tipo_1.tipos.DOBLE);
+                                case tipo_1.tipos.DOBLE:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor ^ derecha.valor, tipo_1.tipos.DOBLE);
+                                case tipo_1.tipos.BOOLEANO:
+                                    arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar una potencia entre un double y un boolean", this.linea, this.columna));
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                case tipo_1.tipos.CADENA:
+                                    arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar una potencia entre un double y un string", this.linea, this.columna));
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                case tipo_1.tipos.CARACTER:
+                                    arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar una potencia entre un double y un cadacter", this.linea, this.columna));
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                default:
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                    break;
+                            }
+                            break;
+                        case tipo_1.tipos.CARACTER:
+                            arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar una potencia con un string", this.linea, this.columna));
+                            return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                        case tipo_1.tipos.CADENA:
+                            arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar una potencia con un caracter", this.linea, this.columna));
+                            return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                        case tipo_1.tipos.BOOLEANO:
+                            arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar una potencia con un booleano", this.linea, this.columna));
+                            return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                        default:
+                            break;
+                    }
+                }
+                else {
+                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                }
                 break;
-            case "/":
-                break;
-            case "%":
-                break;
-            case "neg":
+            case OperadorAritmetico.MODULO:
+                if (izquierda && derecha) {
+                    switch (izquierda.Tipo.tipos) {
+                        case tipo_1.tipos.ENTERO:
+                            switch (derecha.Tipo.tipos) {
+                                case tipo_1.tipos.ENTERO:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor % derecha.valor, tipo_1.tipos.DOBLE);
+                                case tipo_1.tipos.DOBLE:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor % derecha.valor, tipo_1.tipos.DOBLE);
+                                case tipo_1.tipos.CARACTER:
+                                    arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar modulo con un int y un string", this.linea, this.columna));
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                case tipo_1.tipos.CADENA:
+                                    arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar modulo con un int y un caracter", this.linea, this.columna));
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                case tipo_1.tipos.BOOLEANO:
+                                    arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar modulo con un int y un booleano", this.linea, this.columna));
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                default:
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            }
+                            break;
+                        case tipo_1.tipos.DOBLE:
+                            switch (derecha.Tipo.tipos) {
+                                case tipo_1.tipos.ENTERO:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor % derecha.valor, tipo_1.tipos.DOBLE);
+                                case tipo_1.tipos.DOBLE:
+                                    return new literal_1.default(this.linea, this.columna, izquierda.valor % derecha.valor, tipo_1.tipos.DOBLE);
+                                case tipo_1.tipos.CARACTER:
+                                    arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar modulo con un double y un string", this.linea, this.columna));
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                case tipo_1.tipos.CADENA:
+                                    arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar modulo con un double y un caracter", this.linea, this.columna));
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                case tipo_1.tipos.BOOLEANO:
+                                    arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar modulo con un double y un booleano", this.linea, this.columna));
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                                default:
+                                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            }
+                        case tipo_1.tipos.CARACTER:
+                            arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar modulo con un string", this.linea, this.columna));
+                            return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                        case tipo_1.tipos.CADENA:
+                            arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar modulo con un caracter", this.linea, this.columna));
+                            return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                        case tipo_1.tipos.BOOLEANO:
+                            arbol.errores.push(new Excepcion_1.default("SINTACTICO", "No se puede realizar modulo con un booleano", this.linea, this.columna));
+                            return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                        default:
+                            break;
+                    }
+                }
+                else {
+                    return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                }
                 break;
             default:
-                break;
+                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
         }
         return this;
     }
 }
 exports.default = Aritmetica;
+var OperadorAritmetico;
+(function (OperadorAritmetico) {
+    OperadorAritmetico[OperadorAritmetico["SUMA"] = 0] = "SUMA";
+    OperadorAritmetico[OperadorAritmetico["RESTA"] = 1] = "RESTA";
+    OperadorAritmetico[OperadorAritmetico["MULTIPLICACION"] = 2] = "MULTIPLICACION";
+    OperadorAritmetico[OperadorAritmetico["DIVISION"] = 3] = "DIVISION";
+    OperadorAritmetico[OperadorAritmetico["POTENCIA"] = 4] = "POTENCIA";
+    OperadorAritmetico[OperadorAritmetico["MODULO"] = 5] = "MODULO";
+})(OperadorAritmetico = exports.OperadorAritmetico || (exports.OperadorAritmetico = {}));
 //# sourceMappingURL=aritmetica.js.map

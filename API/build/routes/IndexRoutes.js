@@ -1,14 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const indexController_1 = require("../controllers/indexController");
 const express_1 = require("express");
+const indexController_1 = require("../controllers/indexController");
 class IndexRoutes {
     constructor() {
         this.router = express_1.Router();
         this.config();
     }
     config() {
-        this.router.get('/cargarTemporal', indexController_1.IndexController.index);
+        this.router.post("/Compilar", indexController_1.IndexController.interpretar);
     }
 }
 const indexRoutes = new IndexRoutes();

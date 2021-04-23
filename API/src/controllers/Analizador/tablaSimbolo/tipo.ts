@@ -6,7 +6,7 @@ export default class Tipo
         this.tipos = tipos;
     }
 
-    public equals(obj: Tipo){
+    public equals(obj: any){
         return this.tipos == obj.tipos;
     }
 }

@@ -13,7 +13,7 @@ exports.default = Tipo;
 var tipos;
 (function (tipos) {
     tipos[tipos["ENTERO"] = 0] = "ENTERO";
-    tipos[tipos["DECIMAL"] = 1] = "DECIMAL";
+    tipos[tipos["DOBLE"] = 1] = "DOBLE";
     tipos[tipos["CARACTER"] = 2] = "CARACTER";
     tipos[tipos["BOOLEANO"] = 3] = "BOOLEANO";
     tipos[tipos["CADENA"] = 4] = "CADENA";

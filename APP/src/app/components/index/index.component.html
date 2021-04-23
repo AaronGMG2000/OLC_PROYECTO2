@@ -20,6 +20,7 @@
               <div class="col-7">
                 <ngx-codemirror
                 [(ngModel)]="element.content"
+                (ngModelChange) = "LlenarContent(element.content)"
                 [options]="{
                   theme: 'material',
                   mode: 'javascript',
@@ -35,7 +36,7 @@
               </div>
               <div class="col-5">
                 <ngx-codemirror
-                [(ngModel)]="element.content"
+                [(ngModel)]="CONSOLA"
                 [options]="{
                   theme: 'material',
                   mode: 'go',

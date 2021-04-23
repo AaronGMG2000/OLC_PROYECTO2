@@ -1,13 +1,14 @@
-import {IndexController} from '../controllers/indexController';
-import {Request, Response, Router} from 'express';
-class IndexRoutes{
-    public router : Router = Router();
-    
-    constructor(){
+import {Router} from "express";
+import {IndexController} from "../controllers/indexController";
+class IndexRoutes {
+    public router: Router = Router();
+
+    constructor() {
         this.config();
     }
-    config(): void{
-        this.router.get('/cargarTemporal',IndexController.index);
+
+    public config(): void {
+        this.router.post("/Compilar", IndexController.interpretar);
     }
 }
 const indexRoutes = new IndexRoutes();

@@ -5,7 +5,8 @@ import 'codemirror/mode/go/go';
 import 'codemirror/mode/markdown/markdown';
 import 'codemirror/mode/xml/xml';
 import 'codemirror/addon/fold/xml-fold';
-
+import { COMPILADORService } from 'src/app/services/compilador.service';
+import { Contenido } from 'src/app/models/contenido';
 @Component({
   selector: 'app-index',
   templateUrl: './index.component.html',
@@ -16,6 +17,7 @@ export class IndexComponent implements OnInit {
   NumTab = 0;
   ContenidoTab = '';
   CONTENT = '';
+  CONSOLA = '';
   buttons: Array<any> = [
     {
       location: 'after',
@@ -34,7 +36,7 @@ export class IndexComponent implements OnInit {
         icon: 'image',
         hint: 'AST',
         stylingMode: 'contained',
-        onClick: this.AnadirPestana.bind(this),
+        // onClick: this.obtenerVariable.bind(this),
       },
     },
     {
@@ -44,7 +46,7 @@ export class IndexComponent implements OnInit {
         icon: 'video',
         hint: 'Compilar',
         stylingMode: 'contained',
-        // onClick: this.AnadirPestana.bind(this),
+        onClick: this.Compilar.bind(this),
       },
     },
     {
@@ -78,7 +80,10 @@ export class IndexComponent implements OnInit {
       },
     }
   ];
-  constructor(private Interacion: IndexService) { }
+  constructor(
+    private Interacion: IndexService,
+    public compilador: COMPILADORService
+  ) { }
 
   ngOnInit(): void {
     this.Pestanas = [];
@@ -121,5 +126,22 @@ export class IndexComponent implements OnInit {
 
   seleccionarPestana(e: any): void {
     this.ContenidoTab = e.addedItems[0].name;
+  }
+
+  LlenarContent(text: string): void{
+    this.CONTENT = text;
+  }
+  Compilar(): void{
+    const text = this.CONTENT;
+    const cont:Contenido = {
+      Contenido: this.CONTENT
+    };
+    this.compilador.COMPILAR(cont).subscribe(
+      (res: any) => {
+        this.CONSOLA = res.consola;
+        console.log(res.consola);
+      },
+      (err: any) => console.log(err)
+    );
   }
 }

@@ -1,1 +1,0 @@
-{"version":3,"file":"Instruccion.js","sourceRoot":"","sources":["../../../src/controllers/Abstract/Instruccion.ts"],"names":[],"mappings":";;;AAIA,MAAsB,WAAW;IAM7B,YAAY,IAAS,EAAE,KAAc,EAAE,OAAc;QACjD,IAAI,CAAC,IAAI,GAAG,IAAI,CAAC;QACjB,IAAI,CAAC,KAAK,GAAG,KAAK,CAAC;QACnB,IAAI,CAAC,OAAO,GAAG,OAAO,CAAC;IAC3B,CAAC;CAIJ;AAdD,kCAcC"}
