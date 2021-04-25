@@ -376,9 +376,10 @@ export default class Aritmetica extends Expresion {
                         case tipos.ENTERO:
                             switch (derecha.Tipo.tipos) {
                                 case tipos.ENTERO:
-                                    return new Literal(this.linea, this.columna, izquierda.valor ^ derecha.valor, tipos.ENTERO);
+                                    console.log(izquierda.valor^derecha.valor);
+                                    return new Literal(this.linea, this.columna, Math.pow(izquierda.valor, derecha.valor), tipos.ENTERO);
                                 case tipos.DOBLE:
-                                    return new Literal(this.linea, this.columna, izquierda.valor ^ derecha.valor, tipos.DOBLE);
+                                    return new Literal(this.linea, this.columna, Math.pow(izquierda.valor, derecha.valor), tipos.DOBLE);
                                 case tipos.BOOLEANO:
                                     arbol.errores.push(new Excepcion("SINTACTICO","No se puede realizar una potencia entre un int y un boolean",this.linea, this.columna));
                                     return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
@@ -396,9 +397,9 @@ export default class Aritmetica extends Expresion {
                         case tipos.DOBLE:
                             switch (derecha.Tipo.tipos) {
                                 case tipos.ENTERO:
-                                    return new Literal(this.linea, this.columna, izquierda.valor ^ derecha.valor, tipos.DOBLE);
+                                    return new Literal(this.linea, this.columna, Math.pow(izquierda.valor, derecha.valor), tipos.DOBLE);
                                 case tipos.DOBLE:
-                                    return new Literal(this.linea, this.columna, izquierda.valor ^ derecha.valor, tipos.DOBLE);
+                                    return new Literal(this.linea, this.columna, Math.pow(izquierda.valor, derecha.valor), tipos.DOBLE);
                                 case tipos.BOOLEANO:
                                     arbol.errores.push(new Excepcion("SINTACTICO","No se puede realizar una potencia entre un double y un boolean",this.linea, this.columna));
                                     return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
@@ -485,10 +486,8 @@ export default class Aritmetica extends Expresion {
                     return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
                 }
                 break;
-            default:
-                return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
         }
-     return this;
+        return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
     }
 }
 

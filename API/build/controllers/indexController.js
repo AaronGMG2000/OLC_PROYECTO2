@@ -24,14 +24,15 @@ class indexController {
         });
     }
     interpretar(req, res) {
-        const parser = require("./Analizador/analizador");
+        let parser = require("./Analizador/analizador");
+        parser.ArbolAST = new ArbolAST_1.default([]);
         const Contenido = req.body.Contenido;
-        console.log(Contenido);
-        parser.parse(Contenido);
         try {
-            const ast = new ArbolAST_1.default(parser.parse(Contenido));
+            let ast = new ArbolAST_1.default([]);
+            ast = parser.parse(Contenido);
             const tabla = new Entorno_1.default();
             ast.global = tabla;
+            ast.consola = "";
             ast.EjecutarBloque();
             res.json({ consola: ast.consola, Errores: ast.errores });
         }

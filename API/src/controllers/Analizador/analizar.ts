@@ -4,6 +4,7 @@ import Entorno from "./tablaSimbolo/Entorno";
 
 try {
     const parser = require ("./analizador");
+    parser.ArbolAST = new ArbolAST([]);
     let Contenido = "print(\"hola mundo\");\n";
     Contenido += "PRINT(4*-4);\n";
     Contenido += "PRINT(false);\n";

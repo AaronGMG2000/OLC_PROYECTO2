@@ -25,11 +25,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const simbolo_1 = __importDefault(require("./simbolo"));
 const tipo_1 = __importStar(require("./tipo"));
 class Entorno {
-    constructor(anterior) {
+    constructor(nombre = "GLOBAL", anterior) {
+        this.nombre = nombre;
         this.anterior = anterior;
         this.tabla = new Map();
     }
     set(simbolo, valor, tipo, DIMENSION = -1, CANTIDAD = -1) {
+        simbolo = simbolo.toUpperCase();
         if (!this.tabla.has(simbolo)) {
             this.tabla.set(simbolo, new simbolo_1.default(tipo, simbolo, valor, DIMENSION, CANTIDAD));
         }
@@ -39,6 +41,7 @@ class Entorno {
         }
     }
     update(simbolo, valor, POSICION = -1) {
+        simbolo = simbolo.toUpperCase();
         for (var temp = this; temp != null; temp = temp.anterior) {
             if (temp.tabla.has(simbolo)) {
                 var anterior = temp.tabla.get(simbolo);
@@ -49,7 +52,8 @@ class Entorno {
                         return true;
                     }
                     else if (POSICION != -1) {
-                        anterior.valor[POSICION] = valor;
+                        anterior.valor[POSICION.valor] = valor.valor;
+                        return true;
                     }
                     else {
                         //ERROR
@@ -62,6 +66,7 @@ class Entorno {
         return false;
     }
     get(variable) {
+        variable = variable.toUpperCase();
         for (var temp = this; temp != null; temp = temp.anterior) {
             if (temp.tabla.has(variable)) {
                 var result = temp.tabla.get(variable);

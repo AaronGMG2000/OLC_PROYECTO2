@@ -18,34 +18,26 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const tipo_1 = __importStar(require("../tablaSimbolo/tipo"));
 const expresion_1 = require("./expresion");
-class Literal extends expresion_1.Expresion {
-    constructor(linea, columna, valor, T) {
-        const tip = new tipo_1.default(T);
-        switch (tip.tipos) {
-            case tipo_1.tipos.ENTERO:
-                valor = Number(valor);
-                break;
-            case tipo_1.tipos.BOOLEANO:
-                if (typeof (valor) == typeof ("") && valor.toUpperCase() === "FALSE") {
-                    valor = false;
-                }
-                else if (typeof (valor) == typeof ("")) {
-                    valor = true;
-                }
-                break;
-            case tipo_1.tipos.DOBLE:
-                valor = Number(parseFloat(valor));
-                break;
-            default:
-        }
-        super(linea, columna, valor, tip);
+const literal_1 = __importDefault(require("./literal"));
+class VARIABLE extends expresion_1.Expresion {
+    constructor(linea, columna, nombre) {
+        const tip = new tipo_1.default(tipo_1.tipos.ENTERO);
+        super(linea, columna, 0, tip);
+        this.nombre = nombre;
     }
     getValor(arbol, tabla) {
-        return this;
+        let expre = tabla.get(this.nombre);
+        if (expre.tipo.tipos !== tipo_1.tipos.ERROR) {
+            return expre.valor;
+        }
+        return new literal_1.default(this.linea, this.columna, "ERROR", tipo_1.tipos.ERROR);
     }
 }
-exports.default = Literal;
-//# sourceMappingURL=literal.js.map
+exports.default = VARIABLE;
+//# sourceMappingURL=variable.js.map

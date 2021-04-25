@@ -11,15 +11,15 @@ class indexController {
     }
 
     public interpretar(req: Request, res: Response) {
-        const parser = require("./Analizador/analizador");
+        let parser = require("./Analizador/analizador");
+        parser.ArbolAST = new ArbolAST([]);
         const Contenido = req.body.Contenido;
-        console.log(Contenido);
-        parser.parse(Contenido);
         try {
-            const ast = new ArbolAST( parser.parse(Contenido) );
-
+            let ast = new ArbolAST([]);
+            ast = parser.parse(Contenido);
             const tabla = new Entorno();
             ast.global = tabla;
+            ast.consola = "";
             ast.EjecutarBloque();
             res.json({consola: ast.consola, Errores: ast.errores});
         } catch (err) {

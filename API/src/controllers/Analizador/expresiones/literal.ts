@@ -12,9 +12,9 @@ export default class Literal extends Expresion {
                 valor = Number(valor);
                 break;
             case tipos.BOOLEANO:
-                if (valor.toUpperCase() === "FALSE") {
+                if (typeof(valor)==typeof("") && valor.toUpperCase() === "FALSE") {
                     valor = false;
-                } else {
+                } else if(typeof(valor)==typeof("")) {
                     valor = true;
                 }
                 break;

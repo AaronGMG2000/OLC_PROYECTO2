@@ -3,15 +3,18 @@ import Tipo, { tipos } from "./tipo";
 
 export default class Entorno
 {
+    public nombre:string;
     public tabla:Map<String, Simbolo>;
     private anterior: Entorno|any;
 
-    constructor(anterior?:Entorno){
+    constructor(nombre:string = "GLOBAL", anterior?:Entorno){
+        this.nombre = nombre;
         this.anterior = anterior;
         this.tabla = new Map<String, Simbolo>();
     }
 
     public set(simbolo:String, valor:any, tipo:Tipo, DIMENSION:number=-1, CANTIDAD:number=-1): void{
+        simbolo = simbolo.toUpperCase();
         if(!this.tabla.has(simbolo)){
             this.tabla.set(simbolo, new Simbolo(tipo, simbolo, valor, DIMENSION, CANTIDAD));
         }else{
@@ -20,7 +23,8 @@ export default class Entorno
         }
     }
 
-    public update(simbolo:String, valor:any, POSICION:number=-1):boolean{
+    public update(simbolo:String, valor:any, POSICION:any=-1):boolean{
+        simbolo = simbolo.toUpperCase();
         for(var temp:Entorno = this; temp!=null; temp = temp.anterior ){
             if (temp.tabla.has(simbolo)) {
                 var anterior = temp.tabla.get(simbolo);
@@ -30,7 +34,8 @@ export default class Entorno
                         temp.tabla.set(simbolo, anterior);
                         return true;
                     }else if(POSICION!=-1){
-                        anterior.valor[POSICION] = valor;
+                        anterior.valor[POSICION.valor] = valor.valor;
+                        return true;
                     }else{
                         //ERROR
                         return false;
@@ -43,6 +48,7 @@ export default class Entorno
     }
 
     public get(variable:String):Simbolo{
+        variable = variable.toUpperCase();
         for(var temp:Entorno = this; temp!=null; temp = temp.anterior ){
             if (temp.tabla.has(variable)) {
                 var result = temp.tabla.get(variable);

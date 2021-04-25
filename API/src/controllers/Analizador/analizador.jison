@@ -2,36 +2,85 @@
     const Excepcion = require('./exceptions/Excepcion');
     const Tipo = require('./tablaSimbolo/tipo');
     const Literal = require('./expresiones/literal');
+    const Variable = require('./expresiones/variable');
+    const Vector = require('./expresiones/vector');
     const Arbol = require('./tablaSimbolo/ArbolAST');
     const Expresion = require('./expresiones/expresion');
     const Imprimir = require('./Instrucciones/Imprimir');
     const DECLARAR = require('./Instrucciones/DECLARAR');
     const ASIGNAR = require('./Instrucciones/ASIGNAR')
     const Aritmetica = require('./expresiones/aritmetica');
+    const Condicion = require('./expresiones/condicion');
     const Instruccion = require('./Abstract/instruccion');
     let Texto="";
+    let ArbolAST = new Arbol.default([]);
+    let num_error = 0;
 %}
 
 %lex
 
 %options case-insensitive
 %x Cadena
+%x CARACTER
 %%
 /* Espacios en blanco */
 "//".*            	{}
 [/][*][^*]*[*]+([^/*][^*]*[*]+)*[/]           {}
 [ \r\t]+            {}
 \n                  {}
+\s+                 {}
+[']                 {Texto=""; this.begin("CARACTER");}
+<CARACTER>[^'\\]"'"     {yytext = yytext.substr(1,yyleng-2); this.popState(); return 'CARACTER';}
+<CARACTER>"\\n'"        {yytext = '\n'; this.popState(); return 'CARACTER';}
+<CARACTER>"\\t'"        {yytext = "\t"; this.popState(); return 'CARACTER';}
+<CARACTER>"\\r'"        {yytext = "\r"; this.popState(); return 'CARACTER';}
+<CARACTER>"\\\"'"       {yytext = "\""; this.popState(); return 'CARACTER';}
+<CARACTER>"\\''"        {yytext = "'"; this.popState(); return 'CARACTER';}       
+<CARACTER>"\\\\'"       {yytext = "\\"; this.popState(); return 'CARACTER';}
+
 ["]                 {Texto=""; this.begin("Cadena");}
 <Cadena>[^"\\]+     {Texto+=yytext;}
 <Cadena>"\\n"       {Texto+='\n';}
 <Cadena>"\\t"       {Texto+="\t";}
+<Cadena>"\\r"       {Texto+="\r";}
 <Cadena>"\\\""      {Texto+="\"";}
-<Cadena>"\\\'"      {Texto+="\'";}       
+<Cadena>"\\'"      {Texto+="\'";}       
 <Cadena>"\\\\"      {Texto+="\\";}
 <Cadena>["]         {yytext = Texto; this.popState(); return 'Cadena';}
 
 "PRINT"                 return "PRINT";
+";"                     return "PTCOMA";
+":"                     return "DOSPT"
+"."                     return "PT";
+","                     return "COMA";
+"("                     return "PARIZ";
+")"                     return "PARDER";
+"["                     return "CORIZ";
+"]"                     return "CORDER";
+"{"                     return "LLAVEIZ";
+"}"                     return "LLAVEDER";
+"++"                    return "PLUS";
+"--"                    return "MIN";
+
+"+"                     return "MAS";
+"-"                     return "MENOS";
+"*"                     return "POR";
+"/"                     return "DIV";
+"%"                     return "MOD";
+"^"                     return "ELEV";
+"!="                    return "DIFERENTE";
+"=="                    return "IIGUAL";
+">="                    return "MAYORIGUAL";
+"<="                    return "MENORIGUAL";
+    
+"<"                     return "MENOR";
+">"                     return "MAYOR";
+"="                     return "IGUAL";
+
+"&&"                    return "AND";
+"||"                    return "OR";
+"!"                     return "NOT";
+
 "INT"                   return "INT";
 "DOUBLE"                return "DOUBLE";
 "BOOLEAN"               return "BOOLEAN";
@@ -39,18 +88,8 @@
 "STRING"                return "STRING";
 "TRUE"                  return "TRUE";
 "FALSE"                 return "FALSE";
-"++"                    return "PLUS";
-"--"                    return "MIN";
-"!="                    return "DIFERENTE";
-"=="                    return "IIGUAL";
-">="                    return "MAYORIGUAL";
-"<="                    return "MENORIGUAL";
-"&&"                    return "AND";
-"||"                    return "OR";
-"!"                     return "NOT";    
-"<"                     return "MENOR";
-">"                     return "MAYOR";
-"="                     return "IGUAL";
+
+
 "?"                     return "TERNARIO";
 "FOR"                   return "FOR";
 "WHILE"                 return "WHILE";
@@ -76,33 +115,19 @@
 "toSTRING"              return "TSTRING";
 "toCharArray"           return "CHARARRAY";
 "Exec"                  return "EXEC";
-"+"                     return "MAS";
-"-"                     return "MENOS";
-"*"                     return "POR";
-"/"                     return "DIV";
-"%"                     return "MOD";
-"^"                     return "ELEV";
-"("                     return "PARIZ";
-")"                     return "PARDER";
-"["                     return "CORIZ";
-"]"                     return "CORDER";
-"{"                     return "LLAVEIZ";
-"}"                     return "LLAVEDER";
-";"                     return "PTCOMA";
-":"                     return "DOSPT"
-"."                     return "PT";
-[0-9]+"."[0-9]+         return "DOBLE";
-[0-9]+                  return "ENTERO";
-"'"[A-Za-z]?"'"         {yytext = yytext.substr(1,yyleng-2); return "CARACTER";}
-[A-Za-z]([A-Za-z]|[0-9]|[_]])* return "ID";
-","                     return "COMA";
+
+
+
+[A-Za-z]([A-Za-z]|[0-9]|[_])*  return "ID";
+[0-9]+"."[0-9]+\b         return "DOBLE";
+[0-9]+\b                  return "ENTERO";
 
 <<EOF>>                 return 'EOF';
 
-.       {
-            Arbol.errores.push(new Excepcion(Arbol.errores.length+1, "LEXICO", "Símbolo "+yytext+" no reconocido.", yylloc.first_line, yylloc.first_column)); 
-            Arbol.consola+='\nError léxico: Símbolo ' + yytext + ' no reconocido, en la linea: ' + yylloc.first_line + 'y columna: ' + yylloc.first_column;
-        }
+. {
+    num_error++;
+    ArbolAST.errores.push(new Excepcion.default(num_error, "LEXICO", "Símbolo "+yytext+" no reconocido.", yylloc.first_line, yylloc.first_column)); 
+}
 /lex
                 
 /* Asociación de operadores y precedencia */
@@ -113,8 +138,9 @@
 %left 'IIGUAL' 'DIFERENTE','MENOR','MENORIGUAL','MAYOR'.'MAYORIGUAL'
 %left 'MAS' 'MENOS'
 %left 'POR' 'DIV' 'MOD'
+%left 'ELEV'
 %right UMENOS
-%right FCAST 
+%right FCAST
 %left 'PLUS','MIN'
 
 %start INI
@@ -122,11 +148,8 @@
 %%
 
 INI
-    : LINS EOF      {return $1;}
-    | error EOF     {
-                        Arbol.errores.push(new Excepcion(Arbol.errores.length+1, "Sintactico", "No se esperaba  "+yytext+".", yylloc.first_line, yylloc.first_column));
-                        Arbol.consola+="\nError Sintactico no se esperaba:  "+yytext+" en la linea "+this._$.first_line+" y columna"+this._$.first_column;
-                    }
+    : LINS EOF      {ArbolAST.instrucciones = $1; return ArbolAST;}
+    | error EOF     {num_error++;ArbolAST.errores.push(new Excepcion.default(num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));}
 ;
 
 LINS
@@ -136,53 +159,42 @@ LINS
 
 INS
     : PRINT PARIZ EXP PARDER PTCOMA                 {$$ = new Imprimir.default(this._$.first_line, this._$.first_column, $3); }
-    | DECLARACION PTCOMA                            {}
-    | ASIGNACION  PTCOMA                            {}
-    | FIF                                           {}
-    | FWHILE                                        {}
-    | FFOR                                          {}  
-    | FSWITCH                                       {}
-    | FUNCION                                       {}
-    | DOWHILE                                       {}
-    | LLAMADA PTCOMA                                {}
-    | FEXEC PTCOMA                                  {}
-    | FRETURN PTCOMA                                {}
-    | BREAK PTCOMA                                  {}
-    | CONTINUE PTCOMA                               {}
-    | ID PT ADD PARIZ EXP PARDER PTCOMA             {}
-    | error PTCOMA                                  {}
+    | DECLARACION                                   {$$ = $1}
+    | ASIGNACION                                    {$$ = $1}
+    | FIF                                           {$$ = $1}
+    | FWHILE                                        {$$ = $1}
+    | FFOR                                          {$$ = $1}  
+    | FSWITCH                                       {$$ = $1}
+    | INCREMENTO PTCOMA                             {$$ = $1}
+    | DECREMENTO PTCOMA                             {$$ = $1}
+    | DOWHILE                                       {$$ = $1}
+    | FUNCION                                       {$$ = $1}
+    | LLAMADA PTCOMA                                {$$ = $1}
+    | FRETURN                                       {$$ = $1}
+    | BREAK PTCOMA                                  {$$ = $1}
+    | CONTINUE PTCOMA                               {$$ = $1}
+    | error PTCOMA                                  {num_error++;ArbolAST.errores.push(new Excepcion.default(num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));}
 ;
 
 FRETURN
-    : RETURN                  {}
-    | RETURN EXP              {}
+    : RETURN PTCOMA                  {}
+    | RETURN EXP PTCOMA              {}
 ;
-// |FTIPO CORIZ CORDER ID IGUAL LLAVEIZ L_EXP LLAVEDER               {$$ = new DECLARAR(this._$.first_line, this._$.first_column,$2, $1,$7.length,-1, $7)}
+
 DECLARACION
-    :FTIPO ID                                                         {$$ = new DECLARAR.default(this._$.first_line, this._$.first_column,$2, $1)}
-    |FTIPO ID IGUAL EXP                                               {$$ = new DECLARAR.default(this._$.first_line, this._$.first_column,$2, $1,-1,-1, $4)}
-    |FTIPO CORIZ CORDER ID IGUAL FTIPO CORIZ EXP CORDER               {$$ = new DECLARAR.default(this._$.first_line, this._$.first_column,$2, $1,$8,-1)}
-    |LIST MENOR FTIPO MAYOR ID                                        {$$ = new DECLARAR.default(this._$.first_line, this._$.first_column,$5, $2, $4,-1,0)}
-    |LIST MENOR FTIPO MAYOR ID IGUAL NEW LIST MENOR Tipo MAYOR        {$$ = new DECLARAR.default(this._$.first_line, this._$.first_column,$5, $2, $4,-1,0)}
+    :FTIPO ID PTCOMA                                                         {$$ = new DECLARAR.default(this._$.first_line, this._$.first_column,$2, $1)}
+    |FTIPO ID IGUAL EXP PTCOMA                                               {$$ = new DECLARAR.default(this._$.first_line, this._$.first_column,$2, $1,-1,-1, $4)}
+    |FTIPO CORIZ CORDER ID IGUAL NEW FTIPO CORIZ EXP CORDER PTCOMA           {$$ = new DECLARAR.default(this._$.first_line, this._$.first_column,$4, $1,$9,-1)}
+    |LIST MENOR FTIPO MAYOR ID PTCOMA                                        {$$ = new DECLARAR.default(this._$.first_line, this._$.first_column,$5, $2, $4,-1,0)}
+    |FTIPO CORIZ CORDER ID IGUAL LLAVEIZ L_EXP LLAVEDER PTCOMA               {$$ = new DECLARAR.default(this._$.first_line, this._$.first_column,$4, $1,$7.length,-1, $7)}
+    |LIST MENOR FTIPO MAYOR ID IGUAL NEW LIST MENOR Tipo MAYOR PTCOMA        {$$ = new DECLARAR.default(this._$.first_line, this._$.first_column,$5, $2, $4,-1,0)}
 ;
 
-LISTAVALORES
-    :ENTERO             {$$ = new Literal.default(this._$.first_line, this._$.first_column, $1, Tipo.tipos.ENTERO)}
-    |DOBLE              {$$ = new Literal.default(this._$.first_line, this._$.first_column, $1, Tipo.tipos.DOBLE)}
-    |CARACTER           {$$ = new Literal.default(this._$.first_line, this._$.first_column, $1, Tipo.tipos.CARACTER)}
-    |Cadena             {$$ = new Literal.default(this._$.first_line, this._$.first_column, $1, Tipo.tipos.CADENA)}
-    |TRUE               {$$ = new Literal.default(this._$.first_line, this._$.first_column, $1, Tipo.tipos.BOOLEANO)}
-    |FALSE              {$$ = new Literal.default(this._$.first_line, this._$.first_column, $1, Tipo.tipos.BOOLEANO)}
-;
 
-L_EXP
-    :L_EXP COMA EXP     {}
-    |EXP                {}
-;
 
 ASIGNACION
-    :ID IGUAL EXP                                 {}
-    |ID CORIZ CORIZ EXP CORDER CORDER IGUAL EXP   {}
+    :ID IGUAL EXP PTCOMA                                 {$$ = new ASIGNAR.default(this._$.first_line, this._$.first_column, $1,-1, $3);}
+    |ID CORIZ CORIZ EXP CORDER CORDER IGUAL EXP PTCOMA   {$$ = new ASIGNAR.default(this._$.first_line, this._$.first_column, $1,$4, $8);}
 ;
 
 FUNCION
@@ -190,8 +202,8 @@ FUNCION
     |FTIPO ID PARIZ PARAMETROS PARDER LLAVEIZ LINS LLAVEDER     {}
     |VOID ID PARIZ PARAMETROS PARDER LLAVEIZ LINS LLAVEDER      {}
     |VOID ID PARIZ PARDER LLAVEIZ LINS LLAVEDER                 {}
-    |VOID error LLAVEDER                                        {}
-    |error LLAVEDER                                             {}
+    |VOID error LLAVEDER                                        {num_error++; ArbolAST.errores.push(new Excepcion.default(num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));}
+    |error LLAVEDER                                             {num_error++; ArbolAST.errores.push(new Excepcion.default(num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));}
 ;
 
 PARAMETROS
@@ -203,13 +215,13 @@ FIF
     :IF PARIZ EXP PARDER LLAVEIZ LINS LLAVEDER                                      {}
     |IF PARIZ EXP PARDER LLAVEIZ LINS LLAVEDER ELSE FIF                             {}
     |IF PARIZ EXP PARDER LLAVEIZ LINS LLAVEDER ELSE LLAVEIZ LINS LLAVEDER           {}
-    |IF error LLAVEDER                                                              {}
+    |IF error LLAVEDER                                                              {num_error++; ArbolAST.errores.push(new Excepcion.default(num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));}
 ;
 
 FSWITCH
-    :SWITCH PARDER EXP PARIZ LLAVEIZ LCASOS DEFAULT DOSPT LINS LLAVEDER             {}
-    |SWITCH PARDER EXP PARIZ LLAVEIZ LCASOS LLAVEDER                                {}
-    |SWITCH error PARDER                                                            {} 
+    :SWITCH PARIZ EXP PARDER LLAVEIZ LCASOS DEFAULT DOSPT LINS LLAVEDER             {}
+    |SWITCH PARIZ EXP PARDER LLAVEIZ LCASOS LLAVEDER                                {}
+    |SWITCH error PARDER                                                            {num_error++; ArbolAST.errores.push(new Excepcion.default(num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));} 
 ;
 
 LCASOS
@@ -219,31 +231,31 @@ LCASOS
 
 FWHILE
     :WHILE PARIZ EXP PARDER LLAVEIZ LINS LLAVEDER             {}
-    |WHILE error LLAVEDER                                     {}
+    |WHILE error LLAVEDER                                     {num_error++; ArbolAST.errores.push(new Excepcion.default(num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));}
 ;
 
 FOR
     :FOR PARIZ DECLARACION PTCOMA CONDICION PTCOMA EXP PARDER LLAVEIZ LINS LLAVEDER     {}
     |FOR PARIZ ASIGNACION PTCOMA CONDICION PTCOMA EXP PARDER LLAVEIZ LINS LLAVEDER      {}
-    |FOR error LLAVEDER                                                                 {}
+    |FOR error LLAVEDER                                                                 {num_error++; ArbolAST.errores.push(new Excepcion.default(num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));}
 ;
 
 DOWHILE
     :DO LLAVEIZ LINS LLAVEDER WHILE PARIZ EXP PARDER PTCOMA             {}
-    |DO error PTCOMA                                                    {}
+    |DO error PTCOMA                                                    {num_error++; ArbolAST.errores.push(new Excepcion.default(num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));}
 ;
 
 LLAMADA
-    :ID PARIZ PARDER              {}
-    |ID PARIZ PARAMETROS PARDER   {}
+    :ID PARIZ L_EXP PARDER         {}
+    |ID PARIZ PARDER               {}
 ;
 
 FTIPO
-    :INT                    {}
-    |DOUBLE                 {}
-    |CHAR                   {}
-    |BOOLEAN                {}
-    |STRING                 {}
+    :INT                    {$$ = new Tipo.default(Tipo.tipos.ENTERO);}
+    |DOUBLE                 {$$ = new Tipo.default(Tipo.tipos.DOBLE);}
+    |CHAR                   {$$ = new Tipo.default(Tipo.tipos.CARACTER);}
+    |BOOLEAN                {$$ = new Tipo.default(Tipo.tipos.BOOLEAN);}
+    |STRING                 {$$ = new Tipo.default(Tipo.tipos.CADENA);}
 ;
 
 EXP
@@ -257,49 +269,56 @@ EXP
                                                                         , Tipo.tipos.ENTERO, $1, $3)}
     |EXP MOD EXP                                    {$$ = new Aritmetica.default(Aritmetica.OperadorAritmetico.MODULO,this._$.first_line, this._$.first_column, 0
                                                                         , Tipo.tipos.ENTERO, $1, $3)}
-    |EXP MENOR EXP                                  {}
-    |EXP MAYOR EXP                                  {}
-    |EXP DIFERENTE EXP                              {}
-    |EXP IIGUAL EXP                                 {}
-    |EXP MAYORIGUAL EXP                             {}
-    |EXP MENORIGUAL EXP                             {}
-    |EXP AND EXP                                    {}
-    |EXP OR EXP                                     {}
-    |NOT EXP                                        {}
+    |EXP ELEV EXP                                   {$$ = new Aritmetica.default(Aritmetica.OperadorAritmetico.POTENCIA,this._$.first_line, this._$.first_column, 0
+                                                                        , Tipo.tipos.ENTERO, $1, $3)}
     |MENOS EXP %prec UMENOS                         {$$ = new Aritmetica.default(Aritmetica.OperadorAritmetico.RESTA,this._$.first_line, this._$.first_column, 0
                                                                         , Tipo.tipos.ENTERO, $2)}
-    |LISTAVALORES                                   {}
-    |PARIZ EXP PARDER                               {}
-    |CONDICION TERNARIO EXP DOSPT EXP               {}
-    |EXP PLUS                                       {}
-    |EXP MIN                                        {}
-    |NATIVAS                                        {}
+    |PARIZ EXP PARDER                               {$$ = $2}
+    |LISTAVALORES                                   {$$ = $1}
+    |EXP MENOR EXP                                  {$$ = new Condicion.default(this._$.first_line, this._$.first_column, 0, "<", $1, $3);}
+    |EXP MAYOR EXP                                  {$$ = new Condicion.default(this._$.first_line, this._$.first_column, 0, ">", $1, $3);}
+    |EXP DIFERENTE EXP                              {$$ = new Condicion.default(this._$.first_line, this._$.first_column, 0, "!=", $1, $3);}
+    |EXP IIGUAL EXP                                 {$$ = new Condicion.default(this._$.first_line, this._$.first_column, 0, "==", $1, $3);}
+    |EXP MAYORIGUAL EXP                             {$$ = new Condicion.default(this._$.first_line, this._$.first_column, 0, ">=", $1, $3);}
+    |EXP MENORIGUAL EXP                             {$$ = new Condicion.default(this._$.first_line, this._$.first_column, 0, "<=", $1, $3);}
+    |EXP AND EXP                                    {$$ = new Condicion.default(this._$.first_line, this._$.first_column, 0, "&&", $1, $3);}
+    |EXP OR EXP                                     {$$ = new Condicion.default(this._$.first_line, this._$.first_column, 0, "||", $1, $3);}
+    |NOT EXP                                        {$$ = new Condicion.default(this._$.first_line, this._$.first_column, 0, "!", $2);}
     |PARIZ FTIPO PARDER EXP %prec FCAST             {}
+    |CONDICION TERNARIO EXP DOSPT EXP               {}
+    |INCREMENTO                                     {}
+    |DECREMENTO                                     {}
+    |NATIVAS                                        {}
     |FTOLOWER                                       {}
     |FTOUPPER                                       {}
+    |ID                                             {$$ = new Variable.default(this._$.first_line, this._$.first_column, $1);}
+    |LLAMADA                                        {$$ = $1}
+    |ID CORIZ CORIZ EXP CORDER CORDER               {$$ = new Vector.default(this._$.first_line, this._$.first_column, $1, $4);}
 ;
 
-VALORES
-    :ID
-    |ID PARIZ PARDER                                {}
-    |ID PARIZ L_EXP PARDER                          {}
-    |ID CORIZ CORIZ EXP CORDER CORDER               {}
+LISTAVALORES
+    :ENTERO             {$$ = new Literal.default(this._$.first_line, this._$.first_column, $1, Tipo.tipos.ENTERO)}
+    |DOBLE              {$$ = new Literal.default(this._$.first_line, this._$.first_column, $1, Tipo.tipos.DOBLE)}
+    |CARACTER           {$$ = new Literal.default(this._$.first_line, this._$.first_column, $1, Tipo.tipos.CARACTER)}
+    |Cadena             {$$ = new Literal.default(this._$.first_line, this._$.first_column, $1, Tipo.tipos.CADENA)}
+    |TRUE               {$$ = new Literal.default(this._$.first_line, this._$.first_column, $1, Tipo.tipos.BOOLEANO)}
+    |FALSE              {$$ = new Literal.default(this._$.first_line, this._$.first_column, $1, Tipo.tipos.BOOLEANO)}
 ;
 
 L_EXP
-    :L_EXP COMA EXP     {}
-    |EXP                {}
+    :L_EXP COMA EXP     {$$ = $1; $$.push($3);}
+    |EXP                {$$ = []; $$.push($1);}
 ;
 
-FBREAK
-    :BREAK PTCOMA           {}
-    |BREAK error PTCOMA     {}
-;                        
-FCONTINUE
-    :CONTINUE PTCOMA           {}
-    | CONTINUE error PTCOMA    {}
-;                     
-                    
+INCREMENTO
+    :EXP PLUS            {}
+;
+
+DECREMENTO
+    :EXP MIN             {}
+;
+
+                                     
 FTOLOWER
     :toLOWER PARIZ EXP PARDER       {}
 ;                        

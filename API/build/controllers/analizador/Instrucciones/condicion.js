@@ -52,4 +52,4 @@ class DECLARAR extends instruccion_1.Instruccion {
     }
 }
 exports.default = DECLARAR;
-//# sourceMappingURL=DECLARAR.js.map
+//# sourceMappingURL=condicion.js.map

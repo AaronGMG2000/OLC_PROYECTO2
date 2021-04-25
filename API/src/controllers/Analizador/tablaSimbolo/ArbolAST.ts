@@ -19,7 +19,11 @@ export default class ArbolAST {
 
     public EjecutarBloque() {
         for(let elemento of this.instrucciones){
-            elemento.ejecutar(this, this.global);
+            if(typeof(elemento) !== typeof("")){
+                elemento.ejecutar(this, this.global);
+            }else{
+                console.log(this.errores);
+            }
         }
     }
 }

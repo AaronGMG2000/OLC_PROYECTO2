@@ -7,6 +7,7 @@ const ArbolAST_1 = __importDefault(require("./tablaSimbolo/ArbolAST"));
 const Entorno_1 = __importDefault(require("./tablaSimbolo/Entorno"));
 try {
     const parser = require("./analizador");
+    parser.ArbolAST = new ArbolAST_1.default([]);
     let Contenido = "print(\"hola mundo\");\n";
     Contenido += "PRINT(4*-4);\n";
     Contenido += "PRINT(false);\n";
