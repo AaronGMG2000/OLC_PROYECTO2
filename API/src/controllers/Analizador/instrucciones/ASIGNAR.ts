@@ -20,12 +20,13 @@ export default class ASIGNAR extends Instruccion {
 
     ejecutar(arbol: ArbolAST, tabla: Entorno) {
         const expre = tabla.get(this.ID);
-        if(expre){  
-            if (expre.tipo.tipos!==this.exp?.Tipo.tipos) {
+        if(expre){
+            let value = this.exp?.getValor(arbol, tabla);
+            if (expre.tipo.tipos!==value?.Tipo.tipos) {
                 arbol.errores.push(new Excepcion("Semantico","el tipado de la variable no coincide con el del valor indicado", this.linea, this.columna));
                 return;
             }
-            const comprobar = tabla.update(this.ID, this.exp, this.UBICACION);
+            const comprobar = tabla.update(this.ID, value, this.UBICACION);
             if (!comprobar){
                 arbol.errores.push(new Excepcion("Semantico","No se encontro la variable "+this.ID, this.linea, this.columna));
                 return;

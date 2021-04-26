@@ -12,6 +12,11 @@
     const DECLARAR = require('./Instrucciones/DECLARAR');
     const ASIGNAR = require('./Instrucciones/ASIGNAR')
     const Aritmetica = require('./expresiones/aritmetica');
+    const IF = require('./Instrucciones/IF');
+    const WHILE = require('./Instrucciones/while');
+    const BREAK = require('./Instrucciones/break');
+    const CONTINUE = require('./Instrucciones/continue');
+
     const Incremento = require('./expresiones/incremento');
     const Decremento = require('./expresiones/decremento');
     const Casteo = require('./expresiones/casteo');
@@ -176,8 +181,8 @@ INS
     | FUNCION                                       {$$ = $1}
     | LLAMADA PTCOMA                                {$$ = $1}
     | FRETURN                                       {$$ = $1}
-    | BREAK PTCOMA                                  {$$ = $1}
-    | CONTINUE PTCOMA                               {$$ = $1}
+    | BREAK PTCOMA                                  {$$ = new BREAK.default(this._$.first_line, this._$.first_column);}
+    | CONTINUE PTCOMA                               {$$ = new CONTINUE.default(this._$.first_line, this._$.first_column);}
     | FTERNARIO PTCOMA                              {$$ = $1}
     | error PTCOMA                                  {ArbolAST.num_error++;ArbolAST.errores.push(new Excepcion.default(ArbolAST.num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));}
 ;
@@ -218,9 +223,9 @@ PARAMETROS
 ;
 
 FIF
-    :IF PARIZ EXP PARDER LLAVEIZ LINS LLAVEDER                                      {}
-    |IF PARIZ EXP PARDER LLAVEIZ LINS LLAVEDER ELSE FIF                             {}
-    |IF PARIZ EXP PARDER LLAVEIZ LINS LLAVEDER ELSE LLAVEIZ LINS LLAVEDER           {}
+    :IF PARIZ EXP PARDER LLAVEIZ LINS LLAVEDER                                      {$$ = new IF.default(this._$.first_line, this._$.first_column, $3, $6)}
+    |IF PARIZ EXP PARDER LLAVEIZ LINS LLAVEDER ELSE FIF                             {$$ = new IF.default(this._$.first_line, this._$.first_column, $3, $6, undefined, $9)}
+    |IF PARIZ EXP PARDER LLAVEIZ LINS LLAVEDER ELSE LLAVEIZ LINS LLAVEDER           {$$ = new IF.default(this._$.first_line, this._$.first_column, $3, $6, $10)}
     |IF error LLAVEDER                                                              {ArbolAST.num_error++; ArbolAST.errores.push(new Excepcion.default(ArbolAST.num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));}
 ;
 
@@ -236,7 +241,7 @@ LCASOS
 ;
 
 FWHILE
-    :WHILE PARIZ EXP PARDER LLAVEIZ LINS LLAVEDER             {}
+    :WHILE PARIZ EXP PARDER LLAVEIZ LINS LLAVEDER             {$$ = new WHILE.default(this._$.first_line, this._$.first_column, $3, $6);}
     |WHILE error LLAVEDER                                     {ArbolAST.num_error++; ArbolAST.errores.push(new Excepcion.default(ArbolAST.num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));}
 ;
 

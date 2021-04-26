@@ -107,8 +107,14 @@ break;
 case 13:
 this.$ = new DEC.default(this._$.first_line, this._$.first_column, $$[$0-1]);
 break;
-case 16: case 18: case 19: case 20: case 70:
+case 16: case 20: case 70:
 this.$ = $$[$0-1]
+break;
+case 18:
+this.$ = new BREAK.default(this._$.first_line, this._$.first_column);
+break;
+case 19:
+this.$ = new CONTINUE.default(this._$.first_line, this._$.first_column);
 break;
 case 24:
 this.$ = new DECLARAR.default(this._$.first_line, this._$.first_column,$$[$0-1], $$[$0-2])
@@ -136,6 +142,18 @@ this.$ = new ASIGNAR.default(this._$.first_line, this._$.first_column, $$[$0-8],
 break;
 case 36: case 37: case 43: case 46: case 50: case 53: case 55:
 ArbolAST.num_error++; ArbolAST.errores.push(new Excepcion.default(ArbolAST.num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));
+break;
+case 40:
+this.$ = new IF.default(this._$.first_line, this._$.first_column, $$[$0-4], $$[$0-1])
+break;
+case 41:
+this.$ = new IF.default(this._$.first_line, this._$.first_column, $$[$0-6], $$[$0-3], undefined, $$[$0])
+break;
+case 42:
+this.$ = new IF.default(this._$.first_line, this._$.first_column, $$[$0-8], $$[$0-5], $$[$0-1])
+break;
+case 49:
+this.$ = new WHILE.default(this._$.first_line, this._$.first_column, $$[$0-4], $$[$0-1]);
 break;
 case 58:
 this.$ = new Tipo.default(Tipo.tipos.ENTERO);
@@ -508,6 +526,11 @@ _handle_error:
     const DECLARAR = require('./Instrucciones/DECLARAR');
     const ASIGNAR = require('./Instrucciones/ASIGNAR')
     const Aritmetica = require('./expresiones/aritmetica');
+    const IF = require('./Instrucciones/IF');
+    const WHILE = require('./Instrucciones/while');
+    const BREAK = require('./Instrucciones/break');
+    const CONTINUE = require('./Instrucciones/continue');
+
     const Incremento = require('./expresiones/incremento');
     const Decremento = require('./expresiones/decremento');
     const Casteo = require('./expresiones/casteo');

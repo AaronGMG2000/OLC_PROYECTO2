@@ -39,8 +39,6 @@ class condicion extends expresion_1.Expresion {
     getValor(arbol, tabla) {
         var izquierda;
         var derecha;
-        console.log(this.ExpresionDerecha);
-        console.log(this.ExpresionIzquierda);
         if (this.ExpresionIzquierda) {
             izquierda = this.ExpresionIzquierda.getValor(arbol, tabla);
         }

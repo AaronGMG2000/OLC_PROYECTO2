@@ -16,11 +16,12 @@ class ASIGNAR extends instruccion_1.Instruccion {
         var _a;
         const expre = tabla.get(this.ID);
         if (expre) {
-            if (expre.tipo.tipos !== ((_a = this.exp) === null || _a === void 0 ? void 0 : _a.Tipo.tipos)) {
+            let value = (_a = this.exp) === null || _a === void 0 ? void 0 : _a.getValor(arbol, tabla);
+            if (expre.tipo.tipos !== (value === null || value === void 0 ? void 0 : value.Tipo.tipos)) {
                 arbol.errores.push(new Excepcion_1.default("Semantico", "el tipado de la variable no coincide con el del valor indicado", this.linea, this.columna));
                 return;
             }
-            const comprobar = tabla.update(this.ID, this.exp, this.UBICACION);
+            const comprobar = tabla.update(this.ID, value, this.UBICACION);
             if (!comprobar) {
                 arbol.errores.push(new Excepcion_1.default("Semantico", "No se encontro la variable " + this.ID, this.linea, this.columna));
                 return;

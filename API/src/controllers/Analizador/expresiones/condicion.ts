@@ -21,8 +21,6 @@ export default class condicion extends Expresion {
     getValor(arbol: ArbolAST, tabla: Entorno):Expresion {
         var izquierda:Expresion|undefined;
         var derecha:Expresion|undefined;
-        console.log(this.ExpresionDerecha);
-        console.log(this.ExpresionIzquierda);
         if (this.ExpresionIzquierda) {
             izquierda = this.ExpresionIzquierda.getValor(arbol, tabla);
         }
