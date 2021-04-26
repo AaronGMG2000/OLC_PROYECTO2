@@ -7,6 +7,7 @@ const Entorno_1 = __importDefault(require("./Entorno"));
 class ArbolAST {
     constructor(instrucciones) {
         this.errores = new Array();
+        this.num_error = 0;
         this.instrucciones = instrucciones;
         this.consola = "";
         this.global = new Entorno_1.default();

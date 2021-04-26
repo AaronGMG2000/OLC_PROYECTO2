@@ -68,7 +68,13 @@ export default class Simbolo
                         break;
                 }
             }else{
-                this.valor = valor;
+                console.log(valor);
+                if(this.tipo.tipos === tipos.ENTERO){
+                    valor.valor = Math.trunc(valor.valor) 
+                    this.valor = valor;
+                }else{
+                    this.valor = valor;
+                }
             }
         }
         else

@@ -7,14 +7,19 @@
     const Arbol = require('./tablaSimbolo/ArbolAST');
     const Expresion = require('./expresiones/expresion');
     const Imprimir = require('./Instrucciones/Imprimir');
+    const DEC = require('./Instrucciones/decremento');
+    const INC = require('./Instrucciones/incrementar');
     const DECLARAR = require('./Instrucciones/DECLARAR');
     const ASIGNAR = require('./Instrucciones/ASIGNAR')
     const Aritmetica = require('./expresiones/aritmetica');
+    const Incremento = require('./expresiones/incremento');
+    const Decremento = require('./expresiones/decremento');
+    const Casteo = require('./expresiones/casteo');
     const Condicion = require('./expresiones/condicion');
     const Instruccion = require('./Abstract/instruccion');
     let Texto="";
     let ArbolAST = new Arbol.default([]);
-    let num_error = 0;
+    let ArbolAST2 = new Arbol.default([]);
 %}
 
 %lex
@@ -30,7 +35,7 @@
 \n                  {}
 \s+                 {}
 [']                 {Texto=""; this.begin("CARACTER");}
-<CARACTER>[^'\\]"'"     {yytext = yytext.substr(1,yyleng-2); this.popState(); return 'CARACTER';}
+<CARACTER>[^'\\]"'"     {yytext = yytext.substr(0,yyleng-1); this.popState(); return 'CARACTER';}
 <CARACTER>"\\n'"        {yytext = '\n'; this.popState(); return 'CARACTER';}
 <CARACTER>"\\t'"        {yytext = "\t"; this.popState(); return 'CARACTER';}
 <CARACTER>"\\r'"        {yytext = "\r"; this.popState(); return 'CARACTER';}
@@ -125,8 +130,8 @@
 <<EOF>>                 return 'EOF';
 
 . {
-    num_error++;
-    ArbolAST.errores.push(new Excepcion.default(num_error, "LEXICO", "Símbolo "+yytext+" no reconocido.", yylloc.first_line, yylloc.first_column)); 
+    ArbolAST.num_error++;
+    ArbolAST.errores.push(new Excepcion.default(ArbolAST.num_error, "LEXICO", "Símbolo "+yytext+" no reconocido.", yylloc.first_line, yylloc.first_column)); 
 }
 /lex
                 
@@ -148,8 +153,8 @@
 %%
 
 INI
-    : LINS EOF      {ArbolAST.instrucciones = $1; return ArbolAST;}
-    | error EOF     {num_error++;ArbolAST.errores.push(new Excepcion.default(num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));}
+    : LINS EOF      {ArbolAST.instrucciones = $1; ArbolAST2 = ArbolAST; ArbolAST = new Arbol.default([]); return ArbolAST2;}
+    | error EOF     {ArbolAST.num_error++;ArbolAST.errores.push(new Excepcion.default(ArbolAST.num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));}
 ;
 
 LINS
@@ -165,15 +170,16 @@ INS
     | FWHILE                                        {$$ = $1}
     | FFOR                                          {$$ = $1}  
     | FSWITCH                                       {$$ = $1}
-    | INCREMENTO PTCOMA                             {$$ = $1}
-    | DECREMENTO PTCOMA                             {$$ = $1}
+    | INCREMENTO PTCOMA                             {$$ = new INC.default(this._$.first_line, this._$.first_column, $1);}
+    | DECREMENTO PTCOMA                             {$$ = new DEC.default(this._$.first_line, this._$.first_column, $1);}
     | DOWHILE                                       {$$ = $1}
     | FUNCION                                       {$$ = $1}
     | LLAMADA PTCOMA                                {$$ = $1}
     | FRETURN                                       {$$ = $1}
     | BREAK PTCOMA                                  {$$ = $1}
     | CONTINUE PTCOMA                               {$$ = $1}
-    | error PTCOMA                                  {num_error++;ArbolAST.errores.push(new Excepcion.default(num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));}
+    | FTERNARIO PTCOMA                              {$$ = $1}
+    | error PTCOMA                                  {ArbolAST.num_error++;ArbolAST.errores.push(new Excepcion.default(ArbolAST.num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));}
 ;
 
 FRETURN
@@ -202,8 +208,8 @@ FUNCION
     |FTIPO ID PARIZ PARAMETROS PARDER LLAVEIZ LINS LLAVEDER     {}
     |VOID ID PARIZ PARAMETROS PARDER LLAVEIZ LINS LLAVEDER      {}
     |VOID ID PARIZ PARDER LLAVEIZ LINS LLAVEDER                 {}
-    |VOID error LLAVEDER                                        {num_error++; ArbolAST.errores.push(new Excepcion.default(num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));}
-    |error LLAVEDER                                             {num_error++; ArbolAST.errores.push(new Excepcion.default(num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));}
+    |VOID error LLAVEDER                                        {ArbolAST.num_error++; ArbolAST.errores.push(new Excepcion.default(ArbolAST.num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));}
+    |error LLAVEDER                                             {ArbolAST.num_error++; ArbolAST.errores.push(new Excepcion.default(ArbolAST.num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));}
 ;
 
 PARAMETROS
@@ -215,13 +221,13 @@ FIF
     :IF PARIZ EXP PARDER LLAVEIZ LINS LLAVEDER                                      {}
     |IF PARIZ EXP PARDER LLAVEIZ LINS LLAVEDER ELSE FIF                             {}
     |IF PARIZ EXP PARDER LLAVEIZ LINS LLAVEDER ELSE LLAVEIZ LINS LLAVEDER           {}
-    |IF error LLAVEDER                                                              {num_error++; ArbolAST.errores.push(new Excepcion.default(num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));}
+    |IF error LLAVEDER                                                              {ArbolAST.num_error++; ArbolAST.errores.push(new Excepcion.default(ArbolAST.num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));}
 ;
 
 FSWITCH
     :SWITCH PARIZ EXP PARDER LLAVEIZ LCASOS DEFAULT DOSPT LINS LLAVEDER             {}
     |SWITCH PARIZ EXP PARDER LLAVEIZ LCASOS LLAVEDER                                {}
-    |SWITCH error PARDER                                                            {num_error++; ArbolAST.errores.push(new Excepcion.default(num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));} 
+    |SWITCH error PARDER                                                            {ArbolAST.num_error++; ArbolAST.errores.push(new Excepcion.default(ArbolAST.num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));} 
 ;
 
 LCASOS
@@ -231,18 +237,18 @@ LCASOS
 
 FWHILE
     :WHILE PARIZ EXP PARDER LLAVEIZ LINS LLAVEDER             {}
-    |WHILE error LLAVEDER                                     {num_error++; ArbolAST.errores.push(new Excepcion.default(num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));}
+    |WHILE error LLAVEDER                                     {ArbolAST.num_error++; ArbolAST.errores.push(new Excepcion.default(ArbolAST.num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));}
 ;
 
 FOR
     :FOR PARIZ DECLARACION PTCOMA CONDICION PTCOMA EXP PARDER LLAVEIZ LINS LLAVEDER     {}
     |FOR PARIZ ASIGNACION PTCOMA CONDICION PTCOMA EXP PARDER LLAVEIZ LINS LLAVEDER      {}
-    |FOR error LLAVEDER                                                                 {num_error++; ArbolAST.errores.push(new Excepcion.default(num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));}
+    |FOR error LLAVEDER                                                                 {ArbolAST.num_error++; ArbolAST.errores.push(new Excepcion.default(ArbolAST.num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));}
 ;
 
 DOWHILE
     :DO LLAVEIZ LINS LLAVEDER WHILE PARIZ EXP PARDER PTCOMA             {}
-    |DO error PTCOMA                                                    {num_error++; ArbolAST.errores.push(new Excepcion.default(num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));}
+    |DO error PTCOMA                                                    {ArbolAST.num_error++; ArbolAST.errores.push(new Excepcion.default(ArbolAST.num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));}
 ;
 
 LLAMADA
@@ -284,13 +290,13 @@ EXP
     |EXP AND EXP                                    {$$ = new Condicion.default(this._$.first_line, this._$.first_column, 0, "&&", $1, $3);}
     |EXP OR EXP                                     {$$ = new Condicion.default(this._$.first_line, this._$.first_column, 0, "||", $1, $3);}
     |NOT EXP                                        {$$ = new Condicion.default(this._$.first_line, this._$.first_column, 0, "!", $2);}
-    |PARIZ FTIPO PARDER EXP %prec FCAST             {}
-    |CONDICION TERNARIO EXP DOSPT EXP               {}
-    |INCREMENTO                                     {}
-    |DECREMENTO                                     {}
-    |NATIVAS                                        {}
-    |FTOLOWER                                       {}
-    |FTOUPPER                                       {}
+    |CAST                                           {$$ = $1}
+    |FTERNARIO                                      {$$ = $1}
+    |INCREMENTO                                     {$$ = $1}
+    |DECREMENTO                                     {$$ = $1}
+    |NATIVAS                                        {$$ = $1}
+    |FTOLOWER                                       {$$ = $1}
+    |FTOUPPER                                       {$$ = $1}
     |ID                                             {$$ = new Variable.default(this._$.first_line, this._$.first_column, $1);}
     |LLAMADA                                        {$$ = $1}
     |ID CORIZ CORIZ EXP CORDER CORDER               {$$ = new Vector.default(this._$.first_line, this._$.first_column, $1, $4);}
@@ -305,19 +311,26 @@ LISTAVALORES
     |FALSE              {$$ = new Literal.default(this._$.first_line, this._$.first_column, $1, Tipo.tipos.BOOLEANO)}
 ;
 
+CAST
+    :PARIZ FTIPO PARDER EXP %prec FCAST     {$$ = new Casteo.default(this._$.first_line, this._$.first_column, 0,$2, $4)}
+;
+
 L_EXP
     :L_EXP COMA EXP     {$$ = $1; $$.push($3);}
     |EXP                {$$ = []; $$.push($1);}
 ;
 
 INCREMENTO
-    :EXP PLUS            {}
+    :EXP PLUS            {$$ = new Incremento.default(this._$.first_line, this._$.first_column, $1)}
 ;
 
 DECREMENTO
-    :EXP MIN             {}
+    :EXP MIN             {$$ = new Decremento.default(this._$.first_line, this._$.first_column, $1)}
 ;
 
+FTERNARIO
+    :EXP TERNARIO EXP DOSPT EXP     {}
+;
                                      
 FTOLOWER
     :toLOWER PARIZ EXP PARDER       {}

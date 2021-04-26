@@ -6,10 +6,9 @@ import Literal from "./literal";
 
 export default class VARIABLE extends Expresion {
 
-    public nombre:string;
     constructor(linea: number, columna: number, nombre:string) {
         const tip = new Tipo(tipos.ENTERO);
-        super(linea, columna, 0, tip);
+        super(linea, columna, 0, tip, nombre);
         this.nombre = nombre;
     }
     public getValor(arbol: ArbolAST, tabla: Entorno): Expresion {
@@ -19,4 +18,5 @@ export default class VARIABLE extends Expresion {
         }
         return new Literal(this.linea, this.columna, "ERROR", tipos.ERROR);
     }
+
 }

@@ -7,6 +7,7 @@ export default class ArbolAST {
     public errores: Array<Excepcion> = new Array<Excepcion>();
     public consola: String;
     public global: Entorno;
+    public num_error:number = 0;
     constructor(instrucciones: Array<Instruccion>){
         this.instrucciones = instrucciones;
         this.consola = "";

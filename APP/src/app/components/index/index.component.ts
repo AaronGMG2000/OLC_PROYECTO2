@@ -138,6 +138,7 @@ export class IndexComponent implements OnInit {
     };
     this.compilador.COMPILAR(cont).subscribe(
       (res: any) => {
+        this.CONSOLA = "";
         this.CONSOLA = res.consola;
         console.log(res.consola);
       },

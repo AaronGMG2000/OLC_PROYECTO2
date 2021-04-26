@@ -34,9 +34,17 @@ export default class Entorno
                         temp.tabla.set(simbolo, anterior);
                         return true;
                     }else if(POSICION!=-1){
-                        anterior.valor[POSICION.valor] = valor.valor;
-                        return true;
+                        if (POSICION.valor < anterior.DIMENSION || POSICION.valor < anterior.CANTIDAD && POSICION.valor>=0) {
+                            if (POSICION.Tipo.tipos === tipos.ENTERO) {
+                                anterior.valor[POSICION.valor] = valor.valor;
+                                temp.tabla.set(simbolo, anterior);
+                                return true;
+                            }
+                        }
+                        //ERROR
+                        return false
                     }else{
+                        
                         //ERROR
                         return false;
                     }

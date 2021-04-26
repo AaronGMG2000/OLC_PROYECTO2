@@ -28,4 +28,5 @@ export default class Literal extends Expresion {
     public getValor(arbol: ArbolAST, tabla: Entorno): Expresion {
         return this;
     }
+
 }

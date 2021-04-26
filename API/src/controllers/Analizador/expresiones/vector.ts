@@ -7,13 +7,9 @@ import Literal from "./literal";
 
 export default class VECTOR extends Expresion {
 
-    public nombre:string;
-    public posicion:Expresion;
     constructor(linea: number, columna: number, nombre:string, posicion:Expresion) {
         const tip = new Tipo(tipos.ENTERO);
-        super(linea, columna, 0, tip);
-        this.nombre = nombre;
-        this.posicion = posicion;
+        super(linea, columna, 0, tip, nombre, posicion);
     }
     public getValor(arbol: ArbolAST, tabla: Entorno): Expresion {
         let expre = tabla.get(this.nombre);
@@ -28,4 +24,5 @@ export default class VECTOR extends Expresion {
         }
         return new Literal(this.linea, this.columna, "ERROR", tipos.ERROR);
     }
+
 }

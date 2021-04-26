@@ -29,9 +29,7 @@ const literal_1 = __importDefault(require("./literal"));
 class VECTOR extends expresion_1.Expresion {
     constructor(linea, columna, nombre, posicion) {
         const tip = new tipo_1.default(tipo_1.tipos.ENTERO);
-        super(linea, columna, 0, tip);
-        this.nombre = nombre;
-        this.posicion = posicion;
+        super(linea, columna, 0, tip, nombre, posicion);
     }
     getValor(arbol, tabla) {
         let expre = tabla.get(this.nombre);

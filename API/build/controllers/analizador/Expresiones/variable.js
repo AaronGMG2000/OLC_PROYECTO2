@@ -28,7 +28,7 @@ const literal_1 = __importDefault(require("./literal"));
 class VARIABLE extends expresion_1.Expresion {
     constructor(linea, columna, nombre) {
         const tip = new tipo_1.default(tipo_1.tipos.ENTERO);
-        super(linea, columna, 0, tip);
+        super(linea, columna, 0, tip, nombre);
         this.nombre = nombre;
     }
     getValor(arbol, tabla) {

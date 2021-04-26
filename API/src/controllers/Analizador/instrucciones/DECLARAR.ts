@@ -41,9 +41,10 @@ export default class DECLARAR extends Instruccion {
                 v2 = this.DIMENSION.getValor(arbol, tabla).valor;
             }
             if (ex) {
-                if (ex.Tipo.tipos!=this.tipo.tipos){
-                    console.log(ex.Tipo.tipos);
-                    console.log(this.tipo.tipos);
+                
+                if (ex.Tipo.tipos!=this.tipo.tipos && 
+                    ((ex.Tipo.tipos !==tipos.DOBLE && this.tipo.tipos !== tipos.ENTERO)&&
+                    (ex.Tipo.tipos !==tipos.ENTERO && this.tipo.tipos !== tipos.DOBLE))){
                     arbol.errores.push(new Excepcion("Semantico","los tipos ingresados no coinciden",this.linea, this.columna));
                     return;
                 }
