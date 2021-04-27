@@ -8,6 +8,8 @@ export default class ArbolAST {
     public consola: String;
     public global: Entorno;
     public num_error:number = 0;
+    public pilaCiclo:any[] = [];
+    public pilaFuncion:any[] = [];
     constructor(instrucciones: Array<Instruccion>){
         this.instrucciones = instrucciones;
         this.consola = "";
@@ -22,9 +24,8 @@ export default class ArbolAST {
         for(let elemento of this.instrucciones){
             if(typeof(elemento) !== typeof("")){
                 elemento.ejecutar(this, this.global);
-            }else{
-                console.log(this.errores);
             }
         }
+        console.log(this.errores);
     }
 }

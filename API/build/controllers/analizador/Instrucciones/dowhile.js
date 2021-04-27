@@ -7,7 +7,7 @@ const instruccion_1 = require("../Abstract/instruccion");
 const Excepcion_1 = __importDefault(require("../exceptions/Excepcion"));
 const Entorno_1 = __importDefault(require("../tablaSimbolo/Entorno"));
 const tipo_1 = require("../tablaSimbolo/tipo");
-class WHILE extends instruccion_1.Instruccion {
+class DOWHILE extends instruccion_1.Instruccion {
     constructor(linea, columna, condicion1, bloque1) {
         super(linea, columna);
         this.condicion1 = condicion1;
@@ -16,11 +16,49 @@ class WHILE extends instruccion_1.Instruccion {
     ejecutar(arbol, tabla) {
         let condicion = this.condicion1.getValor(arbol, tabla);
         if (condicion.Tipo.tipos === tipo_1.tipos.BOOLEANO) {
+            var Nuevo_Entorno = new Entorno_1.default("DO", tabla);
             let cont = false;
             let bre = false;
             arbol.pilaCiclo.push("ciclo");
+            //DO
+            for (let elemento of this.bloque1) {
+                if (typeof (elemento) !== typeof ("")) {
+                    let res = elemento.ejecutar(arbol, Nuevo_Entorno);
+                    if (typeof (res) === typeof ([])) {
+                        if (res.nombre === "RETURN") {
+                            if (arbol.pilaFuncion.length > 0) {
+                                return res;
+                            }
+                            else {
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "NO SE PUEDE RETORNAR FUERA DE UNA FUNCION", this.linea, this.columna));
+                            }
+                        }
+                        if (res.nombre === "CONTINUE") {
+                            cont = true;
+                            break;
+                        }
+                        else if (res.nombre === "BREAK") {
+                            bre = true;
+                            break;
+                        }
+                    }
+                }
+                else {
+                    console.log(arbol.errores);
+                }
+            }
+            if (cont) {
+                cont = false;
+            }
+            if (bre) {
+                arbol.pilaCiclo.pop();
+                return;
+            }
+            condicion = this.condicion1.getValor(arbol, tabla);
+            //WHILE
             while (condicion.valor) {
-                let Nuevo_Entorno = new Entorno_1.default("WHILE", tabla);
+                Nuevo_Entorno = new Entorno_1.default("DOWHILE", tabla);
                 for (let elemento of this.bloque1) {
                     if (typeof (elemento) !== typeof ("")) {
                         let res = elemento.ejecutar(arbol, Nuevo_Entorno);
@@ -63,5 +101,5 @@ class WHILE extends instruccion_1.Instruccion {
         //ERROR
     }
 }
-exports.default = WHILE;
-//# sourceMappingURL=while.js.map
+exports.default = DOWHILE;
+//# sourceMappingURL=dowhile.js.map

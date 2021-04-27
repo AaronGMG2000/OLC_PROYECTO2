@@ -24,8 +24,16 @@ export default class DECLARAR extends Instruccion {
         }
         this.ID=ID;
         this.tipo = Tipo;
-        this.DIMENSION = DIMENSION;
-        this.CANTIDAD = CANTIDAD;
+        if (this.DIMENSION) {
+            this.DIMENSION = DIMENSION;
+        }else{
+            this.DIMENSION = -1;
+        }
+        if (this.CANTIDAD) {
+            this.CANTIDAD = CANTIDAD;
+        }else{
+            this.CANTIDAD = -1;
+        }
     }
 
     ejecutar(arbol: ArbolAST, tabla: Entorno) {
@@ -42,17 +50,25 @@ export default class DECLARAR extends Instruccion {
             }
             if (ex) {
                 
-                if (ex.Tipo.tipos!=this.tipo.tipos && 
-                    ((ex.Tipo.tipos !==tipos.DOBLE && this.tipo.tipos !== tipos.ENTERO)&&
-                    (ex.Tipo.tipos !==tipos.ENTERO && this.tipo.tipos !== tipos.DOBLE))){
-                    arbol.errores.push(new Excepcion("Semantico","los tipos ingresados no coinciden",this.linea, this.columna));
-                    return;
+                if (ex.Tipo.tipos!==this.tipo.tipos && this.tipo.tipos!==tipos.DOBLE
+                    && this.tipo.tipos !== tipos.ENTERO){
+                    console.log("hola");
+                    arbol.num_error++;
+                    arbol.errores.push(new Excepcion(arbol.num_error,"Semantico","los tipos ingresados no coinciden",this.linea, this.columna));
+                    return false;
+                }
+                if ((this.tipo.tipos === tipos.DOBLE || this.tipo.tipos===tipos.ENTERO)
+                    && (ex.Tipo.tipos!==tipos.DOBLE && ex.Tipo.tipos !== tipos.ENTERO)) {
+                    arbol.num_error++;
+                    arbol.errores.push(new Excepcion(arbol.num_error,"Semantico","los tipos ingresados no coinciden",this.linea, this.columna));
+                    return false;
                 }
             }
             tabla.set(this.ID, ex, this.tipo, v1, v2);
-            return;
+            return true;
         }
         //ERROR
+        return false;
     }
 
 }

@@ -11,7 +11,6 @@ class DECREMENT extends instruccion_1.Instruccion {
             var result = this.exp.getValor(arbol, tabla);
         }
         //ERROR
-        //ERROR
     }
 }
 exports.default = DECREMENT;

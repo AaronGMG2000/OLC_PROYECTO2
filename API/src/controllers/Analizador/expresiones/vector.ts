@@ -19,7 +19,7 @@ export default class VECTOR extends Expresion {
                 let value = expre.valor[pos.valor];
                 return new Literal(this.linea, this.columna, value, expre.tipo.tipos);
             }
-            arbol.errores.push(new Excepcion("SEMANTICO","Posición fuera del rango",this.linea, this.columna));
+            arbol.errores.push(new Excepcion(arbol.num_error,"SEMANTICO","Posición fuera del rango",this.linea, this.columna));
             return new Literal(this.linea, this.columna, "ERROR", tipos.ERROR);
         }
         return new Literal(this.linea, this.columna, "ERROR", tipos.ERROR);

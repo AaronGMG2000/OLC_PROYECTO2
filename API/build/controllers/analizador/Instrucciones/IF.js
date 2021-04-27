@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const instruccion_1 = require("../Abstract/instruccion");
+const Excepcion_1 = __importDefault(require("../exceptions/Excepcion"));
 const Entorno_1 = __importDefault(require("../tablaSimbolo/Entorno"));
 const tipo_1 = require("../tablaSimbolo/tipo");
 class IF extends instruccion_1.Instruccion {
@@ -23,7 +24,31 @@ class IF extends instruccion_1.Instruccion {
                     if (typeof (elemento) !== typeof ("")) {
                         let res = elemento.ejecutar(arbol, Nuevo_Entorno);
                         if (typeof (res) === typeof ([])) {
-                            return res;
+                            if (res.nombre === "RETURN") {
+                                if (arbol.pilaFuncion.length > 0) {
+                                    return res;
+                                }
+                                else {
+                                    arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "NO SE PUEDE RETORNAR FUERA DE UNA FUNCION", this.linea, this.columna));
+                                }
+                            }
+                            else if (res.nombre === "BREAK") {
+                                if (arbol.pilaCiclo.length > 0) {
+                                    return res;
+                                }
+                                else {
+                                    arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "NO SE PUEDE UTILIZAR BREAK FUERA DE UN CICLO", this.linea, this.columna));
+                                }
+                            }
+                            else if (res.nombre === "CONTINUE") {
+                                if (arbol.pilaCiclo.length > 0) {
+                                    return res;
+                                }
+                                else {
+                                    arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "NO SE PUEDE UTILIZAR CONTINUE FUERA DE UN CICLO", this.linea, this.columna));
+                                }
+                            }
+                            return;
                         }
                     }
                     else {
@@ -43,7 +68,31 @@ class IF extends instruccion_1.Instruccion {
                     if (typeof (elemento) !== typeof ("")) {
                         let res = elemento.ejecutar(arbol, Nuevo_Entorno);
                         if (typeof (res) === typeof ([])) {
-                            return res;
+                            if (res.nombre === "RETURN") {
+                                if (arbol.pilaFuncion.length > 0) {
+                                    return res;
+                                }
+                                else {
+                                    arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "NO SE PUEDE RETORNAR FUERA DE UNA FUNCION", this.linea, this.columna));
+                                }
+                            }
+                            else if (res.nombre === "BREAK") {
+                                if (arbol.pilaCiclo.length > 0) {
+                                    return res;
+                                }
+                                else {
+                                    arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "NO SE PUEDE UTILIZAR BREAK FUERA DE UN CICLO", this.linea, this.columna));
+                                }
+                            }
+                            else if (res.nombre === "CONTINUE") {
+                                if (arbol.pilaCiclo.length > 0) {
+                                    return res;
+                                }
+                                else {
+                                    arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "NO SE PUEDE UTILIZAR CONTINUE FUERA DE UN CICLO", this.linea, this.columna));
+                                }
+                            }
+                            return;
                         }
                     }
                     else {

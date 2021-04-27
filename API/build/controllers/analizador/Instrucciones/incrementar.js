@@ -8,7 +8,7 @@ class INCREMENT extends instruccion_1.Instruccion {
     }
     ejecutar(arbol, tabla) {
         if (this.exp) {
-            var result = this.exp.getValor(arbol, tabla);
+            this.exp.getValor(arbol, tabla);
         }
         //ERROR
     }

@@ -13,7 +13,7 @@ export default class INCREMENT extends Instruccion {
 
     ejecutar(arbol: ArbolAST, tabla: Entorno) {
         if (this.exp) {
-            var result = this.exp.getValor(arbol, tabla);
+            this.exp.getValor(arbol, tabla);
         }
         //ERROR
     }

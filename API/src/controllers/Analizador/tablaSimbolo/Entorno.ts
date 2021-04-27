@@ -7,7 +7,7 @@ export default class Entorno
     public tabla:Map<String, Simbolo>;
     private anterior: Entorno|any;
 
-    constructor(nombre:string = "GLOBAL", anterior?:Entorno){
+    constructor(nombre:string= "GLOBAL", anterior?:Entorno){
         this.nombre = nombre;
         this.anterior = anterior;
         this.tabla = new Map<String, Simbolo>();
@@ -27,17 +27,17 @@ export default class Entorno
         simbolo = simbolo.toUpperCase();
         for(var temp:Entorno = this; temp!=null; temp = temp.anterior ){
             if (temp.tabla.has(simbolo)) {
-                var anterior = temp.tabla.get(simbolo);
-                if (anterior) {
-                    if(anterior.DIMENSION==-1 && anterior.CANTIDAD==-1){
-                        anterior.valor = valor;
-                        temp.tabla.set(simbolo, anterior);
+                var ant = temp.tabla.get(simbolo);
+                if (ant) {
+                    if(ant.DIMENSION==-1 && ant.CANTIDAD==-1){
+                        ant.valor = valor;
+                        temp.tabla.set(simbolo, ant);
                         return true;
                     }else if(POSICION!=-1){
-                        if (POSICION.valor < anterior.DIMENSION || POSICION.valor < anterior.CANTIDAD && POSICION.valor>=0) {
+                        if (POSICION.valor < ant.DIMENSION || POSICION.valor < ant.CANTIDAD && POSICION.valor>=0) {
                             if (POSICION.Tipo.tipos === tipos.ENTERO) {
-                                anterior.valor[POSICION.valor] = valor.valor;
-                                temp.tabla.set(simbolo, anterior);
+                                ant.valor[POSICION.valor] = valor.valor;
+                                temp.tabla.set(simbolo, ant);
                                 return true;
                             }
                         }

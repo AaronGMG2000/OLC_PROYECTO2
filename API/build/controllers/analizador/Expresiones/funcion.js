@@ -23,27 +23,31 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Excepcion_1 = __importDefault(require("../exceptions/Excepcion"));
-const tipo_1 = __importStar(require("../tablaSimbolo/tipo"));
 const expresion_1 = require("./expresion");
+const tipo_1 = __importStar(require("../tablaSimbolo/tipo"));
 const literal_1 = __importDefault(require("./literal"));
-class VECTOR extends expresion_1.Expresion {
-    constructor(linea, columna, nombre, posicion) {
+class FUNCION extends expresion_1.Expresion {
+    constructor(linea, columna, nombre, parametros) {
         const tip = new tipo_1.default(tipo_1.tipos.ENTERO);
-        super(linea, columna, 0, tip, nombre, posicion);
+        super(linea, columna, 0, tip);
+        this.nombre = nombre;
+        this.parametros = parametros;
     }
     getValor(arbol, tabla) {
-        let expre = tabla.get(this.nombre);
-        if (expre.tipo.tipos !== tipo_1.tipos.ERROR) {
-            const pos = this.posicion.getValor(arbol, tabla);
-            if (pos.valor < expre.valor.length && pos.valor >= 0) {
-                let value = expre.valor[pos.valor];
-                return new literal_1.default(this.linea, this.columna, value, expre.tipo.tipos);
+        this.nombre += "#";
+        if (this.parametros) {
+            for (let par of this.parametros) {
+                this.nombre += "" + par.Tipo.tipos;
             }
-            arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "Posición fuera del rango", this.linea, this.columna));
-            return new literal_1.default(this.linea, this.columna, "ERROR", tipo_1.tipos.ERROR);
         }
+        var comprobar = tabla.get(this.nombre);
+        if (comprobar) {
+            console.log(comprobar);
+        }
+        arbol.num_error++;
+        arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "Se esperaba un valor numerico", this.linea, this.columna));
         return new literal_1.default(this.linea, this.columna, "ERROR", tipo_1.tipos.ERROR);
     }
 }
-exports.default = VECTOR;
-//# sourceMappingURL=vector.js.map
+exports.default = FUNCION;
+//# sourceMappingURL=funcion.js.map

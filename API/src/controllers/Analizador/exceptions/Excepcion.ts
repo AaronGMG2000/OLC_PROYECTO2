@@ -1,11 +1,13 @@
 export default class Excepcion {
+    public numero:number;
     public tipo: String;
     public descripcion: String;
     public fila: Number;
     public columna: Number;
 
-    constructor(tipo: String, descripcion:String, fila:Number, columna:Number)
+    constructor(num: number, tipo:String,descripcion:String, fila:Number, columna:Number)
     {
+        this.numero = num;
         this.tipo = tipo;
         this.descripcion = descripcion;
         this.fila = fila;

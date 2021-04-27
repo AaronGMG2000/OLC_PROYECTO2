@@ -21,19 +21,16 @@ export default class INCREMENTO extends Expresion {
                 if (expre.tipo.tipos !== tipos.ERROR && (expre.tipo.tipos===tipos.DOBLE || expre.tipo.tipos===tipos.ENTERO)){
                     
                     if (this.exp.posicion===-1) {
-                        
                         let v = expre.valor.getValor(arbol, tabla);
-                        v.valor++;
-                        var v2 = new Literal(this.linea, this.columna, v.valor, expre.valor.Tipo.tipos);
+                        var v2 = new Literal(this.linea, this.columna, v.valor+1, expre.valor.Tipo.tipos);
                         tabla.update(this.exp.nombre, v2);
                         return new Literal(this.linea, this.columna, expre.valor.valor, expre.tipo.tipos);
                     }else{
                         let value = expre.valor[this.exp.posicion.valor];
-                        value++;
-                        let v = new Literal(this.linea, this.columna, value, expre.tipo.tipos);
+                        let v = new Literal(this.linea, this.columna, value+1, expre.tipo.tipos);
                         let dir = new Literal(this.linea, this.columna, this.exp.posicion.valor, tipos.ENTERO);
                         tabla.update(this.exp.nombre, v, dir);
-                        return new Literal(this.linea, this.columna, value, expre.tipo.tipos);
+                        return new Literal(this.linea, this.columna, value+1, expre.tipo.tipos);
                     }
                 }
             }else{
@@ -42,7 +39,7 @@ export default class INCREMENTO extends Expresion {
                 return new Literal(this.linea, this.columna, expre.valor, expre.Tipo.tipos);
             }
         }
-        arbol.errores.push(new Excepcion("SEMANTICO","Se esperaba un valor numerico",this.linea, this.columna));
+        arbol.errores.push(new Excepcion(arbol.num_error,"SEMANTICO","Se esperaba un valor numerico",this.linea, this.columna));
         return new Literal(this.linea, this.columna, "ERROR", tipos.ERROR);
     }
 

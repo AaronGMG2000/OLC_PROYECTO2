@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class Excepcion {
-    constructor(tipo, descripcion, fila, columna) {
+    constructor(num, tipo, descripcion, fila, columna) {
+        this.numero = num;
         this.tipo = tipo;
         this.descripcion = descripcion;
         this.fila = fila;

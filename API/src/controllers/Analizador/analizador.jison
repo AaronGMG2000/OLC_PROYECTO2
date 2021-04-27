@@ -14,7 +14,13 @@
     const Aritmetica = require('./expresiones/aritmetica');
     const IF = require('./Instrucciones/IF');
     const WHILE = require('./Instrucciones/while');
+    const DOWHILE = require('./Instrucciones/dowhile');
+    const SWITCH = require('./Instrucciones/switch');
+    const FUNC = require('./Instrucciones/funcion');
+    const FUNCION = require('./Instrucciones/funcion')
+    const FOR = require('./Instrucciones/FOR');
     const BREAK = require('./Instrucciones/break');
+    const RETURN = require('./Instrucciones/return');
     const CONTINUE = require('./Instrucciones/continue');
 
     const Incremento = require('./expresiones/incremento');
@@ -159,7 +165,7 @@
 
 INI
     : LINS EOF      {ArbolAST.instrucciones = $1; ArbolAST2 = ArbolAST; ArbolAST = new Arbol.default([]); return ArbolAST2;}
-    | error EOF     {ArbolAST.num_error++;ArbolAST.errores.push(new Excepcion.default(ArbolAST.num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));}
+    | error EOF     {console.log("hola"); ArbolAST.num_error++;ArbolAST.errores.push(new Excepcion.default(ArbolAST.num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));}
 ;
 
 LINS
@@ -169,8 +175,8 @@ LINS
 
 INS
     : PRINT PARIZ EXP PARDER PTCOMA                 {$$ = new Imprimir.default(this._$.first_line, this._$.first_column, $3); }
-    | DECLARACION                                   {$$ = $1}
-    | ASIGNACION                                    {$$ = $1}
+    | DECLARACION PTCOMA                            {$$ = $1}
+    | ASIGNACION PTCOMA                             {$$ = $1}
     | FIF                                           {$$ = $1}
     | FWHILE                                        {$$ = $1}
     | FFOR                                          {$$ = $1}  
@@ -188,29 +194,29 @@ INS
 ;
 
 FRETURN
-    : RETURN PTCOMA                  {}
-    | RETURN EXP PTCOMA              {}
+    : RETURN PTCOMA                  {$$ = new RETURN.default(this._$.first_line, this._$.first_column);}
+    | RETURN EXP PTCOMA              {$$ = new RETURN.default(this._$.first_line, this._$.first_column, $2);}
 ;
 
 DECLARACION
-    :FTIPO ID PTCOMA                                                         {$$ = new DECLARAR.default(this._$.first_line, this._$.first_column,$2, $1)}
-    |FTIPO ID IGUAL EXP PTCOMA                                               {$$ = new DECLARAR.default(this._$.first_line, this._$.first_column,$2, $1,-1,-1, $4)}
-    |FTIPO CORIZ CORDER ID IGUAL NEW FTIPO CORIZ EXP CORDER PTCOMA           {$$ = new DECLARAR.default(this._$.first_line, this._$.first_column,$4, $1,$9,-1)}
-    |LIST MENOR FTIPO MAYOR ID PTCOMA                                        {$$ = new DECLARAR.default(this._$.first_line, this._$.first_column,$5, $2, $4,-1,0)}
-    |FTIPO CORIZ CORDER ID IGUAL LLAVEIZ L_EXP LLAVEDER PTCOMA               {$$ = new DECLARAR.default(this._$.first_line, this._$.first_column,$4, $1,$7.length,-1, $7)}
-    |LIST MENOR FTIPO MAYOR ID IGUAL NEW LIST MENOR Tipo MAYOR PTCOMA        {$$ = new DECLARAR.default(this._$.first_line, this._$.first_column,$5, $2, $4,-1,0)}
+    :FTIPO ID                                                          {$$ = new DECLARAR.default(this._$.first_line, this._$.first_column,$2, $1)}
+    |FTIPO ID IGUAL EXP                                                {$$ = new DECLARAR.default(this._$.first_line, this._$.first_column,$2, $1,-1,-1, $4)}
+    |FTIPO CORIZ CORDER ID IGUAL NEW FTIPO CORIZ EXP CORDER            {$$ = new DECLARAR.default(this._$.first_line, this._$.first_column,$4, $1,$9,-1)}
+    |LIST MENOR FTIPO MAYOR ID                                         {$$ = new DECLARAR.default(this._$.first_line, this._$.first_column,$5, $2, $4,-1,0)}
+    |FTIPO CORIZ CORDER ID IGUAL LLAVEIZ L_EXP LLAVEDER                {$$ = new DECLARAR.default(this._$.first_line, this._$.first_column,$4, $1,$7.length,-1, $7)}
+    |LIST MENOR FTIPO MAYOR ID IGUAL NEW LIST MENOR Tipo MAYOR         {$$ = new DECLARAR.default(this._$.first_line, this._$.first_column,$5, $2, $4,-1,0)}
 ;
 
 
 
 ASIGNACION
-    :ID IGUAL EXP PTCOMA                                 {$$ = new ASIGNAR.default(this._$.first_line, this._$.first_column, $1,-1, $3);}
-    |ID CORIZ CORIZ EXP CORDER CORDER IGUAL EXP PTCOMA   {$$ = new ASIGNAR.default(this._$.first_line, this._$.first_column, $1,$4, $8);}
+    :ID IGUAL EXP                                  {$$ = new ASIGNAR.default(this._$.first_line, this._$.first_column, $1,-1, $3);}
+    |ID CORIZ CORIZ EXP CORDER CORDER IGUAL EXP    {$$ = new ASIGNAR.default(this._$.first_line, this._$.first_column, $1,$4, $8);}
 ;
 
 FUNCION
-    :FTIPO ID PARIZ PARDER LLAVEIZ LINS LLAVEDER                {}
-    |FTIPO ID PARIZ PARAMETROS PARDER LLAVEIZ LINS LLAVEDER     {}
+    :FTIPO ID PARIZ PARDER LLAVEIZ LINS LLAVEDER                {$$ = new FUNC.default(this._$.first_line, this._$.first_column,$1, $2, $7, $4);}
+    |FTIPO ID PARIZ PARAMETROS PARDER LLAVEIZ LINS LLAVEDER     {$$ = new FUNC.default(this._$.first_line, this._$.first_column,$1, $2, $7, $4);}
     |VOID ID PARIZ PARAMETROS PARDER LLAVEIZ LINS LLAVEDER      {}
     |VOID ID PARIZ PARDER LLAVEIZ LINS LLAVEDER                 {}
     |VOID error LLAVEDER                                        {ArbolAST.num_error++; ArbolAST.errores.push(new Excepcion.default(ArbolAST.num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));}
@@ -218,8 +224,8 @@ FUNCION
 ;
 
 PARAMETROS
-    :PARAMETROS COMA FTIPO ID        {}
-    |FTIPO ID                        {}
+    :PARAMETROS COMA FTIPO ID        {$$ = []; $$ = $1; $$.push(new DECLARAR.default(this._$.first_line, this._$.first_column,$4, $3));}
+    |FTIPO ID                        {$$ = []; $$.push(new DECLARAR.default(this._$.first_line, this._$.first_column,$1, $2));}
 ;
 
 FIF
@@ -230,14 +236,15 @@ FIF
 ;
 
 FSWITCH
-    :SWITCH PARIZ EXP PARDER LLAVEIZ LCASOS DEFAULT DOSPT LINS LLAVEDER             {}
-    |SWITCH PARIZ EXP PARDER LLAVEIZ LCASOS LLAVEDER                                {}
+    :SWITCH PARIZ EXP PARDER LLAVEIZ LCASOS DEFAULT DOSPT LINS LLAVEDER             {$$ = new SWITCH.default(this._$.first_line, this._$.first_column,$3,$6, $9)}
+    |SWITCH PARIZ EXP PARDER LLAVEIZ LCASOS LLAVEDER                                {$$ = new SWITCH.default(this._$.first_line, this._$.first_column,$3,$6, undefined)}
+    |SWITCH PARIZ EXP PARDER LLAVEIZ DEFAULT DOSPT LINS LLAVEDER                    {$$ = new SWITCH.default(this._$.first_line, this._$.first_column,$3,undefined, $6)}
     |SWITCH error PARDER                                                            {ArbolAST.num_error++; ArbolAST.errores.push(new Excepcion.default(ArbolAST.num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));} 
 ;
 
 LCASOS
-    :LCASOS CASE EXP DOSPT LINS                                                   {}
-    |CASE EXP DOSPT LINS                                                          {}
+    :LCASOS CASE EXP DOSPT LINS                                                   {$$ = []; $$=$1; $$.push({Case:$3, INS:$5});}
+    |CASE EXP DOSPT LINS                                                          {$$ = []; $$.push({Case:$2, INS:$4});}
 ;
 
 FWHILE
@@ -245,20 +252,26 @@ FWHILE
     |WHILE error LLAVEDER                                     {ArbolAST.num_error++; ArbolAST.errores.push(new Excepcion.default(ArbolAST.num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));}
 ;
 
-FOR
-    :FOR PARIZ DECLARACION PTCOMA CONDICION PTCOMA EXP PARDER LLAVEIZ LINS LLAVEDER     {}
-    |FOR PARIZ ASIGNACION PTCOMA CONDICION PTCOMA EXP PARDER LLAVEIZ LINS LLAVEDER      {}
-    |FOR error LLAVEDER                                                                 {ArbolAST.num_error++; ArbolAST.errores.push(new Excepcion.default(ArbolAST.num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));}
+FFOR
+    :FOR PARIZ DECLARACION PTCOMA EXP PTCOMA ACTUALIZACION  LLAVEIZ LINS LLAVEDER     {$$ = new FOR.default(this._$.first_line, this._$.first_column, $3, $5, $7, $9, "DEC");}
+    |FOR PARIZ ASIGNACION PTCOMA EXP PTCOMA ACTUALIZACION  LLAVEIZ LINS LLAVEDER      {$$ = new FOR.default(this._$.first_line, this._$.first_column, $3, $5, $7, $9, "ASIG");}
+    |FOR error LLAVEDER                                                    {console.log("AQUI"); ArbolAST.num_error++; ArbolAST.errores.push(new Excepcion.default(ArbolAST.num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));}
+;
+
+ACTUALIZACION
+    :ASIGNACION PARDER     {$$ = $1}
+    | INCREMENTO PARDER    {$$ = new INC.default(this._$.first_line, this._$.first_column, $1);}
+    | DECREMENTO PARDER    {$$ = new DEC.default(this._$.first_line, this._$.first_column, $1);}
 ;
 
 DOWHILE
-    :DO LLAVEIZ LINS LLAVEDER WHILE PARIZ EXP PARDER PTCOMA             {}
+    :DO LLAVEIZ LINS LLAVEDER WHILE PARIZ EXP PARDER PTCOMA             {$$ = new DOWHILE.default(this._$.first_line, this._$.first_column, $7, $3);}
     |DO error PTCOMA                                                    {ArbolAST.num_error++; ArbolAST.errores.push(new Excepcion.default(ArbolAST.num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));}
 ;
 
 LLAMADA
-    :ID PARIZ L_EXP PARDER         {}
-    |ID PARIZ PARDER               {}
+    :ID PARIZ L_EXP PARDER         {$$ = new FUNCION(this._$.first_line, this._$.first_column, $1, $3);}
+    |ID PARIZ PARDER               {$$ = new FUNCION(this._$.first_line, this._$.first_column, $1);}
 ;
 
 FTIPO

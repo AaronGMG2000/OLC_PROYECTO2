@@ -1,4 +1,5 @@
 import { Instruccion } from "../Abstract/instruccion";
+import Excepcion from "../exceptions/Excepcion";
 import { Expresion } from "../expresiones/expresion";
 import ArbolAST from "../tablaSimbolo/ArbolAST";
 import Entorno from "../tablaSimbolo/Entorno";
@@ -27,7 +28,26 @@ export default class IF extends Instruccion {
                     if(typeof(elemento) !== typeof("")){
                         let res = elemento.ejecutar(arbol, Nuevo_Entorno);
                         if(typeof(res) === typeof([])){
-                            return res;
+                            if (res.nombre==="RETURN") {
+                                if(arbol.pilaFuncion.length>0){
+                                    return res;
+                                }else{
+                                    arbol.errores.push(new Excepcion(arbol.num_error,"SEMANTICO","NO SE PUEDE RETORNAR FUERA DE UNA FUNCION", this.linea, this.columna));
+                                } 
+                            }else if(res.nombre==="BREAK"){
+                                if(arbol.pilaCiclo.length>0){
+                                    return res;
+                                }else{
+                                    arbol.errores.push(new Excepcion(arbol.num_error,"SEMANTICO","NO SE PUEDE UTILIZAR BREAK FUERA DE UN CICLO", this.linea, this.columna));
+                                }
+                            }else if(res.nombre==="CONTINUE"){
+                                if(arbol.pilaCiclo.length>0){
+                                    return res;
+                                }else{
+                                arbol.errores.push(new Excepcion(arbol.num_error,"SEMANTICO","NO SE PUEDE UTILIZAR CONTINUE FUERA DE UN CICLO", this.linea, this.columna));
+                                }
+                            }
+                            return;
                         }
                     }else{
                         console.log(arbol.errores);
@@ -46,7 +66,26 @@ export default class IF extends Instruccion {
                     if(typeof(elemento) !== typeof("")){
                         let res = elemento.ejecutar(arbol, Nuevo_Entorno);
                         if(typeof(res) === typeof([])){
-                            return res;
+                            if (res.nombre==="RETURN") {
+                                if(arbol.pilaFuncion.length>0){
+                                    return res;
+                                }else{
+                                    arbol.errores.push(new Excepcion(arbol.num_error,"SEMANTICO","NO SE PUEDE RETORNAR FUERA DE UNA FUNCION", this.linea, this.columna));
+                                } 
+                            }else if(res.nombre==="BREAK"){
+                                if(arbol.pilaCiclo.length>0){
+                                    return res;
+                                }else{
+                                    arbol.errores.push(new Excepcion(arbol.num_error,"SEMANTICO","NO SE PUEDE UTILIZAR BREAK FUERA DE UN CICLO", this.linea, this.columna));
+                                }
+                            }else if(res.nombre==="CONTINUE"){
+                                if(arbol.pilaCiclo.length>0){
+                                    return res;
+                                }else{
+                                arbol.errores.push(new Excepcion(arbol.num_error,"SEMANTICO","NO SE PUEDE UTILIZAR CONTINUE FUERA DE UN CICLO", this.linea, this.columna));
+                                }
+                            }
+                            return;
                         }
                     }else{
                         console.log(arbol.errores);

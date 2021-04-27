@@ -47,35 +47,791 @@ class condicion extends expresion_1.Expresion {
         }
         switch (this.operador) {
             case "<":
-                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) < (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
-                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                switch (izquierda === null || izquierda === void 0 ? void 0 : izquierda.Tipo.tipos) {
+                    case tipo_1.tipos.ENTERO:
+                        switch (derecha === null || derecha === void 0 ? void 0 : derecha.Tipo.tipos) {
+                            case tipo_1.tipos.BOOLEANO:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Entero con un booleano", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CADENA:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Entero con un string", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CARACTER:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) < (derecha === null || derecha === void 0 ? void 0 : derecha.valor.charCodeAt())) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.ENTERO:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) < (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.DOBLE:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) < (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                        }
+                    case tipo_1.tipos.CARACTER:
+                        switch (derecha === null || derecha === void 0 ? void 0 : derecha.Tipo.tipos) {
+                            case tipo_1.tipos.BOOLEANO:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un char con un booleano", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CADENA:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un char con un string", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CARACTER:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor.charCodeAt()) < (derecha === null || derecha === void 0 ? void 0 : derecha.valor.charCodeAt())) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.ENTERO:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor.charCodeAt()) < (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.DOBLE:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor.charCodeAt()) < (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                        }
+                    case tipo_1.tipos.CADENA:
+                        switch (derecha === null || derecha === void 0 ? void 0 : derecha.Tipo.tipos) {
+                            case tipo_1.tipos.BOOLEANO:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un String con un booleano", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CADENA:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) < (derecha === null || derecha === void 0 ? void 0 : derecha.valor.toChar)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.CARACTER:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un String con un caracter", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.ENTERO:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un String con un Entero", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.DOBLE:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un String con un Dooble", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                        }
+                    case tipo_1.tipos.DOBLE:
+                        switch (derecha === null || derecha === void 0 ? void 0 : derecha.Tipo.tipos) {
+                            case tipo_1.tipos.BOOLEANO:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Double con un booleano", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CADENA:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Double con un string", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CARACTER:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) < (derecha === null || derecha === void 0 ? void 0 : derecha.valor.charCodeAt())) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.ENTERO:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) < (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.DOBLE:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) < (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                        }
+                    case tipo_1.tipos.BOOLEANO:
+                        switch (derecha === null || derecha === void 0 ? void 0 : derecha.Tipo.tipos) {
+                            case tipo_1.tipos.BOOLEANO:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) < (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.CADENA:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Booleano con un string", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CARACTER:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Booleano con un char", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.ENTERO:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Booleano con un int", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.DOBLE:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Booleano con un Doble", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                        }
+                    default:
+                        return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
                 }
-                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
             case ">":
-                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) > (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
-                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                switch (izquierda === null || izquierda === void 0 ? void 0 : izquierda.Tipo.tipos) {
+                    case tipo_1.tipos.ENTERO:
+                        switch (derecha === null || derecha === void 0 ? void 0 : derecha.Tipo.tipos) {
+                            case tipo_1.tipos.BOOLEANO:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Entero con un booleano", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CADENA:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Entero con un string", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CARACTER:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) > (derecha === null || derecha === void 0 ? void 0 : derecha.valor.charCodeAt())) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.ENTERO:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) > (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.DOBLE:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) > (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                        }
+                    case tipo_1.tipos.CARACTER:
+                        switch (derecha === null || derecha === void 0 ? void 0 : derecha.Tipo.tipos) {
+                            case tipo_1.tipos.BOOLEANO:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un char con un booleano", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CADENA:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un char con un string", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CARACTER:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor.charCodeAt()) > (derecha === null || derecha === void 0 ? void 0 : derecha.valor.charCodeAt())) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.ENTERO:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor.charCodeAt()) > (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.DOBLE:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor.charCodeAt()) > (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                        }
+                    case tipo_1.tipos.CADENA:
+                        switch (derecha === null || derecha === void 0 ? void 0 : derecha.Tipo.tipos) {
+                            case tipo_1.tipos.BOOLEANO:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un String con un booleano", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CADENA:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) > (derecha === null || derecha === void 0 ? void 0 : derecha.valor.toChar)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.CARACTER:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un String con un caracter", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.ENTERO:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un String con un Entero", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.DOBLE:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un String con un Dooble", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                        }
+                    case tipo_1.tipos.DOBLE:
+                        switch (derecha === null || derecha === void 0 ? void 0 : derecha.Tipo.tipos) {
+                            case tipo_1.tipos.BOOLEANO:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Double con un booleano", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CADENA:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Double con un string", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CARACTER:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) > (derecha === null || derecha === void 0 ? void 0 : derecha.valor.charCodeAt())) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.ENTERO:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) > (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.DOBLE:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) > (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                        }
+                    case tipo_1.tipos.BOOLEANO:
+                        switch (derecha === null || derecha === void 0 ? void 0 : derecha.Tipo.tipos) {
+                            case tipo_1.tipos.BOOLEANO:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) > (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.CADENA:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Booleano con un string", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CARACTER:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Booleano con un char", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.ENTERO:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Booleano con un int", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.DOBLE:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Booleano con un Doble", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                        }
+                    default:
+                        return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
                 }
-                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
             case "<=":
-                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) <= (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
-                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                switch (izquierda === null || izquierda === void 0 ? void 0 : izquierda.Tipo.tipos) {
+                    case tipo_1.tipos.ENTERO:
+                        switch (derecha === null || derecha === void 0 ? void 0 : derecha.Tipo.tipos) {
+                            case tipo_1.tipos.BOOLEANO:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Entero con un booleano", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CADENA:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Entero con un string", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CARACTER:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) <= (derecha === null || derecha === void 0 ? void 0 : derecha.valor.charCodeAt())) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.ENTERO:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) <= (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.DOBLE:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) <= (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                        }
+                    case tipo_1.tipos.CARACTER:
+                        switch (derecha === null || derecha === void 0 ? void 0 : derecha.Tipo.tipos) {
+                            case tipo_1.tipos.BOOLEANO:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un char con un booleano", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CADENA:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un char con un string", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CARACTER:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor.charCodeAt()) <= (derecha === null || derecha === void 0 ? void 0 : derecha.valor.charCodeAt())) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.ENTERO:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor.charCodeAt()) <= (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.DOBLE:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor.charCodeAt()) <= (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                        }
+                    case tipo_1.tipos.CADENA:
+                        switch (derecha === null || derecha === void 0 ? void 0 : derecha.Tipo.tipos) {
+                            case tipo_1.tipos.BOOLEANO:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un String con un booleano", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CADENA:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) <= (derecha === null || derecha === void 0 ? void 0 : derecha.valor.toChar)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.CARACTER:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un String con un caracter", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.ENTERO:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un String con un Entero", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.DOBLE:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un String con un Dooble", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                        }
+                    case tipo_1.tipos.DOBLE:
+                        switch (derecha === null || derecha === void 0 ? void 0 : derecha.Tipo.tipos) {
+                            case tipo_1.tipos.BOOLEANO:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Double con un booleano", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CADENA:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Double con un string", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CARACTER:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) <= (derecha === null || derecha === void 0 ? void 0 : derecha.valor.charCodeAt())) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.ENTERO:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) <= (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.DOBLE:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) <= (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                        }
+                    case tipo_1.tipos.BOOLEANO:
+                        switch (derecha === null || derecha === void 0 ? void 0 : derecha.Tipo.tipos) {
+                            case tipo_1.tipos.BOOLEANO:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) <= (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.CADENA:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Booleano con un string", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CARACTER:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Booleano con un char", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.ENTERO:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Booleano con un int", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.DOBLE:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Booleano con un Doble", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                        }
+                    default:
+                        return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
                 }
-                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
             case ">=":
-                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) >= (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
-                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                switch (izquierda === null || izquierda === void 0 ? void 0 : izquierda.Tipo.tipos) {
+                    case tipo_1.tipos.ENTERO:
+                        switch (derecha === null || derecha === void 0 ? void 0 : derecha.Tipo.tipos) {
+                            case tipo_1.tipos.BOOLEANO:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Entero con un booleano", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CADENA:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Entero con un string", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CARACTER:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) >= (derecha === null || derecha === void 0 ? void 0 : derecha.valor.charCodeAt())) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.ENTERO:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) >= (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.DOBLE:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) >= (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                        }
+                    case tipo_1.tipos.CARACTER:
+                        switch (derecha === null || derecha === void 0 ? void 0 : derecha.Tipo.tipos) {
+                            case tipo_1.tipos.BOOLEANO:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un char con un booleano", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CADENA:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un char con un string", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CARACTER:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor.charCodeAt()) >= (derecha === null || derecha === void 0 ? void 0 : derecha.valor.charCodeAt())) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.ENTERO:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor.charCodeAt()) >= (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.DOBLE:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor.charCodeAt()) >= (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                        }
+                    case tipo_1.tipos.CADENA:
+                        switch (derecha === null || derecha === void 0 ? void 0 : derecha.Tipo.tipos) {
+                            case tipo_1.tipos.BOOLEANO:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un String con un booleano", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CADENA:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) >= (derecha === null || derecha === void 0 ? void 0 : derecha.valor.toChar)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.CARACTER:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un String con un caracter", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.ENTERO:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un String con un Entero", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.DOBLE:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un String con un Dooble", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                        }
+                    case tipo_1.tipos.DOBLE:
+                        switch (derecha === null || derecha === void 0 ? void 0 : derecha.Tipo.tipos) {
+                            case tipo_1.tipos.BOOLEANO:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Double con un booleano", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CADENA:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Double con un string", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CARACTER:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) >= (derecha === null || derecha === void 0 ? void 0 : derecha.valor.charCodeAt())) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.ENTERO:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) >= (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.DOBLE:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) >= (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                        }
+                    case tipo_1.tipos.BOOLEANO:
+                        switch (derecha === null || derecha === void 0 ? void 0 : derecha.Tipo.tipos) {
+                            case tipo_1.tipos.BOOLEANO:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) >= (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.CADENA:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Booleano con un string", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CARACTER:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Booleano con un char", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.ENTERO:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Booleano con un int", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.DOBLE:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Booleano con un Doble", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                        }
+                    default:
+                        return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
                 }
-                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
             case "==":
-                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) == (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
-                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                switch (izquierda === null || izquierda === void 0 ? void 0 : izquierda.Tipo.tipos) {
+                    case tipo_1.tipos.ENTERO:
+                        switch (derecha === null || derecha === void 0 ? void 0 : derecha.Tipo.tipos) {
+                            case tipo_1.tipos.BOOLEANO:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Entero con un booleano", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CADENA:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Entero con un string", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CARACTER:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) === (derecha === null || derecha === void 0 ? void 0 : derecha.valor.charCodeAt())) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.ENTERO:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) === (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.DOBLE:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) === (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                        }
+                    case tipo_1.tipos.CARACTER:
+                        switch (derecha === null || derecha === void 0 ? void 0 : derecha.Tipo.tipos) {
+                            case tipo_1.tipos.BOOLEANO:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un char con un booleano", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CADENA:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un char con un string", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CARACTER:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor.charCodeAt()) === (derecha === null || derecha === void 0 ? void 0 : derecha.valor.charCodeAt())) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.ENTERO:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor.charCodeAt()) === (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.DOBLE:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor.charCodeAt()) === (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                        }
+                    case tipo_1.tipos.CADENA:
+                        switch (derecha === null || derecha === void 0 ? void 0 : derecha.Tipo.tipos) {
+                            case tipo_1.tipos.BOOLEANO:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un String con un booleano", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CADENA:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) === (derecha === null || derecha === void 0 ? void 0 : derecha.valor.toChar)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.CARACTER:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un String con un caracter", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.ENTERO:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un String con un Entero", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.DOBLE:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un String con un Dooble", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                        }
+                    case tipo_1.tipos.DOBLE:
+                        switch (derecha === null || derecha === void 0 ? void 0 : derecha.Tipo.tipos) {
+                            case tipo_1.tipos.BOOLEANO:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Double con un booleano", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CADENA:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Double con un string", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CARACTER:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) === (derecha === null || derecha === void 0 ? void 0 : derecha.valor.charCodeAt())) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.ENTERO:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) === (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.DOBLE:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) === (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                        }
+                    case tipo_1.tipos.BOOLEANO:
+                        switch (derecha === null || derecha === void 0 ? void 0 : derecha.Tipo.tipos) {
+                            case tipo_1.tipos.BOOLEANO:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) === (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.CADENA:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Booleano con un string", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CARACTER:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Booleano con un char", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.ENTERO:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Booleano con un int", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.DOBLE:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Booleano con un Doble", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                        }
+                    default:
+                        return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
                 }
-                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
             case "!=":
-                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) != (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
-                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                switch (izquierda === null || izquierda === void 0 ? void 0 : izquierda.Tipo.tipos) {
+                    case tipo_1.tipos.ENTERO:
+                        switch (derecha === null || derecha === void 0 ? void 0 : derecha.Tipo.tipos) {
+                            case tipo_1.tipos.BOOLEANO:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Entero con un booleano", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CADENA:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Entero con un string", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CARACTER:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) !== (derecha === null || derecha === void 0 ? void 0 : derecha.valor.charCodeAt())) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.ENTERO:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) !== (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.DOBLE:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) !== (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                        }
+                    case tipo_1.tipos.CARACTER:
+                        switch (derecha === null || derecha === void 0 ? void 0 : derecha.Tipo.tipos) {
+                            case tipo_1.tipos.BOOLEANO:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un char con un booleano", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CADENA:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un char con un string", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CARACTER:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor.charCodeAt()) !== (derecha === null || derecha === void 0 ? void 0 : derecha.valor.charCodeAt())) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.ENTERO:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor.charCodeAt()) !== (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.DOBLE:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor.charCodeAt()) !== (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                        }
+                    case tipo_1.tipos.CADENA:
+                        switch (derecha === null || derecha === void 0 ? void 0 : derecha.Tipo.tipos) {
+                            case tipo_1.tipos.BOOLEANO:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un String con un booleano", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CADENA:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) !== (derecha === null || derecha === void 0 ? void 0 : derecha.valor.toChar)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.CARACTER:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un String con un caracter", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.ENTERO:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un String con un Entero", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.DOBLE:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un String con un Dooble", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                        }
+                    case tipo_1.tipos.DOBLE:
+                        switch (derecha === null || derecha === void 0 ? void 0 : derecha.Tipo.tipos) {
+                            case tipo_1.tipos.BOOLEANO:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Double con un booleano", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CADENA:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Double con un string", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CARACTER:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) !== (derecha === null || derecha === void 0 ? void 0 : derecha.valor.charCodeAt())) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.ENTERO:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) !== (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.DOBLE:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) !== (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                        }
+                    case tipo_1.tipos.BOOLEANO:
+                        switch (derecha === null || derecha === void 0 ? void 0 : derecha.Tipo.tipos) {
+                            case tipo_1.tipos.BOOLEANO:
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) !== (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
+                                    return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+                                }
+                                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
+                            case tipo_1.tipos.CADENA:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Booleano con un string", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.CARACTER:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Booleano con un char", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.ENTERO:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Booleano con un int", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                            case tipo_1.tipos.DOBLE:
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un Booleano con un Doble", this.linea, this.columna));
+                                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+                        }
+                    default:
+                        return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
                 }
-                return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
             case "!":
                 if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.Tipo.tipos) === tipo_1.tipos.BOOLEANO) {
                     if (!(izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor)) {
@@ -83,7 +839,8 @@ class condicion extends expresion_1.Expresion {
                     }
                     return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
                 }
-                arbol.errores.push(new Excepcion_1.default("SEMANTICO", "Se esperaba tipo booleano", this.linea, this.columna));
+                arbol.num_error++;
+                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "Se esperaba tipo booleano", this.linea, this.columna));
             case "&&":
                 if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.Tipo.tipos) === tipo_1.tipos.BOOLEANO && (derecha === null || derecha === void 0 ? void 0 : derecha.Tipo.tipos) === tipo_1.tipos.BOOLEANO) {
                     if (izquierda.valor && derecha.valor) {
@@ -91,15 +848,15 @@ class condicion extends expresion_1.Expresion {
                     }
                     return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
                 }
-                arbol.errores.push(new Excepcion_1.default("SEMANTICO", "Se esperaba tipo booleano", this.linea, this.columna));
+                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "Se esperaba tipo booleano", this.linea, this.columna));
             case "||":
                 if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.Tipo.tipos) === tipo_1.tipos.BOOLEANO && (derecha === null || derecha === void 0 ? void 0 : derecha.Tipo.tipos) === tipo_1.tipos.BOOLEANO) {
-                    if (izquierda.valor === derecha.valor) {
+                    if (izquierda.valor || derecha.valor) {
                         return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
                     }
                     return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);
                 }
-                arbol.errores.push(new Excepcion_1.default("SEMANTICO", "Se esperaba tipo booleano", this.linea, this.columna));
+                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "Se esperaba tipo booleano", this.linea, this.columna));
         }
         return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
     }

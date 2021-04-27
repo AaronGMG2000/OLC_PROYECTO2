@@ -23,16 +23,17 @@ export default class ASIGNAR extends Instruccion {
         if(expre){
             let value = this.exp?.getValor(arbol, tabla);
             if (expre.tipo.tipos!==value?.Tipo.tipos) {
-                arbol.errores.push(new Excepcion("Semantico","el tipado de la variable no coincide con el del valor indicado", this.linea, this.columna));
-                return;
+                arbol.errores.push(new Excepcion(arbol.num_error,"Semantico","el tipado de la variable no coincide con el del valor indicado", this.linea, this.columna));
+                return false;
             }
             const comprobar = tabla.update(this.ID, value, this.UBICACION);
             if (!comprobar){
-                arbol.errores.push(new Excepcion("Semantico","No se encontro la variable "+this.ID, this.linea, this.columna));
-                return;
+                arbol.errores.push(new Excepcion(arbol.num_error,"Semantico","No se encontro la variable "+this.ID, this.linea, this.columna));
+                return false;
             }
+            return true;
         }
-        return;
+        return false;
         //ERROR
     }
 
