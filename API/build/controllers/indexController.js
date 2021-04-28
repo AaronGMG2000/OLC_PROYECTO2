@@ -13,11 +13,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.IndexController = void 0;
+const Excepcion_1 = __importDefault(require("./Analizador/exceptions/Excepcion"));
+const ArbolAST_1 = __importDefault(require("./Analizador/tablaSimbolo/ArbolAST"));
 const Entorno_1 = __importDefault(require("./Analizador/tablaSimbolo/Entorno"));
 class indexController {
     index(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log("hola");
             res.json();
         });
     }
@@ -26,7 +27,14 @@ class indexController {
         try {
             let parse = require("./Analizador/analizador");
             parse.num_error = 0;
-            let ast = parse.parse(Contenido);
+            let ast = new ArbolAST_1.default([]);
+            try {
+                ast = parse.parse(Contenido);
+            }
+            catch (e) {
+                ast.num_error++;
+                ast.errores.push(new Excepcion_1.default(ast.num_error, "SINTACTICO", "Error inrecuperable", -1, -1));
+            }
             const tabla = new Entorno_1.default();
             ast.global = tabla;
             ast.EjecutarBloque();

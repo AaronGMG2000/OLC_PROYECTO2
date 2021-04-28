@@ -11,13 +11,15 @@ export default class FUNCION extends Instruccion {
     public nombre:string;
     public PARAMETRO: Array<DECLARAR> | any;
     public INSTRUCCION: Array<Instruccion>;
+    public vector:boolean;
     
-    constructor(linea:number, columna:number, tipo:Tipo, nombre:string, INS:Array<Instruccion>, Parametro?:Array<DECLARAR>){
+    constructor(linea:number, columna:number, tipo:Tipo, nombre:string, INS:Array<Instruccion>, Parametro?:Array<DECLARAR>, vector:boolean=false){
         super(linea, columna);
         this.tipo = tipo;
         this.nombre = nombre;
         this.INSTRUCCION = INS;
         this.PARAMETRO = Parametro;
+        this.vector = vector;
     }
 
     ejecutar(arbol: ArbolAST, tabla: Entorno) {

@@ -8,6 +8,7 @@ class Simbolo {
         this.DIMENSION = DIMENSION;
         this.CANTIDAD = CANTIDAD;
         if (valor) {
+            this.valor = valor;
             if (valor.valor) {
                 if (this.DIMENSION != -1) {
                     switch (this.tipo.tipos) {
@@ -124,6 +125,9 @@ class Simbolo {
                 }
             }
         }
+    }
+    getValor(arbol, tabla) {
+        return this.valor;
     }
     getIdentificador() {
         return this.identificador;

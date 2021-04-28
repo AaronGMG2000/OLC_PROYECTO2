@@ -13,23 +13,22 @@ export default class DECLARAR extends Instruccion {
     public DIMENSION:Expresion|any;
     public CANTIDAD:Expresion|any;
     constructor(linea:number, columna:number, ID:string, Tipo:Tipo, DIMENSION?:Expresion, CANTIDAD?:Expresion, exp?:Expresion){
-        
         super(linea, columna);
-        if(!exp && this.DIMENSION!=-1){
-            this.exp = new Literal(this.linea, this.columna,"vector",Tipo.tipos);
-        }else if(!exp && this.CANTIDAD!=-1){
-            this.exp = new Literal(this.linea, this.columna,"lista",Tipo.tipos);
+        if(!exp && typeof(DIMENSION)!==typeof(-1)  && typeof(DIMENSION)!==typeof(undefined)){
+            this.exp = new Literal(this.linea, this.columna,"vector",Tipo.tipos, true);
+        }else if(!exp &&typeof(CANTIDAD)!==typeof(-1) && typeof(CANTIDAD)!==typeof(undefined)){
+            this.exp = new Literal(this.linea, this.columna,"vector",Tipo.tipos, true);
         }else{
             this.exp = exp;
         }
         this.ID=ID;
         this.tipo = Tipo;
-        if (this.DIMENSION) {
+        if (DIMENSION) {
             this.DIMENSION = DIMENSION;
         }else{
             this.DIMENSION = -1;
         }
-        if (this.CANTIDAD) {
+        if (CANTIDAD) {
             this.CANTIDAD = CANTIDAD;
         }else{
             this.CANTIDAD = -1;
@@ -39,7 +38,7 @@ export default class DECLARAR extends Instruccion {
     ejecutar(arbol: ArbolAST, tabla: Entorno) {
         const comprobar = tabla.get(this.ID);
         if(comprobar.tipo.tipos===tipos.ERROR){
-            const ex = this.exp?.getValor(arbol, tabla);
+            let ex = this.exp?.getValor(arbol, tabla);
             let v1 = -1;
             let v2 = -1;
             if (typeof(this.DIMENSION)!==typeof(-1)) {
@@ -49,10 +48,13 @@ export default class DECLARAR extends Instruccion {
                 v2 = this.DIMENSION.getValor(arbol, tabla).valor;
             }
             if (ex) {
-                
+                if (ex.Tipo.tipos===tipos.ERROR) {
+                    arbol.num_error++;
+                    arbol.errores.push(new Excepcion(arbol.num_error, "SEMANTICO","Fallo al asignar", this.linea, this.columna));
+                    return false;
+                }
                 if (ex.Tipo.tipos!==this.tipo.tipos && this.tipo.tipos!==tipos.DOBLE
                     && this.tipo.tipos !== tipos.ENTERO){
-                    console.log("hola");
                     arbol.num_error++;
                     arbol.errores.push(new Excepcion(arbol.num_error,"Semantico","los tipos ingresados no coinciden",this.linea, this.columna));
                     return false;
@@ -63,6 +65,9 @@ export default class DECLARAR extends Instruccion {
                     arbol.errores.push(new Excepcion(arbol.num_error,"Semantico","los tipos ingresados no coinciden",this.linea, this.columna));
                     return false;
                 }
+            }
+            if (!ex) {
+                ex = new Literal(this.linea, this.columna, undefined, this.tipo.tipos, true);
             }
             tabla.set(this.ID, ex, this.tipo, v1, v2);
             return true;

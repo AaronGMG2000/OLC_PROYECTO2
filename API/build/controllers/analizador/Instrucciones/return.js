@@ -9,9 +9,9 @@ class RETURN extends instruccion_1.Instruccion {
     ejecutar(arbol, tabla) {
         let valor = this.exp.getValor(arbol, tabla);
         if (valor) {
-            return { nombre: "BREAK", retorno: valor };
+            return { nombre: "RETURN", retorno: valor };
         }
-        return { nombre: "BREAK", retorno: undefined };
+        return { nombre: "RETURN", retorno: undefined };
     }
 }
 exports.default = RETURN;

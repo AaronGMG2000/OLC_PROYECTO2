@@ -1,3 +1,5 @@
+import ArbolAST from './ArbolAST';
+import Entorno from './Entorno';
 import Tipo, { tipos } from './tipo';
 
 export default class Simbolo
@@ -16,6 +18,7 @@ export default class Simbolo
         this.CANTIDAD = CANTIDAD;
         if(valor)
         {
+            this.valor = valor;
             if (valor.valor) {
                 if(this.DIMENSION!=-1){
                     switch(this.tipo.tipos){
@@ -67,15 +70,15 @@ export default class Simbolo
                         default:
                             //ERROR
                             break;
-                }
-            }else{
-                if(this.tipo.tipos === tipos.ENTERO){
-                    valor.valor = Math.trunc(valor.valor) 
-                    this.valor = valor;
+                    }
                 }else{
-                    this.valor = valor;
+                    if(this.tipo.tipos === tipos.ENTERO){
+                        valor.valor = Math.trunc(valor.valor) 
+                        this.valor = valor;
+                    }else{
+                        this.valor = valor;
+                    }
                 }
-            }
             }else
             {
                 this.valor = valor;
@@ -126,6 +129,10 @@ export default class Simbolo
             }
         }
         
+    }
+
+    public getValor(arbol:ArbolAST, tabla:Entorno){
+        return this.valor;
     }
 
     public getIdentificador() {

@@ -33,30 +33,40 @@ class INCREMENTO extends expresion_1.Expresion {
         this.exp = exp;
     }
     getValor(arbol, tabla) {
+        let nom = this.exp.nombre;
         let val = this.exp.getValor(arbol, tabla);
+        if (val.nombre === "FUNCION") {
+            this.exp.nombre = "";
+        }
         if (val.Tipo.tipos === tipo_1.tipos.DOBLE || val.Tipo.tipos === tipo_1.tipos.ENTERO) {
             if (this.exp.nombre !== "" && this.exp.nombre !== undefined) {
                 let expre = tabla.get(this.exp.nombre);
                 if (expre.tipo.tipos !== tipo_1.tipos.ERROR && (expre.tipo.tipos === tipo_1.tipos.DOBLE || expre.tipo.tipos === tipo_1.tipos.ENTERO)) {
                     if (this.exp.posicion === -1) {
-                        let v = expre.valor.getValor(arbol, tabla);
+                        let v = expre.getValor(arbol, tabla);
                         var v2 = new literal_1.default(this.linea, this.columna, v.valor + 1, expre.valor.Tipo.tipos);
                         tabla.update(this.exp.nombre, v2);
                         return new literal_1.default(this.linea, this.columna, expre.valor.valor, expre.tipo.tipos);
                     }
                     else {
-                        let value = expre.valor[this.exp.posicion.valor];
-                        let v = new literal_1.default(this.linea, this.columna, value + 1, expre.tipo.tipos);
-                        let dir = new literal_1.default(this.linea, this.columna, this.exp.posicion.valor, tipo_1.tipos.ENTERO);
+                        let value = expre.valor.valor[this.exp.posicion.valor];
+                        let v = new literal_1.default(this.linea, this.columna, value, expre.tipo.tipos);
+                        let dir = new literal_1.default(this.linea, this.columna, this.exp.posicion.valor, this.exp.Tipo.tipos);
                         tabla.update(this.exp.nombre, v, dir);
                         return new literal_1.default(this.linea, this.columna, value + 1, expre.tipo.tipos);
                     }
                 }
             }
             else {
-                let expre = this.exp.getValor(arbol, tabla);
-                expre.valor += 1;
-                return new literal_1.default(this.linea, this.columna, expre.valor, expre.Tipo.tipos);
+                let expre = undefined;
+                if (val.nombre === "FUNCION") {
+                    expre = val;
+                    this.exp.nombre = nom;
+                }
+                else {
+                    expre = this.exp.getValor(arbol, tabla);
+                }
+                return new literal_1.default(this.linea, this.columna, expre.valor + 1, expre.Tipo.tipos);
             }
         }
         arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "Se esperaba un valor numerico", this.linea, this.columna));

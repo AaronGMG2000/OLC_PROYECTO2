@@ -22,24 +22,27 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const tipo_1 = __importStar(require("../tablaSimbolo/tipo"));
 const expresion_1 = require("./expresion");
 class Literal extends expresion_1.Expresion {
-    constructor(linea, columna, valor, T) {
+    constructor(linea, columna, valor, T, vector) {
         const tip = new tipo_1.default(T);
-        switch (tip.tipos) {
-            case tipo_1.tipos.ENTERO:
-                valor = Number(valor);
-                break;
-            case tipo_1.tipos.BOOLEANO:
-                if (typeof (valor) == typeof ("") && valor.toUpperCase() === "FALSE") {
-                    valor = false;
-                }
-                else if (typeof (valor) == typeof ("")) {
-                    valor = true;
-                }
-                break;
-            case tipo_1.tipos.DOBLE:
-                valor = Number(parseFloat(valor));
-                break;
-            default:
+        if (!vector) {
+            switch (tip.tipos) {
+                case tipo_1.tipos.ENTERO:
+                    valor = Number(valor);
+                    break;
+                case tipo_1.tipos.BOOLEANO:
+                    if (typeof (valor) == typeof ("") && valor.toUpperCase() === "FALSE") {
+                        valor = false;
+                    }
+                    else if (typeof (valor) == typeof ("")) {
+                        valor = true;
+                    }
+                    break;
+                case tipo_1.tipos.DOBLE:
+                    valor = Number(parseFloat(valor));
+                    break;
+                default:
+                    valor = valor;
+            }
         }
         super(linea, columna, valor, tip);
     }

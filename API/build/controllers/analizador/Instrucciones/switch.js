@@ -110,6 +110,7 @@ class SWITCH extends instruccion_1.Instruccion {
                     }
                 }
             }
+            arbol.pilaCiclo.pop();
         }
         // ERROR
     }

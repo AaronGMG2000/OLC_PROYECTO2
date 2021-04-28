@@ -5,23 +5,26 @@ import { Expresion } from "./expresion";
 
 export default class Literal extends Expresion {
 
-    constructor(linea: number, columna: number, valor: any, T: tipos) {
+    constructor(linea: number, columna: number, valor: any, T: tipos, vector?:boolean) {
         const tip = new Tipo(T);
-        switch (tip.tipos) {
-            case tipos.ENTERO:
-                valor = Number(valor);
-                break;
-            case tipos.BOOLEANO:
-                if (typeof(valor)==typeof("") && valor.toUpperCase() === "FALSE") {
-                    valor = false;
-                } else if(typeof(valor)==typeof("")) {
-                    valor = true;
-                }
-                break;
-            case tipos.DOBLE:
-                valor = Number(parseFloat(valor));
-                break;
-            default:
+        if (!vector) {
+            switch (tip.tipos) {
+                case tipos.ENTERO:
+                    valor = Number(valor);
+                    break;
+                case tipos.BOOLEANO:
+                    if (typeof(valor)==typeof("") && valor.toUpperCase() === "FALSE") {
+                        valor = false;
+                    } else if(typeof(valor)==typeof("")) {
+                        valor = true;
+                    }
+                    break;
+                case tipos.DOBLE:
+                    valor = Number(parseFloat(valor));
+                    break;
+                default:
+                    valor = valor;
+            }
         }
         super(linea, columna, valor, tip);
     }

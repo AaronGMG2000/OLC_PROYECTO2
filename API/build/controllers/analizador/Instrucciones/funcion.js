@@ -7,12 +7,13 @@ const instruccion_1 = require("../Abstract/instruccion");
 const Excepcion_1 = __importDefault(require("../exceptions/Excepcion"));
 const tipo_1 = require("../tablaSimbolo/tipo");
 class FUNCION extends instruccion_1.Instruccion {
-    constructor(linea, columna, tipo, nombre, INS, Parametro) {
+    constructor(linea, columna, tipo, nombre, INS, Parametro, vector = false) {
         super(linea, columna);
         this.tipo = tipo;
         this.nombre = nombre;
         this.INSTRUCCION = INS;
         this.PARAMETRO = Parametro;
+        this.vector = vector;
     }
     ejecutar(arbol, tabla) {
         this.nombre += "#";

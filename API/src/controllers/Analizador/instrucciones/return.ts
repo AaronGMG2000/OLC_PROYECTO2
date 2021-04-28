@@ -13,9 +13,9 @@ export default class RETURN extends Instruccion {
     ejecutar(arbol: ArbolAST, tabla: Entorno) {
         let valor = this.exp.getValor(arbol, tabla);
         if(valor){
-            return {nombre:"BREAK", retorno:valor};
+            return {nombre:"RETURN", retorno:valor};
         }
-        return {nombre:"BREAK", retorno:undefined};
+        return {nombre:"RETURN", retorno:undefined};
     }
 
 }

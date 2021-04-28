@@ -16,15 +16,57 @@ export default class FUNCION extends Expresion {
         this.parametros = parametros;
     }
     public getValor(arbol: ArbolAST, tabla: Entorno): Expresion {
+        let Nuevo_Entorno = new Entorno(this.nombre,arbol.global);
         this.nombre+="#";
         if (this.parametros) {
             for(let par of this.parametros){
-                this.nombre+=""+par.Tipo.tipos;
+                let varr = par.getValor(arbol, arbol.global);
+                this.nombre+=""+varr.Tipo.tipos;
             }
         }
         var comprobar = tabla.get(this.nombre);
-        if(comprobar){
-            console.log(comprobar);
+        if(comprobar.tipo.tipos !== tipos.ERROR){
+            let func = comprobar.valor;
+            if (func.PARAMETRO) {
+                let x = 0;
+                for(let declaracion of func.PARAMETRO){
+                    declaracion.exp = this.parametros[x];
+                    declaracion.ejecutar(arbol, Nuevo_Entorno);
+                    x++; 
+                }
+            }
+            arbol.pilaFuncion.push("funcion");
+            for(let element of func.INSTRUCCION){
+                let res = element.ejecutar(arbol, Nuevo_Entorno);
+                if (typeof(res)===typeof([])) {
+                    if (res.nombre==="RETURN") {
+                        if(arbol.pilaFuncion.length>0){
+                            let retorno = res.retorno;
+                            if (func.tipo.tipos===retorno.Tipo.tipos && !func.vector) {
+                                let rest = retorno.getValor(tabla, Nuevo_Entorno);
+                                if(rest.Tipo.tipos===tipos.ERROR){
+                                    arbol.num_error++;
+                                    arbol.errores.push(new Excepcion(arbol.num_error, "SINTACTIO", "Error en valor de retorno",this.linea, this.columna));
+                                    return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
+                                }
+                                rest.nombre = "FUNCION";
+                                return rest;
+                            }else if(func.vector){
+                                arbol.num_error++;
+                                arbol.errores.push(new Excepcion(arbol.num_error, "SINTACTICO","Función void no puede tener valor de retorno", this.linea, this.columna));
+                                return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
+                            }
+                        }else{
+                            arbol.errores.push(new Excepcion(arbol.num_error,"SEMANTICO","NO SE PUEDE RETORNAR FUERA DE UNA FUNCION", this.linea, this.columna));
+                            return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
+                            
+                        } 
+                    }
+                }
+            }
+            if(func.vector){
+                return new Literal(this.linea, this.columna, undefined, tipos.CADENA, true);
+            }
         }
         arbol.num_error++;
         arbol.errores.push(new Excepcion(arbol.num_error,"SEMANTICO","Se esperaba un valor numerico",this.linea, this.columna));

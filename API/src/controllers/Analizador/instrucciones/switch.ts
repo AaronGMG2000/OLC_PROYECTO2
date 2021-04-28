@@ -104,6 +104,8 @@ export default class SWITCH extends Instruccion {
                     }    
                 }
             }
+
+            arbol.pilaCiclo.pop();
         }
         // ERROR
     }

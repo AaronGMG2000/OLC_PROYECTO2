@@ -26,7 +26,7 @@ const Excepcion_1 = __importDefault(require("../exceptions/Excepcion"));
 const tipo_1 = __importStar(require("../tablaSimbolo/tipo"));
 const expresion_1 = require("./expresion");
 const literal_1 = __importDefault(require("./literal"));
-class DECREMENTO extends expresion_1.Expresion {
+class INCREMENTO extends expresion_1.Expresion {
     constructor(linea, columna, exp) {
         const tip = new tipo_1.default(tipo_1.tipos.ENTERO);
         super(linea, columna, 0, tip);
@@ -39,16 +39,15 @@ class DECREMENTO extends expresion_1.Expresion {
                 let expre = tabla.get(this.exp.nombre);
                 if (expre.tipo.tipos !== tipo_1.tipos.ERROR && (expre.tipo.tipos === tipo_1.tipos.DOBLE || expre.tipo.tipos === tipo_1.tipos.ENTERO)) {
                     if (this.exp.posicion === -1) {
-                        let v = expre.valor.getValor(arbol, tabla);
-                        console.log(v.valor);
+                        let v = expre.getValor(arbol, tabla);
                         var v2 = new literal_1.default(this.linea, this.columna, v.valor - 1, expre.valor.Tipo.tipos);
                         tabla.update(this.exp.nombre, v2);
                         return new literal_1.default(this.linea, this.columna, expre.valor.valor, expre.tipo.tipos);
                     }
                     else {
-                        let value = expre.valor[this.exp.posicion.valor];
-                        let v = new literal_1.default(this.linea, this.columna, value - 1, expre.tipo.tipos);
-                        let dir = new literal_1.default(this.linea, this.columna, this.exp.posicion.valor, tipo_1.tipos.ENTERO);
+                        let value = expre.valor.valor[this.exp.posicion.valor];
+                        let v = new literal_1.default(this.linea, this.columna, value, expre.tipo.tipos);
+                        let dir = new literal_1.default(this.linea, this.columna, this.exp.posicion.valor, this.exp.Tipo.tipos);
                         tabla.update(this.exp.nombre, v, dir);
                         return new literal_1.default(this.linea, this.columna, value - 1, expre.tipo.tipos);
                     }
@@ -56,13 +55,12 @@ class DECREMENTO extends expresion_1.Expresion {
             }
             else {
                 let expre = this.exp.getValor(arbol, tabla);
-                expre.valor += 1;
-                return new literal_1.default(this.linea, this.columna, expre.valor, expre.Tipo.tipos);
+                return new literal_1.default(this.linea, this.columna, expre.valor - 1, expre.Tipo.tipos);
             }
         }
         arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "Se esperaba un valor numerico", this.linea, this.columna));
         return new literal_1.default(this.linea, this.columna, "ERROR", tipo_1.tipos.ERROR);
     }
 }
-exports.default = DECREMENTO;
+exports.default = INCREMENTO;
 //# sourceMappingURL=decremento.js.map

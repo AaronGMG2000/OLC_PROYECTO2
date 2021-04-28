@@ -10,12 +10,14 @@ class Imprimir extends instruccion_1.Instruccion {
     ejecutar(arbol, tabla) {
         if (this.exp) {
             var result = this.exp.getValor(arbol, tabla);
-            if (result.Tipo.tipos != tipo_1.tipos.ERROR) {
-                if (arbol.consola === "") {
-                    arbol.consola += result.valor;
-                }
-                else {
-                    arbol.consola += "\n" + result.valor;
+            if (result) {
+                if (result.Tipo.tipos != tipo_1.tipos.ERROR) {
+                    if (arbol.consola === "") {
+                        arbol.consola += result.valor;
+                    }
+                    else {
+                        arbol.consola += "\n" + result.valor;
+                    }
                 }
             }
         }

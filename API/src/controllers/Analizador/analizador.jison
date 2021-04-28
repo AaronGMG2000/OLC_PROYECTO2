@@ -17,9 +17,10 @@
     const DOWHILE = require('./Instrucciones/dowhile');
     const SWITCH = require('./Instrucciones/switch');
     const FUNC = require('./Instrucciones/funcion');
-    const FUNCION = require('./Instrucciones/funcion')
+    const FUNCION = require('./expresiones/funcion')
     const FOR = require('./Instrucciones/FOR');
     const BREAK = require('./Instrucciones/break');
+    const LLAMADA = require('./Instrucciones/llamada');
     const RETURN = require('./Instrucciones/return');
     const CONTINUE = require('./Instrucciones/continue');
 
@@ -53,6 +54,8 @@
 <CARACTER>"\\\"'"       {yytext = "\""; this.popState(); return 'CARACTER';}
 <CARACTER>"\\''"        {yytext = "'"; this.popState(); return 'CARACTER';}       
 <CARACTER>"\\\\'"       {yytext = "\\"; this.popState(); return 'CARACTER';}
+<CARACTER><<EOF>>       return "EOF_IN_CARACTER";
+<CARACTER>[^'\\]*"'"    {this.popState(); return 'CARACTER_ERROR';}
 
 ["]                 {Texto=""; this.begin("Cadena");}
 <Cadena>[^"\\]+     {Texto+=yytext;}
@@ -60,8 +63,9 @@
 <Cadena>"\\t"       {Texto+="\t";}
 <Cadena>"\\r"       {Texto+="\r";}
 <Cadena>"\\\""      {Texto+="\"";}
-<Cadena>"\\'"      {Texto+="\'";}       
+<Cadena>"\\'"       {Texto+="\'";}
 <Cadena>"\\\\"      {Texto+="\\";}
+<Cadena><<EOF>>     return "EOF_IN_STRING";
 <Cadena>["]         {yytext = Texto; this.popState(); return 'Cadena';}
 
 "PRINT"                 return "PRINT";
@@ -165,7 +169,7 @@
 
 INI
     : LINS EOF      {ArbolAST.instrucciones = $1; ArbolAST2 = ArbolAST; ArbolAST = new Arbol.default([]); return ArbolAST2;}
-    | error EOF     {console.log("hola"); ArbolAST.num_error++;ArbolAST.errores.push(new Excepcion.default(ArbolAST.num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));}
+    | error EOF     {ArbolAST.num_error++;ArbolAST.errores.push(new Excepcion.default(ArbolAST.num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));}
 ;
 
 LINS
@@ -185,7 +189,7 @@ INS
     | DECREMENTO PTCOMA                             {$$ = new DEC.default(this._$.first_line, this._$.first_column, $1);}
     | DOWHILE                                       {$$ = $1}
     | FUNCION                                       {$$ = $1}
-    | LLAMADA PTCOMA                                {$$ = $1}
+    | LLAMADA PTCOMA                                {$$ = new LLAMADA.default(this._$.first_line, this._$.first_column, $1);}
     | FRETURN                                       {$$ = $1}
     | BREAK PTCOMA                                  {$$ = new BREAK.default(this._$.first_line, this._$.first_column);}
     | CONTINUE PTCOMA                               {$$ = new CONTINUE.default(this._$.first_line, this._$.first_column);}
@@ -215,17 +219,17 @@ ASIGNACION
 ;
 
 FUNCION
-    :FTIPO ID PARIZ PARDER LLAVEIZ LINS LLAVEDER                {$$ = new FUNC.default(this._$.first_line, this._$.first_column,$1, $2, $7, $4);}
+    :FTIPO ID PARIZ PARDER LLAVEIZ LINS LLAVEDER                {$$ = new FUNC.default(this._$.first_line, this._$.first_column,$1, $2, $6);}
     |FTIPO ID PARIZ PARAMETROS PARDER LLAVEIZ LINS LLAVEDER     {$$ = new FUNC.default(this._$.first_line, this._$.first_column,$1, $2, $7, $4);}
-    |VOID ID PARIZ PARAMETROS PARDER LLAVEIZ LINS LLAVEDER      {}
-    |VOID ID PARIZ PARDER LLAVEIZ LINS LLAVEDER                 {}
+    |VOID ID PARIZ PARAMETROS PARDER LLAVEIZ LINS LLAVEDER      {$$ = new FUNC.default(this._$.first_line, this._$.first_column,$1, $2, $7, $4,true);}
+    |VOID ID PARIZ PARDER LLAVEIZ LINS LLAVEDER                 {$$ = new FUNC.default(this._$.first_line, this._$.first_column,new Tipo.default(Tipo.tipos.ENTERO), $2, $6, undefined,true);}
     |VOID error LLAVEDER                                        {ArbolAST.num_error++; ArbolAST.errores.push(new Excepcion.default(ArbolAST.num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));}
     |error LLAVEDER                                             {ArbolAST.num_error++; ArbolAST.errores.push(new Excepcion.default(ArbolAST.num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));}
 ;
 
 PARAMETROS
     :PARAMETROS COMA FTIPO ID        {$$ = []; $$ = $1; $$.push(new DECLARAR.default(this._$.first_line, this._$.first_column,$4, $3));}
-    |FTIPO ID                        {$$ = []; $$.push(new DECLARAR.default(this._$.first_line, this._$.first_column,$1, $2));}
+    |FTIPO ID                        {$$ = []; $$.push(new DECLARAR.default(this._$.first_line, this._$.first_column,$2, $1));}
 ;
 
 FIF
@@ -270,8 +274,8 @@ DOWHILE
 ;
 
 LLAMADA
-    :ID PARIZ L_EXP PARDER         {$$ = new FUNCION(this._$.first_line, this._$.first_column, $1, $3);}
-    |ID PARIZ PARDER               {$$ = new FUNCION(this._$.first_line, this._$.first_column, $1);}
+    :ID PARIZ L_EXP PARDER         {$$ = new FUNCION.default(this._$.first_line, this._$.first_column, $1, $3);}
+    |ID PARIZ PARDER               {$$ = new FUNCION.default(this._$.first_line, this._$.first_column, $1, undefined);}
 ;
 
 FTIPO

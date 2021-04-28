@@ -7,7 +7,6 @@ import Entorno from './Analizador/tablaSimbolo/Entorno';
 class indexController {
 
     public  async index(req: Request, res: Response) {
-        console.log("hola");
         res.json();
     }
 
@@ -17,7 +16,13 @@ class indexController {
         try {
             let parse = require("./Analizador/analizador");
             parse.num_error = 0;
-            let ast = parse.parse(Contenido);
+            let ast = new ArbolAST([]);
+            try{
+                ast = parse.parse(Contenido);
+            }catch(e){
+                ast.num_error++;
+                ast.errores.push(new Excepcion(ast.num_error, "SINTACTICO","Error inrecuperable",-1,-1));
+            }
             const tabla = new Entorno();
             ast.global = tabla;
             ast.EjecutarBloque();

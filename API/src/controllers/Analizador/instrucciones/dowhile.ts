@@ -30,6 +30,7 @@ export default class DOWHILE extends Instruccion {
                     if (typeof(res)===typeof([])) {
                         if(res.nombre === "RETURN"){
                             if(arbol.pilaFuncion.length>0){
+                                arbol.pilaCiclo.pop();
                                 return res;
                             }else{
                                 arbol.num_error++;
@@ -68,6 +69,7 @@ export default class DOWHILE extends Instruccion {
                             
                             if(res.nombre === "RETURN"){
                                 if(arbol.pilaFuncion.length>0){
+                                    arbol.pilaCiclo.pop();
                                     return res;
                                 }else{
                                     arbol.num_error++;

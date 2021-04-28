@@ -35,8 +35,8 @@ class VECTOR extends expresion_1.Expresion {
         let expre = tabla.get(this.nombre);
         if (expre.tipo.tipos !== tipo_1.tipos.ERROR) {
             const pos = this.posicion.getValor(arbol, tabla);
-            if (pos.valor < expre.valor.length && pos.valor >= 0) {
-                let value = expre.valor[pos.valor];
+            if (pos.valor < expre.DIMENSION && pos.valor >= 0) {
+                let value = expre.valor.valor[pos.valor];
                 return new literal_1.default(this.linea, this.columna, value, expre.tipo.tipos);
             }
             arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "Posición fuera del rango", this.linea, this.columna));

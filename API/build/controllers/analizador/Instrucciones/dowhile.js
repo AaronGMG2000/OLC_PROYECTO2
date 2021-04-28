@@ -27,6 +27,7 @@ class DOWHILE extends instruccion_1.Instruccion {
                     if (typeof (res) === typeof ([])) {
                         if (res.nombre === "RETURN") {
                             if (arbol.pilaFuncion.length > 0) {
+                                arbol.pilaCiclo.pop();
                                 return res;
                             }
                             else {
@@ -65,6 +66,7 @@ class DOWHILE extends instruccion_1.Instruccion {
                         if (typeof (res) === typeof ([])) {
                             if (res.nombre === "RETURN") {
                                 if (arbol.pilaFuncion.length > 0) {
+                                    arbol.pilaCiclo.pop();
                                     return res;
                                 }
                                 else {
