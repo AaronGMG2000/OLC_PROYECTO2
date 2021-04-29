@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Entorno_1 = __importDefault(require("./Entorno"));
 class ArbolAST {
     constructor(instrucciones) {
+        this.FUNCIONES = new Array();
         this.errores = new Array();
         this.num_error = 0;
         this.pilaCiclo = [];
@@ -18,6 +19,11 @@ class ArbolAST {
         this.consola = `${this.consola}${update}\n`;
     }
     EjecutarBloque() {
+        for (let elemento of this.FUNCIONES) {
+            if (typeof (elemento) !== typeof ("")) {
+                elemento.ejecutar(this, this.global);
+            }
+        }
         for (let elemento of this.instrucciones) {
             if (typeof (elemento) !== typeof ("")) {
                 elemento.ejecutar(this, this.global);

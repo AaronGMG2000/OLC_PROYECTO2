@@ -219,10 +219,10 @@ ASIGNACION
 ;
 
 FUNCION
-    :FTIPO ID PARIZ PARDER LLAVEIZ LINS LLAVEDER                {$$ = new FUNC.default(this._$.first_line, this._$.first_column,$1, $2, $6);}
-    |FTIPO ID PARIZ PARAMETROS PARDER LLAVEIZ LINS LLAVEDER     {$$ = new FUNC.default(this._$.first_line, this._$.first_column,$1, $2, $7, $4);}
-    |VOID ID PARIZ PARAMETROS PARDER LLAVEIZ LINS LLAVEDER      {$$ = new FUNC.default(this._$.first_line, this._$.first_column,$1, $2, $7, $4,true);}
-    |VOID ID PARIZ PARDER LLAVEIZ LINS LLAVEDER                 {$$ = new FUNC.default(this._$.first_line, this._$.first_column,new Tipo.default(Tipo.tipos.ENTERO), $2, $6, undefined,true);}
+    :FTIPO ID PARIZ PARDER LLAVEIZ LINS LLAVEDER                {$$ = ""; ArbolAST.FUNCIONES.push(new FUNC.default(this._$.first_line, this._$.first_column,$1, $2, $6));}
+    |FTIPO ID PARIZ PARAMETROS PARDER LLAVEIZ LINS LLAVEDER     {$$ = ""; ArbolAST.FUNCIONES.push(new FUNC.default(this._$.first_line, this._$.first_column,$1, $2, $7, $4));}
+    |VOID ID PARIZ PARAMETROS PARDER LLAVEIZ LINS LLAVEDER      {$$ = ""; ArbolAST.FUNCIONES.push(new FUNC.default(this._$.first_line, this._$.first_column,$1, $2, $7, $4,true));}
+    |VOID ID PARIZ PARDER LLAVEIZ LINS LLAVEDER                 {$$ = ""; ArbolAST.FUNCIONES.push(new FUNC.default(this._$.first_line, this._$.first_column,new Tipo.default(Tipo.tipos.ENTERO), $2, $6, undefined,true));}
     |VOID error LLAVEDER                                        {ArbolAST.num_error++; ArbolAST.errores.push(new Excepcion.default(ArbolAST.num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));}
     |error LLAVEDER                                             {ArbolAST.num_error++; ArbolAST.errores.push(new Excepcion.default(ArbolAST.num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));}
 ;

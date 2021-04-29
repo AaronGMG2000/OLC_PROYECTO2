@@ -17,20 +17,20 @@ export default class FUNCION extends Expresion {
     }
     public getValor(arbol: ArbolAST, tabla: Entorno): Expresion {
         let Nuevo_Entorno = new Entorno(this.nombre,arbol.global);
-        this.nombre+="#";
+        let nombre_nuevo = this.nombre+"#";
         if (this.parametros) {
             for(let par of this.parametros){
-                let varr = par.getValor(arbol, arbol.global);
-                this.nombre+=""+varr.Tipo.tipos;
+                let varr = par.getValor(arbol, tabla);
+                nombre_nuevo+=""+varr.Tipo.tipos;
             }
         }
-        var comprobar = tabla.get(this.nombre);
+        var comprobar = arbol.global.get(nombre_nuevo);
         if(comprobar.tipo.tipos !== tipos.ERROR){
             let func = comprobar.valor;
             if (func.PARAMETRO) {
                 let x = 0;
                 for(let declaracion of func.PARAMETRO){
-                    declaracion.exp = this.parametros[x];
+                    declaracion.exp = this.parametros[x].getValor(arbol, tabla);
                     declaracion.ejecutar(arbol, Nuevo_Entorno);
                     x++; 
                 }

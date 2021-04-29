@@ -35,10 +35,15 @@ class indexController {
                 ast.num_error++;
                 ast.errores.push(new Excepcion_1.default(ast.num_error, "SINTACTICO", "Error inrecuperable", -1, -1));
             }
-            const tabla = new Entorno_1.default();
-            ast.global = tabla;
-            ast.EjecutarBloque();
-            res.json({ consola: ast.consola, Errores: ast.errores });
+            if (typeof (ast) === typeof (new ArbolAST_1.default([]))) {
+                const tabla = new Entorno_1.default();
+                ast.global = tabla;
+                ast.EjecutarBloque();
+                res.json({ consola: ast.consola, Errores: ast.errores });
+            }
+            else {
+                res.json({ consola: "", Errores: [] });
+            }
         }
         catch (err) {
             console.log(err);

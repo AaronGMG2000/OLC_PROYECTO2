@@ -26,14 +26,18 @@ const Excepcion_1 = __importDefault(require("../exceptions/Excepcion"));
 const tipo_1 = __importStar(require("../tablaSimbolo/tipo"));
 const expresion_1 = require("./expresion");
 const literal_1 = __importDefault(require("./literal"));
-class INCREMENTO extends expresion_1.Expresion {
+class DECREMENTO extends expresion_1.Expresion {
     constructor(linea, columna, exp) {
         const tip = new tipo_1.default(tipo_1.tipos.ENTERO);
         super(linea, columna, 0, tip);
         this.exp = exp;
     }
     getValor(arbol, tabla) {
+        let nom = this.exp.nombre;
         let val = this.exp.getValor(arbol, tabla);
+        if (val.nombre === "FUNCION") {
+            this.exp.nombre = "";
+        }
         if (val.Tipo.tipos === tipo_1.tipos.DOBLE || val.Tipo.tipos === tipo_1.tipos.ENTERO) {
             if (this.exp.nombre !== "" && this.exp.nombre !== undefined) {
                 let expre = tabla.get(this.exp.nombre);
@@ -54,7 +58,14 @@ class INCREMENTO extends expresion_1.Expresion {
                 }
             }
             else {
-                let expre = this.exp.getValor(arbol, tabla);
+                let expre = undefined;
+                if (val.nombre === "FUNCION") {
+                    expre = val;
+                    this.exp.nombre = nom;
+                }
+                else {
+                    expre = this.exp.getValor(arbol, tabla);
+                }
                 return new literal_1.default(this.linea, this.columna, expre.valor - 1, expre.Tipo.tipos);
             }
         }
@@ -62,5 +73,5 @@ class INCREMENTO extends expresion_1.Expresion {
         return new literal_1.default(this.linea, this.columna, "ERROR", tipo_1.tipos.ERROR);
     }
 }
-exports.default = INCREMENTO;
+exports.default = DECREMENTO;
 //# sourceMappingURL=decremento.js.map

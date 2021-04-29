@@ -1,187 +1,216 @@
-<div class="container-fluid vh-100">
-  <div class="row vh-100 justify-content-center align align-items-center">
-    <div class="col-12">
-      <dx-toolbar class="moduleToolbar" [items]="buttons"></dx-toolbar>
-      <div class="default">
-        <dx-tab-panel style="height: 45vh;"
-          [dataSource]="Pestanas"
-          [selectedIndex]="0"
-          [loop]="false"
-          [animationEnabled]="true"
-          [showNavButtons]="true"
-          [swipeEnabled]="false"
-          (onSelectionChanged)="seleccionarPestana($event)"
-          [selectedIndex]="NumTab">
-          <div *dxTemplate="let element of 'title'">
-            <span>{{ element.name }}</span><i *ngIf="showCloseButton()" class="dx-icon dx-icon-close mr4" (click)="removerPestana()"></i>
-          </div>
-          <div *dxTemplate="let element of 'item'">
-            <div class="row">
-              <div class="col-7">
-                <ngx-codemirror
-                [(ngModel)]="element.content"
-                (ngModelChange) = "LlenarContent(element.content)"
-                [options]="{
-                  theme: 'material',
-                  mode: 'javascript',
-                  lineNumbers: true,
-                  lineWrapping: true,
-                  foldGutter: true,
-                  gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter', 'CodeMirror-lint-markers'],
-                  autoCloseBrackets: true,
-                  autocapitalize: true,
-                  matchBrackets: true
-                }"
-                ></ngx-codemirror>
-              </div>
-              <div class="col-5">
-                <ngx-codemirror
-                [(ngModel)]="CONSOLA"
-                [options]="{
-                  theme: 'material',
-                  mode: 'go',
-                  readOnly: true,
-                  lineNumbers: true,
-                  lineWrapping: true,
-                  foldGutter: true,
-                  gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter', 'CodeMirror-lint-markers'],
-                  autoCloseBrackets: true,
-                  matchBrackets: true
-                }"
-                ></ngx-codemirror>
-              </div>
+<nav class="navbar navbar-dark navbar-expand-lg navbar-light m-0" style="background-color: #263238;">
+  <a class="navbar-brand" href="#">TYPESTY</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarText">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <div class="nav-link" href="#">
+          <label for="upload" class="mt-2 btn btn-block btn-dark">Cargar Archivo</label>
+          <input
+            type="file"
+            #tySubida
+            id="upload"
+            name="tySubida"
+            style="display: none"
+            accept="application,.ty"
+            (input)="upload($event)"
+          />
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+<div class="row vh-80 justify-content-center align align-items-center pt-3">
+  <div class="col-12">
+    <dx-toolbar class="moduleToolbar" [items]="buttons"></dx-toolbar>
+    <div class="default">
+      <dx-tab-panel style="height: 55vh;"
+        [dataSource]="Pestanas"
+        [selectedIndex]="0"
+        [loop]="false"
+        [animationEnabled]="true"
+        [showNavButtons]="true"
+        [swipeEnabled]="false"
+        (onSelectionChanged)="seleccionarPestana($event)"
+        [selectedIndex]="NumTab">
+        <div *dxTemplate="let element of 'title'">
+          <span>{{ element.name }}</span><i *ngIf="showCloseButton()" class="dx-icon dx-icon-close mr4" (click)="removerPestana()"></i>
+        </div>
+        <div *dxTemplate="let element of 'item'">
+          <div class="row h-100" style="margin: 0px; padding: 0px;">
+            <div class="col-6 h-100" style="margin: 0px; padding: 0px; padding-right: 5px;">
+              <ngx-codemirror
+              style="margin: 0px; padding: 0px;"
+              [(ngModel)]="element.content"
+              (ngModelChange) = "LlenarContent(element.content)"
+              [options]="{
+                theme: 'material',
+                mode: 'javascript',
+                lineNumbers: true,
+                styleActiveLine: true,
+                matchBrackets: true,
+                lineWrapping: true,
+                columnNumbers:true,
+                foldGutter: true,
+                gutter: true,
+                gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter', 'CodeMirror-lint-markers'],
+                autoCloseBrackets: true,
+                autocapitalize: true,
+                matchBrackets: true
+              }"
+              ></ngx-codemirror>
+            </div>
+            <div class="col-6 h-100" style="margin: 0px; padding: 0px;">
+              <ngx-codemirror
+              style="margin: 0px; padding: 0px;"
+              [(ngModel)]="CONSOLA"
+              [options]="{
+                theme: 'material',
+                mode: 'go',
+                readOnly: true,
+                lineNumbers: true,
+                lineWrapping: true,
+                foldGutter: true,
+                gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter', 'CodeMirror-lint-markers'],
+                autoCloseBrackets: true,
+                matchBrackets: true
+              }"
+              ></ngx-codemirror>
             </div>
           </div>
-        </dx-tab-panel>
-        <div class="row mt-4">
-          <div class="col-6 scroll">
-            <table class="table diseñoTabla table-dark">
-              <thead style="background-color: #2a2a2a;">
-                <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">Nombre</th>
-                  <th scope="col">Tipo/Valor</th>
-                  <th scope="col">Fila</th>
-                  <th scope="col">Columna</th>
-                  <th scope="col">Ambito</th>
+        </div>
+      </dx-tab-panel>
+      <div class="row mt-4">
+        <div class="col-6 scroll">
+          <table class="table diseñoTabla table-dark">
+            <thead style="background-color: #2a2a2a;">
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Tipo/Valor</th>
+                <th scope="col">Fila</th>
+                <th scope="col">Columna</th>
+                <th scope="col">Ambito</th>
 
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th scope="row">1</th>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                  <td>@mdo</td>
-                  <td>Otto</td>
-                  <td>@mdo</td>
-                </tr>
-                <tr>
-                  <th scope="row">2</th>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                  <td>@mdo</td>
-                  <td>Otto</td>
-                  <td>@mdo</td>
-                </tr>
-                <tr>
-                  <th scope="row">3</th>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                  <td>@mdo</td>
-                  <td>Otto</td>
-                  <td>@mdo</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="col-6 scroll">
-            <table class="table diseñoTabla table-dark">
-              <thead style="background-color: #2a2a2a;">
-                <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">Tipo</th>
-                  <th scope="col">Error</th>
-                  <th scope="col">Fila</th>
-                  <th scope="col">Columna</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th scope="row">1</th>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                  <td>@mdo</td>
-                  <td>Mark</td>
-                </tr>
-                <tr>
-                  <th scope="row">2</th>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                  <td>@mdo</td>
-                  <td>Mark</td>
-                </tr>
-                <tr>
-                  <th scope="row">3</th>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                  <td>@mdo</td>
-                  <td>Mark</td>
-                </tr>
-                <tr>
-                  <th scope="row">3</th>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                  <td>@mdo</td>
-                  <td>Mark</td>
-                </tr>
-                <tr>
-                  <th scope="row">3</th>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                  <td>@mdo</td>
-                  <td>Mark</td>
-                </tr>
-                <tr>
-                  <th scope="row">3</th>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                  <td>@mdo</td>
-                  <td>Mark</td>
-                </tr>
-                <tr>
-                  <th scope="row">3</th>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                  <td>@mdo</td>
-                  <td>Mark</td>
-                </tr>
-                <tr>
-                  <th scope="row">3</th>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                  <td>@mdo</td>
-                  <td>Mark</td>
-                </tr>
-                <tr>
-                  <th scope="row">3</th>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                  <td>@mdo</td>
-                  <td>Mark</td>
-                </tr>
-                <tr>
-                  <th scope="row">3</th>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                  <td>@mdo</td>
-                  <td>Mark</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+              </tr>
+              <tr>
+                <th scope="row">2</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+              </tr>
+              <tr>
+                <th scope="row">3</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-6 scroll">
+          <table class="table diseñoTabla table-dark">
+            <thead style="background-color: #2a2a2a;">
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Tipo</th>
+                <th scope="col">Error</th>
+                <th scope="col">Fila</th>
+                <th scope="col">Columna</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+                <td>Mark</td>
+              </tr>
+              <tr>
+                <th scope="row">2</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+                <td>Mark</td>
+              </tr>
+              <tr>
+                <th scope="row">3</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+                <td>Mark</td>
+              </tr>
+              <tr>
+                <th scope="row">3</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+                <td>Mark</td>
+              </tr>
+              <tr>
+                <th scope="row">3</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+                <td>Mark</td>
+              </tr>
+              <tr>
+                <th scope="row">3</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+                <td>Mark</td>
+              </tr>
+              <tr>
+                <th scope="row">3</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+                <td>Mark</td>
+              </tr>
+              <tr>
+                <th scope="row">3</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+                <td>Mark</td>
+              </tr>
+              <tr>
+                <th scope="row">3</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+                <td>Mark</td>
+              </tr>
+              <tr>
+                <th scope="row">3</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+                <td>Mark</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
   </div>
 </div>
+

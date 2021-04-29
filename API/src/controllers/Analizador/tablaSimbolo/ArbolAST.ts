@@ -4,6 +4,7 @@ import { Instruccion } from "../Abstract/instruccion";
 
 export default class ArbolAST {
     public instrucciones: Array<Instruccion>;
+    public FUNCIONES: Array<Instruccion> = new Array<Instruccion>();
     public errores: Array<Excepcion> = new Array<Excepcion>();
     public consola: String;
     public global: Entorno;
@@ -21,6 +22,11 @@ export default class ArbolAST {
     }
 
     public EjecutarBloque() {
+        for(let elemento of this.FUNCIONES){
+            if(typeof(elemento) !== typeof("")){
+                elemento.ejecutar(this, this.global);
+            }
+        }
         for(let elemento of this.instrucciones){
             if(typeof(elemento) !== typeof("")){
                 elemento.ejecutar(this, this.global);

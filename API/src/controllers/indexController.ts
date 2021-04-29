@@ -23,10 +23,15 @@ class indexController {
                 ast.num_error++;
                 ast.errores.push(new Excepcion(ast.num_error, "SINTACTICO","Error inrecuperable",-1,-1));
             }
-            const tabla = new Entorno();
-            ast.global = tabla;
-            ast.EjecutarBloque();
-            res.json({consola: ast.consola, Errores: ast.errores});
+            if (typeof(ast)===typeof(new ArbolAST([]))) {
+                const tabla = new Entorno();
+                ast.global = tabla;
+                ast.EjecutarBloque();
+                res.json({consola: ast.consola, Errores: ast.errores});
+            }else{
+                res.json({consola:"", Errores:[]});
+            }
+            
         } catch (err) {
             console.log(err);
             res.json({

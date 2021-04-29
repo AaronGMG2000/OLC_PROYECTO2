@@ -7,6 +7,8 @@ import 'codemirror/mode/xml/xml';
 import 'codemirror/addon/fold/xml-fold';
 import { COMPILADORService } from 'src/app/services/compilador.service';
 import { Contenido } from 'src/app/models/contenido';
+import * as fs from 'fs';
+
 @Component({
   selector: 'app-index',
   templateUrl: './index.component.html',
@@ -16,6 +18,7 @@ export class IndexComponent implements OnInit {
   Pestanas: Array<Pestaña> = [];
   NumTab = 0;
   ContenidoTab = '';
+  actual:any = undefined;
   CONTENT = '';
   CONSOLA = '';
   buttons: Array<any> = [
@@ -53,20 +56,10 @@ export class IndexComponent implements OnInit {
       location: 'after',
       widget: 'dxButton',
       options: {
-        icon: 'activefolder',
-        hint: 'Abrir',
-        stylingMode: 'contained',
-        // onClick: ,
-      },
-    },
-    {
-      location: 'after',
-      widget: 'dxButton',
-      options: {
         icon: 'save',
         hint: 'Guardar',
         stylingMode: 'contained',
-        // onClick: this.EliminarTodas.bind(this),
+        onClick: this.saveAsProject.bind(this),
       },
     },
     {
@@ -89,6 +82,7 @@ export class IndexComponent implements OnInit {
     this.Pestanas = [];
     this.NumTab = 0;
     this.CONTENT = '';
+    this.actual = undefined;
     this.ContenidoTab = 'Pestaña 0';
   }
 
@@ -97,6 +91,21 @@ export class IndexComponent implements OnInit {
       this.NumTab = 0;
     }
     this.Pestanas.push(new Pestaña('Pestaña ' + String(this.NumTab++)));
+  }
+
+  async upload(e: any) {
+    console.log(e);
+    let files = e.srcElement.files;
+    let input = e.target;
+    let reader = new FileReader();
+    reader.readAsText(input.files[0]);
+    reader.onload = async () => {
+      let nueva = new Pestaña("TAB_"+(this.NumTab++)+" "+files[0].name);
+      this.Pestanas.push(nueva);
+      this.ContenidoTab = nueva.name;
+      nueva.content =<string>reader.result;
+      nueva.consola = "";
+    };
   }
 
   async removerPestana(): Promise<void>{
@@ -124,15 +133,30 @@ export class IndexComponent implements OnInit {
     return this.Pestanas.length >= 1;
   }
 
+  saveAsProject() {
+    //you can enter your own file name and extension
+    if (this.NumTab!=0) {
+      this.writeContents(this.CONTENT, this.ContenidoTab + ".ty", "text/plain");
+    }
+  }
+  writeContents(content:string, fileName:string, contentType:string) {
+    var a = document.createElement("a");
+    var file = new Blob([content], { type: contentType });
+    a.href = URL.createObjectURL(file);
+    a.download = fileName;
+    a.click();
+  }
+
   seleccionarPestana(e: any): void {
     this.ContenidoTab = e.addedItems[0].name;
+    this.CONSOLA = e.addedItems[0].consola;
+    this.actual = e.addedItems[0];
   }
 
   LlenarContent(text: string): void{
     this.CONTENT = text;
   }
   Compilar(): void{
-    const text = this.CONTENT;
     const cont:Contenido = {
       Contenido: this.CONTENT
     };
@@ -140,6 +164,7 @@ export class IndexComponent implements OnInit {
       (res: any) => {
         this.CONSOLA = "";
         this.CONSOLA = res.consola;
+        this.actual.consola = this.CONSOLA;
         console.log(res.consola);
       },
       (err: any) => console.log(err)

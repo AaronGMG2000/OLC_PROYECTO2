@@ -45,7 +45,7 @@ class DECLARAR extends instruccion_1.Instruccion {
                 v1 = this.DIMENSION.getValor(arbol, tabla).valor;
             }
             if (typeof (this.CANTIDAD) !== typeof (-1)) {
-                v2 = this.DIMENSION.getValor(arbol, tabla).valor;
+                v2 = this.CANTIDAD.getValor(arbol, tabla).valor;
             }
             if (ex) {
                 if (ex.Tipo.tipos === tipo_1.tipos.ERROR) {
