@@ -7,22 +7,24 @@ import Entorno from "../tablaSimbolo/Entorno";
 import Tipo, { tipos } from "../tablaSimbolo/tipo";
 
 export default class DECLARAR extends Instruccion {
-    public exp: Expresion | undefined;
+    public exp: Expresion | any;
     public ID:string;
     public tipo:Tipo;
+    public tipo2:Tipo | any;
     public DIMENSION:Expresion|any;
     public CANTIDAD:Expresion|any;
-    constructor(linea:number, columna:number, ID:string, Tipo:Tipo, DIMENSION?:Expresion, CANTIDAD?:Expresion, exp?:Expresion){
+    constructor(linea:number, columna:number, ID:string, Tipo:Tipo, DIMENSION?:Expresion, CANTIDAD?:Expresion, exp?:Expresion, tipo2?:Tipo){
         super(linea, columna);
         if(!exp && typeof(DIMENSION)!==typeof(-1)  && typeof(DIMENSION)!==typeof(undefined)){
             this.exp = new Literal(this.linea, this.columna,"vector",Tipo.tipos, true);
         }else if(!exp &&typeof(CANTIDAD)!==typeof(-1) && typeof(CANTIDAD)!==typeof(undefined)){
-            this.exp = new Literal(this.linea, this.columna,"vector",Tipo.tipos, true);
+            this.exp = new Literal(this.linea, this.columna,undefined,Tipo.tipos, true);
         }else{
             this.exp = exp;
         }
         this.ID=ID;
         this.tipo = Tipo;
+        this.tipo2 = tipo2;
         if (DIMENSION) {
             this.DIMENSION = DIMENSION;
         }else{
@@ -36,9 +38,41 @@ export default class DECLARAR extends Instruccion {
     }
 
     ejecutar(arbol: ArbolAST, tabla: Entorno) {
+        if (this.tipo2 instanceof Tipo) {
+            if (this.tipo2.tipos!==this.tipo.tipos) {
+                arbol.num_error++;
+                arbol.errores.push(new Excepcion(arbol.num_error,"Semantico","Los tipos del vector no coinciden",this.linea, this.columna));
+                return false;
+            }
+        }
+        let nueva_variable:any = undefined;
         const comprobar = tabla.get(this.ID);
+        if (this.exp instanceof Array && this.DIMENSION) {
+            let nueva = [];
+            for(let valores of this.exp){
+                let value = valores.getValor(arbol, tabla);
+                if (value) {
+                    if (value.Tipo.tipos!== this.tipo.tipos) {
+                        arbol.num_error++;
+                        arbol.errores.push(new Excepcion(arbol.num_error, "SINTACTICO","tipo dentro de valores de la declaración no coincide", value.linea, value.columna));
+                        return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
+                    }
+                    nueva.push(value.valor);
+                }else{
+                    arbol.num_error++;
+                    arbol.errores.push(new Excepcion(arbol.num_error, "SINTACTICO","fallo al obtener el valor", valores.linea, valores.columna));
+                    return new Literal(this.linea, this.columna, undefined, tipos.ERROR); 
+                }
+            }
+            nueva_variable = new Literal(this.linea, this.columna, nueva, this.tipo.tipos, true);
+        }
         if(comprobar.tipo.tipos===tipos.ERROR){
-            let ex = this.exp?.getValor(arbol, tabla);
+            let ex:any = undefined;
+            if (nueva_variable) {
+                ex = nueva_variable;
+            }else{
+                ex = this.exp?.getValor(arbol, tabla);
+            }
             let v1 = -1;
             let v2 = -1;
             if (typeof(this.DIMENSION)!==typeof(-1)) {
@@ -53,6 +87,7 @@ export default class DECLARAR extends Instruccion {
                     arbol.errores.push(new Excepcion(arbol.num_error, "SEMANTICO","Fallo al asignar", this.linea, this.columna));
                     return false;
                 }
+                
                 if (ex.Tipo.tipos!==this.tipo.tipos && this.tipo.tipos!==tipos.DOBLE
                     && this.tipo.tipos !== tipos.ENTERO){
                     arbol.num_error++;
@@ -72,7 +107,8 @@ export default class DECLARAR extends Instruccion {
             tabla.set(this.ID, ex, this.tipo, v1, v2);
             return true;
         }
-        //ERROR
+        arbol.num_error++;
+        arbol.errores.push(new Excepcion(arbol.num_error,"Semantico","La Variable ya esta declarada",this.linea, this.columna));
         return false;
     }
 

@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const tipo_1 = require("./tipo");
 class Simbolo {
     constructor(tipo, identificador, valor, DIMENSION = -1, CANTIDAD = -1) {
+        this.LOV = "";
         this.tipo = tipo;
         this.identificador = identificador;
         this.DIMENSION = DIMENSION;
@@ -10,7 +11,8 @@ class Simbolo {
         if (valor) {
             this.valor = valor;
             if (valor.valor) {
-                if (this.DIMENSION != -1) {
+                if (this.DIMENSION != -1 && typeof (valor.valor) !== typeof ([])) {
+                    this.LOV = "VECTOR";
                     switch (this.tipo.tipos) {
                         case tipo_1.tipos.ENTERO:
                             if (this.DIMENSION != -1) {
@@ -63,11 +65,14 @@ class Simbolo {
                     }
                 }
                 else {
-                    if (this.tipo.tipos === tipo_1.tipos.ENTERO) {
+                    if (this.tipo.tipos === tipo_1.tipos.ENTERO && typeof (valor.valor) !== typeof ([])) {
                         valor.valor = Math.trunc(valor.valor);
                         this.valor = valor;
                     }
                     else {
+                        if (this.DIMENSION != -1) {
+                            this.LOV = "VECTOR";
+                        }
                         this.valor = valor;
                     }
                 }
@@ -122,6 +127,9 @@ class Simbolo {
                         break;
                     default:
                         break;
+                }
+                if (this.CANTIDAD !== -1) {
+                    this.LOV = "LISTA";
                 }
             }
         }

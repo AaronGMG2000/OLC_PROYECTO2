@@ -22,7 +22,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const tipo_1 = __importStar(require("../tablaSimbolo/tipo"));
 const expresion_1 = require("./expresion");
 class Literal extends expresion_1.Expresion {
-    constructor(linea, columna, valor, T, vector) {
+    constructor(linea, columna, valor, T, vector, L = "") {
         const tip = new tipo_1.default(T);
         if (!vector) {
             switch (tip.tipos) {
@@ -45,6 +45,7 @@ class Literal extends expresion_1.Expresion {
             }
         }
         super(linea, columna, valor, tip);
+        this.LOV = L;
     }
     getValor(arbol, tabla) {
         return this;

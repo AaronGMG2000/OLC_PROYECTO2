@@ -12,6 +12,7 @@
     const DECLARAR = require('./Instrucciones/DECLARAR');
     const ASIGNAR = require('./Instrucciones/ASIGNAR')
     const Aritmetica = require('./expresiones/aritmetica');
+    const NATIVAS = require('./expresiones/nativas');
     const IF = require('./Instrucciones/IF');
     const WHILE = require('./Instrucciones/while');
     const DOWHILE = require('./Instrucciones/dowhile');
@@ -23,7 +24,7 @@
     const LLAMADA = require('./Instrucciones/llamada');
     const RETURN = require('./Instrucciones/return');
     const CONTINUE = require('./Instrucciones/continue');
-
+    const ADD = require('./Instrucciones/add');
     const Incremento = require('./expresiones/incremento');
     const Decremento = require('./expresiones/decremento');
     const Casteo = require('./expresiones/casteo');
@@ -132,7 +133,7 @@
 "Truncate"              return "TRUNCATE";
 "Round"                 return "ROUND";
 "Typeof"                return "TYPEOF";
-"toSTRING"              return "TSTRING";
+"toSTRING"              return "TOSTRING";
 "toCharArray"           return "CHARARRAY";
 "Exec"                  return "EXEC";
 
@@ -194,6 +195,7 @@ INS
     | BREAK PTCOMA                                  {$$ = new BREAK.default(this._$.first_line, this._$.first_column);}
     | CONTINUE PTCOMA                               {$$ = new CONTINUE.default(this._$.first_line, this._$.first_column);}
     | FTERNARIO PTCOMA                              {$$ = $1}
+    | ID PT ADD PARIZ EXP PARDER PTCOMA             {$$ = new ADD.default(this._$.first_line, this._$.first_column, $1, $5);}
     | error PTCOMA                                  {ArbolAST.num_error++;ArbolAST.errores.push(new Excepcion.default(ArbolAST.num_error, "Sintactico", "No se esperaba  "+yytext+".", this._$.first_line, this._$.first_column));}
 ;
 
@@ -205,10 +207,11 @@ FRETURN
 DECLARACION
     :FTIPO ID                                                          {$$ = new DECLARAR.default(this._$.first_line, this._$.first_column,$2, $1)}
     |FTIPO ID IGUAL EXP                                                {$$ = new DECLARAR.default(this._$.first_line, this._$.first_column,$2, $1,-1,-1, $4)}
-    |FTIPO CORIZ CORDER ID IGUAL NEW FTIPO CORIZ EXP CORDER            {$$ = new DECLARAR.default(this._$.first_line, this._$.first_column,$4, $1,$9,-1)}
+    |FTIPO CORIZ CORDER ID IGUAL NEW FTIPO CORIZ EXP CORDER            {$$ = new DECLARAR.default(this._$.first_line, this._$.first_column,$4, $1,$9,-1,undefined,$7)}
     |LIST MENOR FTIPO MAYOR ID                                         {$$ = new DECLARAR.default(this._$.first_line, this._$.first_column,$5, $2, $4,-1,0)}
-    |FTIPO CORIZ CORDER ID IGUAL LLAVEIZ L_EXP LLAVEDER                {$$ = new DECLARAR.default(this._$.first_line, this._$.first_column,$4, $1,$7.length,-1, $7)}
-    |LIST MENOR FTIPO MAYOR ID IGUAL NEW LIST MENOR Tipo MAYOR         {$$ = new DECLARAR.default(this._$.first_line, this._$.first_column,$5, $2, $4,-1,0)}
+    |FTIPO CORIZ CORDER ID IGUAL LLAVEIZ L_EXP LLAVEDER                {$$ = new DECLARAR.default(this._$.first_line, this._$.first_column,$4, $1,new Literal.default(this._$.first_line, this._$.first_column,$7.length,Tipo.tipos.ENTERO),-1, $7)}
+    |LIST MENOR FTIPO MAYOR ID IGUAL NEW LIST MENOR FTIPO MAYOR        {$$ = new DECLARAR.default(this._$.first_line, this._$.first_column,$5, $3, -1,new Literal.default(this._$.first_line, this._$.first_column,0,Tipo.tipos.ENTERO))}
+    |LIST MENOR FTIPO MAYOR ID IGUAL EXP                               {$$ = new DECLARAR.default(this._$.first_line, this._$.first_column,$5, $3,-1,-1,$7)}
 ;
 
 
@@ -361,10 +364,10 @@ FTOUPPER
     :toUPPER PARIZ EXP PARDER       {}
 ;                        
 NATIVAS
-    :LENGTH PARIZ EXP PARDER          {}
-    |TRUNCATE PARIZ EXP PARDER        {}
-    |ROUND PARIZ EXP PARDER           {}
-    |TYPEOF PARIZ EXP PARDER          {}
-    |toSTRING PARIZ EXP PARDER        {}
-    |toCharArray PARIZ EXP PARDER     {}
+    :LENGTH PARIZ EXP PARDER          {$$ = new NATIVAS.default(this._$.first_line, this._$.first_column, $1, $3);}
+    |TRUNCATE PARIZ EXP PARDER        {$$ = new NATIVAS.default(this._$.first_line, this._$.first_column, $1, $3);}
+    |ROUND PARIZ EXP PARDER           {$$ = new NATIVAS.default(this._$.first_line, this._$.first_column, $1, $3);}
+    |TYPEOF PARIZ EXP PARDER          {$$ = new NATIVAS.default(this._$.first_line, this._$.first_column, $1, $3);}
+    |TOSTRING PARIZ EXP PARDER        {$$ = new NATIVAS.default(this._$.first_line, this._$.first_column, $1, $3);}
+    |CHARARRAY PARIZ EXP PARDER     {$$ = new NATIVAS.default(this._$.first_line, this._$.first_column, $1, $3);}
 ;

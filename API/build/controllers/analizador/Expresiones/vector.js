@@ -35,7 +35,7 @@ class VECTOR extends expresion_1.Expresion {
         let expre = tabla.get(this.nombre);
         if (expre.tipo.tipos !== tipo_1.tipos.ERROR) {
             const pos = this.posicion.getValor(arbol, tabla);
-            if (pos.valor < expre.DIMENSION && pos.valor >= 0) {
+            if ((pos.valor < expre.DIMENSION && pos.valor >= 0) || (pos.valor < expre.CANTIDAD && pos.valor >= 0)) {
                 let value = expre.valor.valor[pos.valor];
                 return new literal_1.default(this.linea, this.columna, value, expre.tipo.tipos);
             }

@@ -4,8 +4,9 @@ import Tipo, { tipos } from "../tablaSimbolo/tipo";
 import { Expresion } from "./expresion";
 
 export default class Literal extends Expresion {
-
-    constructor(linea: number, columna: number, valor: any, T: tipos, vector?:boolean) {
+    
+    public LOV:string;
+    constructor(linea: number, columna: number, valor: any, T: tipos, vector?:boolean, L:string="") {
         const tip = new Tipo(T);
         if (!vector) {
             switch (tip.tipos) {
@@ -27,6 +28,7 @@ export default class Literal extends Expresion {
             }
         }
         super(linea, columna, valor, tip);
+        this.LOV = L;
     }
     public getValor(arbol: ArbolAST, tabla: Entorno): Expresion {
         return this;

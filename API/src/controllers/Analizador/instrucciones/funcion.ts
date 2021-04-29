@@ -23,6 +23,13 @@ export default class FUNCION extends Instruccion {
     }
 
     ejecutar(arbol: ArbolAST, tabla: Entorno) {
+        let up = this.nombre.toUpperCase();
+        if (up==="LENGTH" || up==="TRUNCATE" || up==="ROUND" 
+            || up==="TYPEOF" || up==="TOSTRING" || up==="TOCHARARRAY") {
+            arbol.num_error++;
+            arbol.errores.push(new Excepcion(arbol.num_error, "SEMANTICO", "Existe una función nativa con este nombre", this.linea, this.columna));
+            return;
+        }
         this.nombre+="#";
         if (this.PARAMETRO) {
             for(let par of this.PARAMETRO){
@@ -35,7 +42,7 @@ export default class FUNCION extends Instruccion {
             return;
         }
         arbol.num_error++;
-        new Excepcion(arbol.num_error, "SEMANTICO", "Ya existe una función con el nombre indicado", this.linea, this.columna);
+        arbol.errores.push(new Excepcion(arbol.num_error, "SEMANTICO", "Ya existe una función con el nombre indicado", this.linea, this.columna));
         return;
         // ERROR
     }
