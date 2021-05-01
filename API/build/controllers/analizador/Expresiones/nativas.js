@@ -108,13 +108,13 @@ class NATIVA extends expresion_1.Expresion {
                         case tipo_1.tipos.CADENA:
                             if (comp instanceof simbolo_1.default) {
                                 if (comp.LOV === "VECTOR") {
-                                    return new literal_1.default(this.linea, this.columna, "CADENA[]", tipo_1.tipos.CADENA);
+                                    return new literal_1.default(this.linea, this.columna, "STRING[]", tipo_1.tipos.CADENA);
                                 }
                                 else {
-                                    return new literal_1.default(this.linea, this.columna, "LIST<CADENA>", tipo_1.tipos.CADENA);
+                                    return new literal_1.default(this.linea, this.columna, "LIST<STRING>", tipo_1.tipos.CADENA);
                                 }
                             }
-                            return new literal_1.default(this.linea, this.columna, "CADENA", tipo_1.tipos.CADENA);
+                            return new literal_1.default(this.linea, this.columna, "STRING", tipo_1.tipos.CADENA);
                     }
                 case "TOSTRING":
                     if (comp instanceof simbolo_1.default) {

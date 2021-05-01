@@ -8,6 +8,24 @@ class Tipo {
     equals(obj) {
         return this.tipos == obj.tipos;
     }
+    getTipo() {
+        if (this.tipos === tipos.BOOLEANO) {
+            return "BOOLEAN";
+        }
+        else if (this.tipos === tipos.ENTERO) {
+            return "INT";
+        }
+        else if (this.tipos === tipos.CADENA) {
+            return "STRING";
+        }
+        else if (this.tipos === tipos.CARACTER) {
+            return "CARACTER";
+        }
+        else if (this.tipos === tipos.DOBLE) {
+            return "DOUBLE";
+        }
+        return "";
+    }
 }
 exports.default = Tipo;
 var tipos;

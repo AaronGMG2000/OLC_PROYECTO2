@@ -4,6 +4,8 @@ import { Expresion } from "../expresiones/expresion";
 import Literal from "../expresiones/literal";
 import ArbolAST from "../tablaSimbolo/ArbolAST";
 import Entorno from "../tablaSimbolo/Entorno";
+import ListaSimbolo from "../tablaSimbolo/ListaSimbolos";
+import Simbolo from "../tablaSimbolo/simbolo";
 import Tipo, { tipos } from "../tablaSimbolo/tipo";
 
 export default class DECLARAR extends Instruccion {
@@ -41,12 +43,12 @@ export default class DECLARAR extends Instruccion {
         if (this.tipo2 instanceof Tipo) {
             if (this.tipo2.tipos!==this.tipo.tipos) {
                 arbol.num_error++;
-                arbol.errores.push(new Excepcion(arbol.num_error,"Semantico","Los tipos del vector no coinciden",this.linea, this.columna));
+                arbol.errores.push(new Excepcion(arbol.num_error,"Semantico","El tipo de declaración no coincide con el de la variable",this.linea, this.columna));
                 return false;
             }
         }
         let nueva_variable:any = undefined;
-        const comprobar = tabla.get(this.ID);
+        const comprobar = tabla.getLocal(this.ID);
         if (this.exp instanceof Array && this.DIMENSION) {
             let nueva = [];
             for(let valores of this.exp){
@@ -67,6 +69,7 @@ export default class DECLARAR extends Instruccion {
             nueva_variable = new Literal(this.linea, this.columna, nueva, this.tipo.tipos, true);
         }
         if(comprobar.tipo.tipos===tipos.ERROR){
+            
             let ex:any = undefined;
             if (nueva_variable) {
                 ex = nueva_variable;
@@ -103,6 +106,20 @@ export default class DECLARAR extends Instruccion {
             }
             if (!ex) {
                 ex = new Literal(this.linea, this.columna, undefined, this.tipo.tipos, true);
+            }
+            if (this.DIMENSION!=-1 && v1<0) {
+                arbol.num_error++;
+                arbol.errores.push(new Excepcion(arbol.num_error,"Semantico","Tamaño de vector invalido",this.linea, this.columna));
+                return false;
+            }
+            if (tabla.nombre.toUpperCase()==="GLOBAL") {
+                if (v1!==-1) {
+                    arbol.lista_simbolos.push(new ListaSimbolo(arbol.lista_simbolos.length,this.ID, "VECTOR", this.tipo.getTipo(), this.linea, this.columna, tabla.nombre));        
+                }else if (v2!==-1) {
+                    arbol.lista_simbolos.push(new ListaSimbolo(arbol.lista_simbolos.length,this.ID, "LISTA", this.tipo.getTipo(), this.linea, this.columna, tabla.nombre));        
+                }else{
+                    arbol.lista_simbolos.push(new ListaSimbolo(arbol.lista_simbolos.length,this.ID, "VARIABLE", this.tipo.getTipo(), this.linea, this.columna, tabla.nombre));        
+                }
             }
             tabla.set(this.ID, ex, this.tipo, v1, v2);
             return true;

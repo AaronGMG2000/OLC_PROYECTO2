@@ -36,7 +36,7 @@ class VARIABLE extends expresion_1.Expresion {
         if (expre.tipo.tipos !== tipo_1.tipos.ERROR) {
             return expre.valor;
         }
-        return new literal_1.default(this.linea, this.columna, "ERROR", tipo_1.tipos.ERROR);
+        return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
     }
 }
 exports.default = VARIABLE;

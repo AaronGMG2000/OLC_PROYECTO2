@@ -25,6 +25,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const instruccion_1 = require("../Abstract/instruccion");
 const Excepcion_1 = __importDefault(require("../exceptions/Excepcion"));
 const literal_1 = __importDefault(require("../expresiones/literal"));
+const ListaSimbolos_1 = __importDefault(require("../tablaSimbolo/ListaSimbolos"));
 const tipo_1 = __importStar(require("../tablaSimbolo/tipo"));
 class DECLARAR extends instruccion_1.Instruccion {
     constructor(linea, columna, ID, Tipo, DIMENSION, CANTIDAD, exp, tipo2) {
@@ -59,12 +60,12 @@ class DECLARAR extends instruccion_1.Instruccion {
         if (this.tipo2 instanceof tipo_1.default) {
             if (this.tipo2.tipos !== this.tipo.tipos) {
                 arbol.num_error++;
-                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "Semantico", "Los tipos del vector no coinciden", this.linea, this.columna));
+                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "Semantico", "El tipo de declaración no coincide con el de la variable", this.linea, this.columna));
                 return false;
             }
         }
         let nueva_variable = undefined;
-        const comprobar = tabla.get(this.ID);
+        const comprobar = tabla.getLocal(this.ID);
         if (this.exp instanceof Array && this.DIMENSION) {
             let nueva = [];
             for (let valores of this.exp) {
@@ -122,6 +123,22 @@ class DECLARAR extends instruccion_1.Instruccion {
             }
             if (!ex) {
                 ex = new literal_1.default(this.linea, this.columna, undefined, this.tipo.tipos, true);
+            }
+            if (this.DIMENSION != -1 && v1 < 0) {
+                arbol.num_error++;
+                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "Semantico", "Tamaño de vector invalido", this.linea, this.columna));
+                return false;
+            }
+            if (tabla.nombre.toUpperCase() === "GLOBAL") {
+                if (v1 !== -1) {
+                    arbol.lista_simbolos.push(new ListaSimbolos_1.default(arbol.lista_simbolos.length, this.ID, "VECTOR", this.tipo.getTipo(), this.linea, this.columna, tabla.nombre));
+                }
+                else if (v2 !== -1) {
+                    arbol.lista_simbolos.push(new ListaSimbolos_1.default(arbol.lista_simbolos.length, this.ID, "LISTA", this.tipo.getTipo(), this.linea, this.columna, tabla.nombre));
+                }
+                else {
+                    arbol.lista_simbolos.push(new ListaSimbolos_1.default(arbol.lista_simbolos.length, this.ID, "VARIABLE", this.tipo.getTipo(), this.linea, this.columna, tabla.nombre));
+                }
             }
             tabla.set(this.ID, ex, this.tipo, v1, v2);
             return true;

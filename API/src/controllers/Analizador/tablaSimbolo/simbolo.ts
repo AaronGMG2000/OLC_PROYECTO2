@@ -5,12 +5,12 @@ import Tipo, { tipos } from './tipo';
 export default class Simbolo
 {
     public tipo: Tipo;
-    private identificador: String;
+    private identificador: string;
     public valor: any;
     public DIMENSION: number|any;
     public CANTIDAD: number|any;
     public LOV:string = "";
-    constructor(tipo: Tipo, identificador: String, valor?:any, DIMENSION:number=-1, CANTIDAD:number=-1)
+    constructor(tipo: Tipo, identificador: string, valor?:any, DIMENSION:number=-1, CANTIDAD:number=-1)
     {
         this.tipo = tipo;
         this.identificador = identificador;
@@ -19,7 +19,7 @@ export default class Simbolo
         if(valor)
         {
             this.valor = valor;
-            if (valor.valor) {
+            if (valor.valor || typeof(this.valor.valor)===typeof(true)) {
                 if(this.DIMENSION!=-1 && typeof(valor.valor)!==typeof([])){
                     this.LOV = "VECTOR";
                     switch(this.tipo.tipos){
@@ -46,7 +46,7 @@ export default class Simbolo
                                 let val:string[] = [];
                                 this.valor.valor = val
                                 for (let x = 0; x < this.DIMENSION; x++) {
-                                    this.valor.valor.push('\u0000');
+                                    this.valor.valor.push("\u0000");
                                 }
                             }
                             break;

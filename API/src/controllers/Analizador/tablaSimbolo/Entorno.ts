@@ -6,14 +6,13 @@ export default class Entorno
     public nombre:string;
     public tabla:Map<String, Simbolo>;
     private anterior: Entorno|any;
-
     constructor(nombre:string= "GLOBAL", anterior?:Entorno){
         this.nombre = nombre;
         this.anterior = anterior;
         this.tabla = new Map<String, Simbolo>();
     }
 
-    public set(simbolo:String, valor:any, tipo:Tipo, DIMENSION:number=-1, CANTIDAD:number=-1): void{
+    public set(simbolo:string, valor:any, tipo:Tipo, DIMENSION:number=-1, CANTIDAD:number=-1): void{
         simbolo = simbolo.toUpperCase();
         if(!this.tabla.has(simbolo)){
             this.tabla.set(simbolo, new Simbolo(tipo, simbolo, valor, DIMENSION, CANTIDAD));
@@ -66,6 +65,17 @@ export default class Entorno
             }
         }
         //Error
+        return new Simbolo(new Tipo(tipos.ERROR), 'ERROR', undefined);
+    }
+
+    public getLocal(variable:String):Simbolo{
+        variable = variable.toUpperCase();
+        if (this.tabla.has(variable)) {
+            var result = this.tabla.get(variable);
+            if (result) {
+                return result;
+            }
+        }
         return new Simbolo(new Tipo(tipos.ERROR), 'ERROR', undefined);
     }
 }

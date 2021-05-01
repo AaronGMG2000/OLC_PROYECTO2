@@ -9,7 +9,8 @@ export default class ASIGNAR extends Instruccion {
     public exp: Expresion | undefined;
     public ID:string;
     public UBICACION: any;
-    constructor(linea:number, columna:number, ID:string,UBICACION?:any, exp?:Expresion){
+    public tip:string;
+    constructor(linea:number, columna:number, ID:string,UBICACION?:any, exp?:Expresion, tipv:string=""){
         super(linea, columna);
         this.exp = exp;
         this.ID=ID;
@@ -18,6 +19,7 @@ export default class ASIGNAR extends Instruccion {
         }else{
             this.UBICACION = -1;
         }
+        this.tip = tipv;
     }
 
     
@@ -30,6 +32,17 @@ export default class ASIGNAR extends Instruccion {
         }
         if(expre.tipo.tipos!== tipos.ERROR){
             let value = this.exp?.getValor(arbol, tabla);
+
+            if (this.tip ==="VECTOR" && expre.DIMENSION===-1) {
+                arbol.num_error++;
+                arbol.errores.push(new Excepcion(arbol.num_error,"SEMANTICO","Llamada de vector erronea",this.linea, this.columna));
+                return false;
+            }else if(this.tip==="LIST" && expre.CANTIDAD===-1){
+                arbol.num_error++;
+                arbol.errores.push(new Excepcion(arbol.num_error,"SEMANTICO","Llamada de lista erronea",this.linea, this.columna));
+                return false;
+            }
+            
             if (expre.tipo.tipos!==value?.Tipo.tipos) {
                 arbol.errores.push(new Excepcion(arbol.num_error,"Semantico","el tipado de la variable no coincide con el del valor indicado", this.linea, this.columna));
                 return false;

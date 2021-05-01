@@ -7,7 +7,6 @@ import 'codemirror/mode/xml/xml';
 import 'codemirror/addon/fold/xml-fold';
 import { COMPILADORService } from 'src/app/services/compilador.service';
 import { Contenido } from 'src/app/models/contenido';
-import * as fs from 'fs';
 
 @Component({
   selector: 'app-index',
@@ -21,6 +20,8 @@ export class IndexComponent implements OnInit {
   actual:any = undefined;
   CONTENT = '';
   CONSOLA = '';
+  errores: any;
+  simbolos:any;
   buttons: Array<any> = [
     {
       location: 'after',
@@ -117,6 +118,8 @@ export class IndexComponent implements OnInit {
     if (!p) {
       return;
     }
+    this.errores = [];
+    this.simbolos = [];
     this.Pestanas = this.Pestanas.filter((obj) => {
       return obj.name !== this.ContenidoTab;
     });
@@ -125,6 +128,8 @@ export class IndexComponent implements OnInit {
   async EliminarTodas(): Promise<void>{
     const p = await this.Interacion.confirmacion('¿Desea eliminar todas las Pestañas?');
     if (p) {
+      this.errores = [];
+      this.simbolos = [];
       this.ngOnInit();
     }
   }
@@ -150,6 +155,7 @@ export class IndexComponent implements OnInit {
   seleccionarPestana(e: any): void {
     this.ContenidoTab = e.addedItems[0].name;
     this.CONSOLA = e.addedItems[0].consola;
+    this.CONTENT = e.addedItems[0].content;
     this.actual = e.addedItems[0];
   }
 
@@ -165,7 +171,8 @@ export class IndexComponent implements OnInit {
         this.CONSOLA = "";
         this.CONSOLA = res.consola;
         this.actual.consola = this.CONSOLA;
-        console.log(res.consola);
+        this.errores = res.Errores;
+        this.simbolos = res.Simbolo;
       },
       (err: any) => console.log(err)
     );

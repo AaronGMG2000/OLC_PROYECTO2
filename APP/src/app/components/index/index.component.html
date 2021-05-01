@@ -50,7 +50,6 @@
                 mode: 'javascript',
                 lineNumbers: true,
                 styleActiveLine: true,
-                matchBrackets: true,
                 lineWrapping: true,
                 columnNumbers:true,
                 foldGutter: true,
@@ -87,9 +86,10 @@
           <table class="table diseñoTabla table-dark">
             <thead style="background-color: #2a2a2a;">
               <tr>
-                <th scope="col">#</th>
+                <th scope="col">ID</th>
                 <th scope="col">Nombre</th>
-                <th scope="col">Tipo/Valor</th>
+                <th scope="col">Grupo</th>
+                <th scope="col">Tipo</th>
                 <th scope="col">Fila</th>
                 <th scope="col">Columna</th>
                 <th scope="col">Ambito</th>
@@ -97,29 +97,14 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td>Otto</td>
-                <td>@mdo</td>
+              <tr *ngFor="let simbolo of simbolos">
+                <td>{{ simbolo.numero }}</td>
+                <td>{{simbolo.ID}}</td>
+                <td>{{ simbolo.grupo }}</td>
+                <td>{{ simbolo.tipo }}</td>
+                <td>{{ simbolo.fila }}</td>
+                <td>{{ simbolo.columna }}</td>
+                <td>{{ simbolo.ambito }}</td>
               </tr>
             </tbody>
           </table>
@@ -130,81 +115,18 @@
               <tr>
                 <th scope="col">#</th>
                 <th scope="col">Tipo</th>
-                <th scope="col">Error</th>
+                <th scope="col">Descripción</th>
                 <th scope="col">Fila</th>
                 <th scope="col">Columna</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td>Mark</td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td>Mark</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td>Mark</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td>Mark</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td>Mark</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td>Mark</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td>Mark</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td>Mark</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td>Mark</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td>Mark</td>
+              <tr *ngFor="let error of errores">
+                <td>{{ error.numero }}</td>
+                <td>{{ error.tipo }}</td>
+                <td>{{ error.descripcion }}</td>
+                <td>{{ error.fila }}</td>
+                <td>{{ error.columna }}</td>
               </tr>
             </tbody>
           </table>

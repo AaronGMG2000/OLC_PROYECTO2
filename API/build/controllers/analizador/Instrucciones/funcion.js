@@ -5,10 +5,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const instruccion_1 = require("../Abstract/instruccion");
 const Excepcion_1 = __importDefault(require("../exceptions/Excepcion"));
+const ListaSimbolos_1 = __importDefault(require("../tablaSimbolo/ListaSimbolos"));
 const tipo_1 = require("../tablaSimbolo/tipo");
-class FUNCION extends instruccion_1.Instruccion {
+class FUNCIONF extends instruccion_1.Instruccion {
     constructor(linea, columna, tipo, nombre, INS, Parametro, vector = false) {
         super(linea, columna);
+        this.registrada = false;
+        this.reg = false;
         this.tipo = tipo;
         this.nombre = nombre;
         this.INSTRUCCION = INS;
@@ -31,6 +34,15 @@ class FUNCION extends instruccion_1.Instruccion {
         }
         var comprobar = tabla.get(this.nombre);
         if (comprobar.tipo.tipos === tipo_1.tipos.ERROR) {
+            if (!this.reg) {
+                if (this.vector) {
+                    arbol.lista_simbolos.push(new ListaSimbolos_1.default(arbol.lista_simbolos.length, this.nombre, "METODO", this.tipo.getTipo(), this.linea, this.columna, tabla.nombre));
+                }
+                else {
+                    arbol.lista_simbolos.push(new ListaSimbolos_1.default(arbol.lista_simbolos.length, this.nombre, "FUNCION", this.tipo.getTipo(), this.linea, this.columna, tabla.nombre));
+                }
+                this.reg = true;
+            }
             tabla.set(this.nombre, this, this.tipo, -1, -1);
             return;
         }
@@ -40,5 +52,5 @@ class FUNCION extends instruccion_1.Instruccion {
         // ERROR
     }
 }
-exports.default = FUNCION;
+exports.default = FUNCIONF;
 //# sourceMappingURL=funcion.js.map

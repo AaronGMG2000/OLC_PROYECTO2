@@ -1,13 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class ListaSimbolo {
-    constructor(ID, grupo, tipo, descripcion, fila, columna, ambito) {
-        this.ID = ID;
-        this.grupo = grupo;
-        this.tipo = tipo;
+    constructor(numero, ID, grupo, tipo, fila, columna, ambito) {
+        this.ID = ID.toUpperCase();
+        this.grupo = grupo.toUpperCase();
+        this.tipo = tipo.toUpperCase();
         this.fila = fila;
         this.columna = columna;
-        this.ambito = ambito;
+        this.ambito = ambito.toUpperCase();
+        this.numero = numero;
     }
 }
 exports.default = ListaSimbolo;

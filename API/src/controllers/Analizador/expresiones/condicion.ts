@@ -616,7 +616,7 @@ export default class condicion extends Expresion {
                                 arbol.errores.push(new Excepcion(arbol.num_error, "SEMANTICO", "No se puede comparar un String con un booleano", this.linea, this.columna));
                                 return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
                             case tipos.CADENA:
-                                if (izquierda?.valor === derecha?.valor.toChar) {
+                                if (izquierda?.valor === derecha?.valor) {
                                     return new Literal(this.linea, this.columna, true, tipos.BOOLEANO);
                                 }
                                 return new Literal(this.linea, this.columna, false, tipos.BOOLEANO);

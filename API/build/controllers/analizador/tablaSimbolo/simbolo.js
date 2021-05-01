@@ -10,7 +10,7 @@ class Simbolo {
         this.CANTIDAD = CANTIDAD;
         if (valor) {
             this.valor = valor;
-            if (valor.valor) {
+            if (valor.valor || typeof (this.valor.valor) === typeof (true)) {
                 if (this.DIMENSION != -1 && typeof (valor.valor) !== typeof ([])) {
                     this.LOV = "VECTOR";
                     switch (this.tipo.tipos) {
@@ -37,7 +37,7 @@ class Simbolo {
                                 let val = [];
                                 this.valor.valor = val;
                                 for (let x = 0; x < this.DIMENSION; x++) {
-                                    this.valor.valor.push('\u0000');
+                                    this.valor.valor.push("\u0000");
                                 }
                             }
                             break;

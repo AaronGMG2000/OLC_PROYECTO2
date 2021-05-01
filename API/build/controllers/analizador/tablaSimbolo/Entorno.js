@@ -85,6 +85,16 @@ class Entorno {
         //Error
         return new simbolo_1.default(new tipo_1.default(tipo_1.tipos.ERROR), 'ERROR', undefined);
     }
+    getLocal(variable) {
+        variable = variable.toUpperCase();
+        if (this.tabla.has(variable)) {
+            var result = this.tabla.get(variable);
+            if (result) {
+                return result;
+            }
+        }
+        return new simbolo_1.default(new tipo_1.default(tipo_1.tipos.ERROR), 'ERROR', undefined);
+    }
 }
 exports.default = Entorno;
 //# sourceMappingURL=Entorno.js.map

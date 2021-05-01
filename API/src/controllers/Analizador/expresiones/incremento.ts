@@ -47,6 +47,7 @@ export default class INCREMENTO extends Expresion {
                 return new Literal(this.linea, this.columna, expre.valor+1, expre.Tipo.tipos);
             }
         }
+        arbol.num_error++;
         arbol.errores.push(new Excepcion(arbol.num_error,"SEMANTICO","Se esperaba un valor numerico",this.linea, this.columna));
         return new Literal(this.linea, this.columna, "ERROR", tipos.ERROR);
     }

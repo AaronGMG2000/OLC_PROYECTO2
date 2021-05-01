@@ -26,10 +26,14 @@ class indexController {
         const Contenido = req.body.Contenido;
         try {
             let parse = require("./Analizador/analizador");
-            parse.num_error = 0;
             let ast = new ArbolAST_1.default([]);
             try {
                 ast = parse.parse(Contenido);
+                if (typeof (ast) == typeof (true)) {
+                    ast = new ArbolAST_1.default([]);
+                    ast.num_error++;
+                    ast.errores.push(new Excepcion_1.default(ast.num_error, "SINTACTICO", "Error inrecuperable", -1, -1));
+                }
             }
             catch (e) {
                 ast.num_error++;
@@ -39,18 +43,22 @@ class indexController {
                 const tabla = new Entorno_1.default();
                 ast.global = tabla;
                 ast.EjecutarBloque();
-                res.json({ consola: ast.consola, Errores: ast.errores });
+                console.log(ast.errores);
+                console.log(ast.lista_simbolos);
+                if (ast.errores.length > 0) {
+                    ast.consola += "\n*******************Errores*********************";
+                    for (let error of ast.errores) {
+                        ast.consola += "\n" + error.toString();
+                    }
+                }
+                res.json({ consola: ast.consola, Errores: ast.errores, Simbolo: ast.lista_simbolos });
             }
             else {
-                res.json({ consola: "", Errores: [] });
+                res.json({ consola: "", Errores: [], Simbolo: [] });
             }
         }
         catch (err) {
-            console.log(err);
-            res.json({
-                salida: err,
-                errores: err
-            });
+            res.json({ consola: "", Errores: [], Simbolo: [] });
         }
     }
 }

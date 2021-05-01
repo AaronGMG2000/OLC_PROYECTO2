@@ -631,7 +631,7 @@ class condicion extends expresion_1.Expresion {
                                 arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede comparar un String con un booleano", this.linea, this.columna));
                                 return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
                             case tipo_1.tipos.CADENA:
-                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) === (derecha === null || derecha === void 0 ? void 0 : derecha.valor.toChar)) {
+                                if ((izquierda === null || izquierda === void 0 ? void 0 : izquierda.valor) === (derecha === null || derecha === void 0 ? void 0 : derecha.valor)) {
                                     return new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
                                 }
                                 return new literal_1.default(this.linea, this.columna, false, tipo_1.tipos.BOOLEANO);

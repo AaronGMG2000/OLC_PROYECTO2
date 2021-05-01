@@ -86,12 +86,12 @@ export default class NATIVA extends Expresion {
                         case tipos.CADENA:
                             if (comp instanceof Simbolo) {
                                 if (comp.LOV==="VECTOR") {
-                                    return new Literal(this.linea, this.columna, "CADENA[]", tipos.CADENA);
+                                    return new Literal(this.linea, this.columna, "STRING[]", tipos.CADENA);
                                 }else{
-                                    return new Literal(this.linea, this.columna, "LIST<CADENA>", tipos.CADENA);
+                                    return new Literal(this.linea, this.columna, "LIST<STRING>", tipos.CADENA);
                                 }
                             }
-                            return new Literal(this.linea, this.columna, "CADENA", tipos.CADENA);
+                            return new Literal(this.linea, this.columna, "STRING", tipos.CADENA);
                     }
                 case "TOSTRING":
                     if (comp instanceof Simbolo) {

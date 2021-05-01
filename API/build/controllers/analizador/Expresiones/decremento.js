@@ -69,6 +69,7 @@ class DECREMENTO extends expresion_1.Expresion {
                 return new literal_1.default(this.linea, this.columna, expre.valor - 1, expre.Tipo.tipos);
             }
         }
+        arbol.num_error++;
         arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "Se esperaba un valor numerico", this.linea, this.columna));
         return new literal_1.default(this.linea, this.columna, "ERROR", tipo_1.tipos.ERROR);
     }

@@ -3,16 +3,18 @@ import Excepcion from "../exceptions/Excepcion";
 import DECLARAR from "../instrucciones/DECLARAR";
 import ArbolAST from "../tablaSimbolo/ArbolAST";
 import Entorno from "../tablaSimbolo/Entorno";
+import ListaSimbolo from "../tablaSimbolo/ListaSimbolos";
 import Tipo, { tipos } from "../tablaSimbolo/tipo";
 
-export default class FUNCION extends Instruccion {
+export default class FUNCIONF extends Instruccion {
     
     public tipo:Tipo;
     public nombre:string;
     public PARAMETRO: Array<DECLARAR> | any;
     public INSTRUCCION: Array<Instruccion>;
     public vector:boolean;
-    
+    public registrada:boolean = false;
+    public reg = false;
     constructor(linea:number, columna:number, tipo:Tipo, nombre:string, INS:Array<Instruccion>, Parametro?:Array<DECLARAR>, vector:boolean=false){
         super(linea, columna);
         this.tipo = tipo;
@@ -23,6 +25,7 @@ export default class FUNCION extends Instruccion {
     }
 
     ejecutar(arbol: ArbolAST, tabla: Entorno) {
+        
         let up = this.nombre.toUpperCase();
         if (up==="LENGTH" || up==="TRUNCATE" || up==="ROUND" 
             || up==="TYPEOF" || up==="TOSTRING" || up==="TOCHARARRAY") {
@@ -38,6 +41,14 @@ export default class FUNCION extends Instruccion {
         }
         var comprobar = tabla.get(this.nombre);
         if (comprobar.tipo.tipos===tipos.ERROR) {
+            if (!this.reg) {
+                if (this.vector) {
+                    arbol.lista_simbolos.push(new ListaSimbolo(arbol.lista_simbolos.length,this.nombre, "METODO", this.tipo.getTipo(), this.linea, this.columna, tabla.nombre));        
+                }else{
+                    arbol.lista_simbolos.push(new ListaSimbolo(arbol.lista_simbolos.length,this.nombre, "FUNCION", this.tipo.getTipo(), this.linea, this.columna, tabla.nombre));        
+                }
+                this.reg = true;
+            }
             tabla.set(this.nombre, this, this.tipo, -1, -1);
             return;
         }

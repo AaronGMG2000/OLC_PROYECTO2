@@ -16,7 +16,7 @@ export default class VARIABLE extends Expresion {
         if (expre.tipo.tipos !== tipos.ERROR){
             return expre.valor;
         }
-        return new Literal(this.linea, this.columna, "ERROR", tipos.ERROR);
+        return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
     }
 
 }

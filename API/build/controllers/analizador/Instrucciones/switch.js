@@ -20,44 +20,48 @@ class SWITCH extends instruccion_1.Instruccion {
             let Nuevo_Entorno = new Entorno_1.default("IF", tabla);
             arbol.pilaCiclo.push("SWITCH");
             if (this.Case) {
+                let correcto = false;
                 for (let caso of this.Case) {
                     let val = caso.Case.getValor();
                     if (val.Tipo.tipos !== tipo_1.tipos.ERROR) {
                         if (variable.Tipo.tipos === val.Tipo.tipos ||
                             variable.Tipo.tipos === tipo_1.tipos.ENTERO && val.Tipo.tipos === tipo_1.tipos.DOBLE ||
                             (variable.Tipo.tipos === tipo_1.tipos.DOBLE && val.Tipo.tipos === tipo_1.tipos.ENTERO)) {
-                            if (val.valor === variable.valor) {
+                            if (val.valor === variable.valor || correcto) {
+                                correcto = true;
                                 for (let elemento of caso.INS) {
-                                    let res = elemento.ejecutar(arbol, Nuevo_Entorno);
-                                    if (typeof (res) === typeof ([])) {
-                                        if (res.nombre === "RETURN") {
-                                            if (arbol.pilaFuncion.length > 0) {
-                                                arbol.pilaCiclo.pop();
-                                                return res;
+                                    if (typeof (elemento) !== typeof ("")) {
+                                        let res = elemento.ejecutar(arbol, Nuevo_Entorno);
+                                        if (typeof (res) === typeof ([])) {
+                                            if (res.nombre === "RETURN") {
+                                                if (arbol.pilaFuncion.length > 0) {
+                                                    arbol.pilaCiclo.pop();
+                                                    return res;
+                                                }
+                                                else {
+                                                    arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "NO SE PUEDE RETORNAR FUERA DE UNA FUNCION", this.linea, this.columna));
+                                                }
                                             }
-                                            else {
-                                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "NO SE PUEDE RETORNAR FUERA DE UNA FUNCION", this.linea, this.columna));
+                                            else if (res.nombre === "BREAK") {
+                                                if (arbol.pilaCiclo.length > 0) {
+                                                    arbol.pilaCiclo.pop();
+                                                    return;
+                                                }
+                                                else {
+                                                    arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "NO SE PUEDE UTILIZAR BREAK FUERA DE UN CICLO", this.linea, this.columna));
+                                                }
                                             }
+                                            else if (res.nombre === "CONTINUE") {
+                                                if (arbol.pilaCiclo.length > 1) {
+                                                    arbol.pilaCiclo.pop();
+                                                    return res;
+                                                }
+                                                else {
+                                                    arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "NO SE PUEDE UTILIZAR CONTINUE FUERA DE UN CICLO", this.linea, this.columna));
+                                                }
+                                            }
+                                            return;
                                         }
-                                        else if (res.nombre === "BREAK") {
-                                            if (arbol.pilaCiclo.length > 0) {
-                                                arbol.pilaCiclo.pop();
-                                                return;
-                                            }
-                                            else {
-                                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "NO SE PUEDE UTILIZAR BREAK FUERA DE UN CICLO", this.linea, this.columna));
-                                            }
-                                        }
-                                        else if (res.nombre === "CONTINUE") {
-                                            if (arbol.pilaCiclo.length > 1) {
-                                                arbol.pilaCiclo.pop();
-                                                return res;
-                                            }
-                                            else {
-                                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "NO SE PUEDE UTILIZAR CONTINUE FUERA DE UN CICLO", this.linea, this.columna));
-                                            }
-                                        }
-                                        return;
                                     }
                                 }
                             }
@@ -77,36 +81,38 @@ class SWITCH extends instruccion_1.Instruccion {
             }
             if (this.Default) {
                 for (let elemento of this.Default) {
-                    let res = elemento.ejecutar(arbol, Nuevo_Entorno);
-                    if (typeof (res) === typeof ([])) {
-                        if (res.nombre === "RETURN") {
-                            if (arbol.pilaFuncion.length > 0) {
-                                arbol.pilaCiclo.pop();
-                                return res;
+                    if (typeof (elemento) !== typeof ("")) {
+                        let res = elemento.ejecutar(arbol, Nuevo_Entorno);
+                        if (typeof (res) === typeof ([])) {
+                            if (res.nombre === "RETURN") {
+                                if (arbol.pilaFuncion.length > 0) {
+                                    arbol.pilaCiclo.pop();
+                                    return res;
+                                }
+                                else {
+                                    arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "NO SE PUEDE RETORNAR FUERA DE UNA FUNCION", this.linea, this.columna));
+                                }
                             }
-                            else {
-                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "NO SE PUEDE RETORNAR FUERA DE UNA FUNCION", this.linea, this.columna));
+                            else if (res.nombre === "BREAK") {
+                                if (arbol.pilaCiclo.length > 0) {
+                                    arbol.pilaCiclo.pop();
+                                    return;
+                                }
+                                else {
+                                    arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "NO SE PUEDE UTILIZAR BREAK FUERA DE UN CICLO", this.linea, this.columna));
+                                }
                             }
+                            else if (res.nombre === "CONTINUE") {
+                                if (arbol.pilaCiclo.length > 1) {
+                                    arbol.pilaCiclo.pop();
+                                    return res;
+                                }
+                                else {
+                                    arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "NO SE PUEDE UTILIZAR CONTINUE FUERA DE UN CICLO", this.linea, this.columna));
+                                }
+                            }
+                            return;
                         }
-                        else if (res.nombre === "BREAK") {
-                            if (arbol.pilaCiclo.length > 0) {
-                                arbol.pilaCiclo.pop();
-                                return;
-                            }
-                            else {
-                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "NO SE PUEDE UTILIZAR BREAK FUERA DE UN CICLO", this.linea, this.columna));
-                            }
-                        }
-                        else if (res.nombre === "CONTINUE") {
-                            if (arbol.pilaCiclo.length > 1) {
-                                arbol.pilaCiclo.pop();
-                                return res;
-                            }
-                            else {
-                                arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "NO SE PUEDE UTILIZAR CONTINUE FUERA DE UN CICLO", this.linea, this.columna));
-                            }
-                        }
-                        return;
                     }
                 }
             }

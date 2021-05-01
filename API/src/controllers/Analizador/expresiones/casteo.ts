@@ -18,17 +18,25 @@ export default class CASTEO extends Expresion {
         let valor = this.exp?.getValor(arbol, tabla);
         switch(this.tipo.tipos){
             case tipos.CADENA:
-                return new Literal(this.linea, this.columna, valor?.valor.toString(), tipos.CADENA);
+                arbol.num_error++;
+                arbol.errores.push(new Excepcion(arbol.num_error, "SINTACTICO","No se puede hacer casteo de un string", this.linea, this.columna));
+                return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
             case tipos.BOOLEANO:
-                return new Literal(this.linea, this.columna, "error", tipos.ERROR);
+                arbol.num_error++;
+                arbol.errores.push(new Excepcion(arbol.num_error, "SINTACTICO","No se puede hacer casteo de double", this.linea, this.columna));
+                return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
             case tipos.DOBLE:
                 switch(valor?.Tipo.tipos){
                     case tipos.BOOLEANO:
-                        return new Literal(this.linea, this.columna, "error", tipos.ERROR);
+                        arbol.num_error++;
+                        arbol.errores.push(new Excepcion(arbol.num_error, "SINTACTICO","No se puede hacer casteo de double a boolean", this.linea, this.columna));
+                        return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
                     case tipos.CARACTER:
                         return new Literal(this.linea, this.columna, valor.valor.charCodeAt(), tipos.DOBLE);
                     case tipos.CADENA:
-                        return new Literal(this.linea, this.columna, "error", tipos.ERROR);
+                        arbol.num_error++;
+                        arbol.errores.push(new Excepcion(arbol.num_error, "SINTACTICO","No se puede hacer casteo de double a string", this.linea, this.columna));
+                        return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
                     case tipos.ENTERO:
                         return new Literal(this.linea, this.columna, Number(valor.valor), tipos.DOBLE);
                     case tipos.DOBLE:
@@ -37,11 +45,15 @@ export default class CASTEO extends Expresion {
             case tipos.ENTERO:
                 switch(valor?.Tipo.tipos){
                     case tipos.BOOLEANO:
-                        return new Literal(this.linea, this.columna, "error", tipos.ERROR);
+                        arbol.num_error++;
+                        arbol.errores.push(new Excepcion(arbol.num_error, "SINTACTICO","No se puede hacer casteo de int a boolean", this.linea, this.columna));
+                        return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
                     case tipos.CARACTER:
                         return new Literal(this.linea, this.columna, valor.valor.charCodeAt(), tipos.ENTERO);
                     case tipos.CADENA:
-                        return new Literal(this.linea, this.columna, "error", tipos.ERROR);
+                        arbol.num_error++;
+                        arbol.errores.push(new Excepcion(arbol.num_error, "SINTACTICO","No se puede hacer casteo de int a string", this.linea, this.columna));
+                        return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
                     case tipos.ENTERO:
                         return new Literal(this.linea, this.columna, Number(valor.valor), tipos.ENTERO);
                     case tipos.DOBLE:
@@ -50,18 +62,26 @@ export default class CASTEO extends Expresion {
             case tipos.CARACTER:
                 switch(valor?.Tipo.tipos){
                     case tipos.BOOLEANO:
-                        return new Literal(this.linea, this.columna, "error", tipos.ERROR);
+                        arbol.num_error++;
+                        arbol.errores.push(new Excepcion(arbol.num_error, "SINTACTICO","No se puede hacer casteo de caracter a boolean", this.linea, this.columna));
+                        return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
                     case tipos.CARACTER:
                         return new Literal(this.linea, this.columna, valor.valor, tipos.ENTERO);
                     case tipos.CADENA:
-                        return new Literal(this.linea, this.columna, "error", tipos.ERROR);
+                        arbol.num_error++;
+                        arbol.errores.push(new Excepcion(arbol.num_error, "SINTACTICO","No se puede hacer casteo de caracter a cadena", this.linea, this.columna));
+                        return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
                     case tipos.ENTERO:
                         console.log(String.fromCharCode(valor.valor));
                         return new Literal(this.linea, this.columna, String.fromCharCode(valor.valor), tipos.CARACTER);
                     case tipos.DOBLE:
-                        return new Literal(this.linea, this.columna, "error", tipos.ERROR);
+                        arbol.num_error++;
+                        arbol.errores.push(new Excepcion(arbol.num_error, "SINTACTICO","No se puede hacer casteo de caracter a double", this.linea, this.columna));
+                        return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
                 }
         }
+        arbol.num_error++;
+        arbol.errores.push(new Excepcion(arbol.num_error, "SINTACTICO","La variable indicada no esta declarada", this.linea, this.columna));
         return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
     }
 }
