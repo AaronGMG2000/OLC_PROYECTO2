@@ -43,8 +43,6 @@ class indexController {
                 const tabla = new Entorno_1.default();
                 ast.global = tabla;
                 ast.EjecutarBloque();
-                console.log(ast.errores);
-                console.log(ast.lista_simbolos);
                 if (ast.errores.length > 0) {
                     ast.consola += "\n*******************Errores*********************";
                     for (let error of ast.errores) {
@@ -60,6 +58,16 @@ class indexController {
         catch (err) {
             res.json({ consola: "", Errores: [], Simbolo: [] });
         }
+    }
+    open(req, res) {
+        try {
+            const Contenido = req.body.Contenido;
+            let parse = require("./Analizador/analizador");
+            let ast = new ArbolAST_1.default([]);
+            ast = parse.parse(Contenido);
+            ast.openFile();
+        }
+        catch (_a) { }
     }
 }
 exports.IndexController = new indexController();

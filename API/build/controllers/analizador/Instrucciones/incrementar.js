@@ -8,9 +8,14 @@ class INCREMENT extends instruccion_1.Instruccion {
     }
     ejecutar(arbol, tabla) {
         if (this.exp) {
-            this.exp.getValor(arbol, tabla);
+            let v = this.exp.getValor(arbol, tabla);
         }
         //ERROR
+    }
+    getNodo() {
+        let nodo = this.exp.getNodo();
+        nodo.agregarHijo(";");
+        return nodo;
     }
 }
 exports.default = INCREMENT;

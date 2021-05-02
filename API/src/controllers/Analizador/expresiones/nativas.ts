@@ -1,3 +1,4 @@
+import { nodoAST } from "../Abstract/nodoAST";
 import Excepcion from "../exceptions/Excepcion";
 import ArbolAST from "../tablaSimbolo/ArbolAST";
 import Entorno from "../tablaSimbolo/Entorno";
@@ -25,9 +26,9 @@ export default class NATIVA extends Expresion {
             }
             switch(this.nombre.toUpperCase()){
                 case "LENGTH":
-                    if (!(valor.valor instanceof Array)) {
+                    if (!(valor.valor instanceof Array) && typeof(valor.valor)!== typeof("")) {
                         arbol.num_error++;
-                        arbol.errores.push(new Excepcion(arbol.num_error, "SEMANTICO","El valor ingresado no es una lista o vector",this.linea, this.columna));
+                        arbol.errores.push(new Excepcion(arbol.num_error, "SEMANTICO","El valor ingresado no es una lista o vector o string",this.linea, this.columna));
                         return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
                     }
                     return new Literal(this.linea, this.columna, valor.valor.length, tipos.ENTERO);
@@ -92,15 +93,16 @@ export default class NATIVA extends Expresion {
                                 }
                             }
                             return new Literal(this.linea, this.columna, "STRING", tipos.CADENA);
+                        default:
+                            return new Literal(this.linea, this.columna, "error", tipos.ERROR);
                     }
                 case "TOSTRING":
-                    if (comp instanceof Simbolo) {
-                        arbol.num_error++;
-                        arbol.errores.push(new Excepcion(arbol.num_error, "SEMANTICO","No se puede convertir un vector o lista en string",this.linea, this.columna));
-                        return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
-                    }
-                    if(typeof(valor.valor)===typeof("")){
-
+                    if (comp.valor instanceof Literal) {
+                        if (comp.valor.valor instanceof Array) {
+                            arbol.num_error++;
+                            arbol.errores.push(new Excepcion(arbol.num_error, "SEMANTICO","No se puede convertir un vector o lista en string",this.linea, this.columna));
+                            return new Literal(this.linea, this.columna, "error", tipos.ERROR);
+                        }
                     }
                     return new Literal(this.linea, this.columna, String(valor.valor), tipos.CADENA);
                 case "TOCHARARRAY":
@@ -120,5 +122,14 @@ export default class NATIVA extends Expresion {
         arbol.num_error++;
         arbol.errores.push(new Excepcion(arbol.num_error, "SEMANTICO","El valor indicado no existe",this.linea, this.columna));
         return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
+    }
+
+    getNodo():nodoAST{
+        let nodo = new nodoAST("NATIVA");
+        nodo.agregarHijo(this.nombre.toUpperCase());
+        nodo.agregarHijo("(");
+        nodo.agregarHijo(undefined, undefined, this.exp.getNodo());
+        nodo.agregarHijo(")");
+        return nodo;
     }
 }

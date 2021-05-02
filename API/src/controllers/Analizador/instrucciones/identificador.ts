@@ -3,6 +3,7 @@ import Entorno from "../tablaSimbolo/Entorno";
 import Tipo, { tipos } from "../tablaSimbolo/tipo";
 import { Expresion } from "../expresiones/expresion";
 import Simbolo from "../tablaSimbolo/simbolo";
+import { nodoAST } from "../Abstract/nodoAST";
 
 export default class identificador extends Expresion {
     public ID: String;
@@ -16,6 +17,11 @@ export default class identificador extends Expresion {
        this.valor = simb.valor;
        this.Tipo = simb.tipo;
        return this;
+    }
+
+    getNodo():nodoAST{
+        let nodo:nodoAST = new nodoAST("IDENTIFICADOR");
+        return nodo;
     }
 
 }

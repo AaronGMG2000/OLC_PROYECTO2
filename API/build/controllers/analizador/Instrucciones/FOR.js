@@ -4,7 +4,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const instruccion_1 = require("../Abstract/instruccion");
+const nodoAST_1 = require("../Abstract/nodoAST");
 const Excepcion_1 = __importDefault(require("../exceptions/Excepcion"));
+const literal_1 = __importDefault(require("../expresiones/literal"));
 const Entorno_1 = __importDefault(require("../tablaSimbolo/Entorno"));
 const tipo_1 = require("../tablaSimbolo/tipo");
 class FOR extends instruccion_1.Instruccion {
@@ -27,13 +29,7 @@ class FOR extends instruccion_1.Instruccion {
             dec = this.declaracion.ejecutar(arbol, tabla);
         }
         if (dec) {
-            let condicion = undefined;
-            if (this.tipo === "DEC") {
-                condicion = this.condicion.getValor(arbol, Nuevo_Entorno);
-            }
-            else {
-                condicion = this.condicion.getValor(arbol, tabla);
-            }
+            let condicion = new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
             if (condicion.Tipo.tipos === tipo_1.tipos.BOOLEANO) {
                 let cont = false;
                 let bre = false;
@@ -59,6 +55,7 @@ class FOR extends instruccion_1.Instruccion {
                                     break;
                                 }
                                 else if (res.nombre === "BREAK") {
+                                    this.ast = true;
                                     bre = true;
                                     break;
                                 }
@@ -92,10 +89,39 @@ class FOR extends instruccion_1.Instruccion {
                         condicion = this.condicion.getValor(arbol, tabla);
                     }
                 }
+                this.ast = true;
                 arbol.pilaCiclo.pop();
+                return;
             }
+            arbol.num_error++;
+            arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SINTACTICO", "Se esperaba un booleano en la condición del for", this.linea, this.columna));
+            return;
         }
+        arbol.num_error++;
+        arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SINTACTICO", "error al declarar o asignar variable en el for", this.linea, this.columna));
+        return;
         //ERROR
+    }
+    getNodo() {
+        let nodo = new nodoAST_1.nodoAST("FOR");
+        nodo.agregarHijo("FOR");
+        nodo.agregarHijo("(");
+        nodo.agregarHijo(undefined, undefined, this.declaracion.getNodo());
+        nodo.agregarHijo(";");
+        nodo.agregarHijo(undefined, undefined, this.condicion.getNodo());
+        nodo.agregarHijo(";");
+        nodo.agregarHijo(undefined, undefined, this.actualizacion.getNodo());
+        nodo.agregarHijo(")");
+        nodo.agregarHijo("{");
+        for (let element of this.bloque1) {
+            let nodo2 = new nodoAST_1.nodoAST("INSTRUCCIONES");
+            if (typeof (element) !== typeof ("")) {
+                nodo2.agregarHijo(undefined, undefined, element.getNodo());
+            }
+            nodo.agregarHijo(undefined, undefined, nodo2);
+        }
+        nodo.agregarHijo("}");
+        return nodo;
     }
 }
 exports.default = FOR;

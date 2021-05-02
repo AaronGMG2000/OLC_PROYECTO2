@@ -1,6 +1,8 @@
 import { Instruccion } from "../Abstract/instruccion";
+import { nodoAST } from "../Abstract/nodoAST";
 import Excepcion from "../exceptions/Excepcion";
 import { Expresion } from "../expresiones/expresion";
+import Literal from "../expresiones/literal";
 import ArbolAST from "../tablaSimbolo/ArbolAST";
 import Entorno from "../tablaSimbolo/Entorno";
 import Tipo, { tipos } from "../tablaSimbolo/tipo";
@@ -29,12 +31,8 @@ export default class FOR extends Instruccion {
             dec = this.declaracion.ejecutar(arbol, tabla);
         }
         if (dec) {
-            let condicion:any=undefined;
-            if (this.tipo ==="DEC") {
-                condicion = this.condicion.getValor(arbol, Nuevo_Entorno);
-            }else{
-                condicion = this.condicion.getValor(arbol, tabla);
-            }
+            let condicion:any= new Literal(this.linea, this.columna,true, tipos.BOOLEANO);
+            
             if(condicion.Tipo.tipos === tipos.BOOLEANO){
                 let cont = false;
                 let bre = false;
@@ -61,6 +59,7 @@ export default class FOR extends Instruccion {
                                     break;
                                 }
                                 else if(res.nombre === "BREAK"){
+                                    this.ast = true;
                                     bre = true;
                                     break;
                                 }
@@ -69,6 +68,7 @@ export default class FOR extends Instruccion {
                             console.log(arbol.errores);
                         }
                     }
+
                     if(cont){
                         cont = false;
                         
@@ -91,10 +91,42 @@ export default class FOR extends Instruccion {
                         this.actualizacion.ejecutar(arbol, tabla);
                         condicion = this.condicion.getValor(arbol, tabla);
                     }
+
                 }
+                this.ast=true;
+
                 arbol.pilaCiclo.pop();
+                return;
             }
+            arbol.num_error++;
+            arbol.errores.push(new Excepcion(arbol.num_error, "SINTACTICO","Se esperaba un booleano en la condición del for", this.linea, this.columna));
+            return;
         }
+        arbol.num_error++;
+        arbol.errores.push(new Excepcion(arbol.num_error, "SINTACTICO","error al declarar o asignar variable en el for", this.linea, this.columna));
+        return;
         //ERROR
+    }
+
+    getNodo():nodoAST{
+        let nodo:nodoAST = new nodoAST("FOR");
+        nodo.agregarHijo("FOR");
+        nodo.agregarHijo("(");
+        nodo.agregarHijo(undefined,undefined,this.declaracion.getNodo());
+        nodo.agregarHijo(";");
+        nodo.agregarHijo(undefined, undefined, this.condicion.getNodo());
+        nodo.agregarHijo(";");
+        nodo.agregarHijo(undefined, undefined, this.actualizacion.getNodo());
+        nodo.agregarHijo(")");
+        nodo.agregarHijo("{");
+        for(let element of this.bloque1){
+            let nodo2 = new nodoAST("INSTRUCCIONES");
+            if(typeof(element) !== typeof("")){
+                nodo2.agregarHijo(undefined, undefined, element.getNodo());
+            }
+            nodo.agregarHijo(undefined, undefined, nodo2);
+        }
+        nodo.agregarHijo("}");
+        return nodo;
     }
 }

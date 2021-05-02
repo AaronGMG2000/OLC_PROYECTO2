@@ -22,6 +22,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const nodoAST_1 = require("../Abstract/nodoAST");
 const Excepcion_1 = __importDefault(require("../exceptions/Excepcion"));
 const expresion_1 = require("../expresiones/expresion");
 const tipo_1 = __importStar(require("../tablaSimbolo/tipo"));
@@ -65,6 +66,15 @@ class TERNARIO extends expresion_1.Expresion {
         arbol.num_error++;
         arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SINTACTICO", "la variable indicada en la condición no existe", this.linea, this.columna));
         return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+    }
+    getNodo() {
+        let nodo = new nodoAST_1.nodoAST("TERNARIO");
+        nodo.agregarHijo(undefined, undefined, this.condicion.getNodo());
+        nodo.agregarHijo("?");
+        nodo.agregarHijo(undefined, undefined, this.exp1.getNodo());
+        nodo.agregarHijo(":");
+        nodo.agregarHijo(undefined, undefined, this.exp2.getNodo());
+        return nodo;
     }
 }
 exports.default = TERNARIO;

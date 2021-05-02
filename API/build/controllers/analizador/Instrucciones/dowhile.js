@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const instruccion_1 = require("../Abstract/instruccion");
+const nodoAST_1 = require("../Abstract/nodoAST");
 const Excepcion_1 = __importDefault(require("../exceptions/Excepcion"));
 const Entorno_1 = __importDefault(require("../tablaSimbolo/Entorno"));
 const tipo_1 = require("../tablaSimbolo/tipo");
@@ -53,6 +54,7 @@ class DOWHILE extends instruccion_1.Instruccion {
                 cont = false;
             }
             if (bre) {
+                this.ast = true;
                 arbol.pilaCiclo.pop();
                 return;
             }
@@ -79,6 +81,7 @@ class DOWHILE extends instruccion_1.Instruccion {
                                 break;
                             }
                             else if (res.nombre === "BREAK") {
+                                this.ast = true;
                                 bre = true;
                                 break;
                             }
@@ -98,9 +101,33 @@ class DOWHILE extends instruccion_1.Instruccion {
                 }
                 condicion = this.condicion1.getValor(arbol, tabla);
             }
+            this.ast = true;
             arbol.pilaCiclo.pop();
+            return;
         }
+        arbol.num_error++;
+        arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SINTACTICO", "Se esperaba un booleano en la condición do while", this.linea, this.columna));
+        return;
         //ERROR
+    }
+    getNodo() {
+        let nodo = new nodoAST_1.nodoAST("DO-WHILE");
+        nodo.agregarHijo("DO");
+        nodo.agregarHijo("{");
+        let nodo2 = new nodoAST_1.nodoAST("INSTRUCCIONES");
+        for (let element of this.bloque1) {
+            if (typeof (element) !== typeof ("")) {
+                nodo2.agregarHijo(undefined, undefined, element.getNodo());
+            }
+        }
+        nodo.agregarHijo(undefined, undefined, nodo2);
+        nodo.agregarHijo("}");
+        nodo.agregarHijo("WHILE");
+        nodo.agregarHijo("(");
+        nodo.agregarHijo(undefined, undefined, this.condicion1.getNodo());
+        nodo.agregarHijo(")");
+        nodo.agregarHijo(";");
+        return nodo;
     }
 }
 exports.default = DOWHILE;

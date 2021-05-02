@@ -22,6 +22,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const nodoAST_1 = require("../Abstract/nodoAST");
 const tipo_1 = __importStar(require("../tablaSimbolo/tipo"));
 const expresion_1 = require("./expresion");
 const literal_1 = __importDefault(require("./literal"));
@@ -34,9 +35,15 @@ class VARIABLE extends expresion_1.Expresion {
     getValor(arbol, tabla) {
         let expre = tabla.get(this.nombre);
         if (expre.tipo.tipos !== tipo_1.tipos.ERROR) {
+            this.expre = expre;
             return expre.valor;
         }
         return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+    }
+    getNodo() {
+        let nodo = new nodoAST_1.nodoAST("VARIABLE");
+        nodo.agregarHijo(this.nombre);
+        return nodo;
     }
 }
 exports.default = VARIABLE;

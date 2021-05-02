@@ -194,7 +194,7 @@ INS
     | DECREMENTO PTCOMA                             {$$ = new DEC.default(this._$.first_line, this._$.first_column, $1);}
     | DOWHILE                                       {$$ = $1}
     | FUNCION                                       {$$ = $1}
-    | LLAMADA PTCOMA                                {$$ = new LLAMADA.default(this._$.first_line, this._$.first_column, $1);}
+    | LLAMADA PTCOMA                                {if($1){$$ = new LLAMADA.default(this._$.first_line, this._$.first_column, $1);}else{$$="";}}
     | FRETURN                                       {$$ = $1}
     | BREAK PTCOMA                                  {$$ = new BREAK.default(this._$.first_line, this._$.first_column);}
     | CONTINUE PTCOMA                               {$$ = new CONTINUE.default(this._$.first_line, this._$.first_column);}
@@ -295,8 +295,8 @@ DOWHILE
 LLAMADA
     :ID PARIZ L_EXP PARDER              {$$ = new FUNCION.default(this._$.first_line, this._$.first_column, $1, $3);}
     |ID PARIZ PARDER                    {$$ = new FUNCION.default(this._$.first_line, this._$.first_column, $1, undefined);}
-    |EXEC ID PARIZ L_EXP PARDER         {$$ = ""; ArbolAST.exec.push(new FUNCION.default(this._$.first_line, this._$.first_column, $2, $4));}
-    |EXEC ID PARIZ PARDER               {$$ = ""; ArbolAST.exec.push(new FUNCION.default(this._$.first_line, this._$.first_column, $2, undefined));}
+    |EXEC ID PARIZ L_EXP PARDER         {$$ = undefined; ArbolAST.exec.push(new FUNCION.default(this._$.first_line, this._$.first_column, $2, $4));}
+    |EXEC ID PARIZ PARDER               {$$ = undefined; ArbolAST.exec.push(new FUNCION.default(this._$.first_line, this._$.first_column, $2, undefined));}
 ;
 
 FTIPO

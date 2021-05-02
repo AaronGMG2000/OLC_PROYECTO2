@@ -31,8 +31,6 @@ class indexController {
                 const tabla = new Entorno();
                 ast.global = tabla;
                 ast.EjecutarBloque();
-                console.log(ast.errores);
-                console.log(ast.lista_simbolos);
                 if (ast.errores.length>0) {
                     ast.consola+="\n*******************Errores*********************";
                     for(let error of ast.errores){
@@ -43,10 +41,19 @@ class indexController {
             }else{
                 res.json({consola:"", Errores:[], Simbolo:[]});
             }
-            
         } catch (err) {
             res.json({consola:"", Errores:[], Simbolo:[]});
         }
+    }
+
+    public open(req: Request, res: Response){
+        try{
+            const Contenido = req.body.Contenido;
+            let parse = require("./Analizador/analizador");
+            let ast = new ArbolAST([]);
+            ast = parse.parse(Contenido);
+            ast.openFile();
+        }catch{}
     }
 }
 

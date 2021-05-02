@@ -1,4 +1,5 @@
 import { Instruccion } from "../Abstract/instruccion";
+import { nodoAST } from "../Abstract/nodoAST";
 import Excepcion from "../exceptions/Excepcion";
 import { Expresion } from "../expresiones/expresion";
 import ArbolAST from "../tablaSimbolo/ArbolAST";
@@ -22,6 +23,7 @@ export default class Imprimir extends Instruccion {
                         arbol.errores.push(new Excepcion(arbol.num_error, "SINTACTICO","No se puede imprimir una lista o vector",this.linea, this.columna));   
                         return;
                     }
+                    this.ast = true;
                     if (arbol.consola==="") {
                         arbol.consola+=result.valor;
                     }else{
@@ -30,5 +32,15 @@ export default class Imprimir extends Instruccion {
                 }
             }
         }
+    }
+
+    getNodo():nodoAST{
+        let nodo:nodoAST = new nodoAST("PRINT");
+        nodo.agregarHijo("print");
+        nodo.agregarHijo("(");
+        nodo.agregarHijo(undefined,undefined,this.exp.getNodo());
+        nodo.agregarHijo(")");
+        nodo.agregarHijo(";");
+        return nodo;
     }
 }

@@ -22,6 +22,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const nodoAST_1 = require("../Abstract/nodoAST");
 const Excepcion_1 = __importDefault(require("../exceptions/Excepcion"));
 const tipo_1 = __importStar(require("../tablaSimbolo/tipo"));
 const expresion_1 = require("./expresion");
@@ -64,6 +65,26 @@ class VECTOR extends expresion_1.Expresion {
             arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "La lista indicada no existe", this.linea, this.columna));
             return new literal_1.default(this.linea, this.columna, "ERROR", tipo_1.tipos.ERROR);
         }
+    }
+    getNodo() {
+        let nodo = new nodoAST_1.nodoAST("");
+        if (this.tip === "LIST") {
+            nodo = new nodoAST_1.nodoAST("LISTA");
+            nodo.agregarHijo(this.nombre);
+            nodo.agregarHijo("[");
+            nodo.agregarHijo("[");
+            nodo.agregarHijo(undefined, undefined, this.posicion.getNodo());
+            nodo.agregarHijo("]");
+            nodo.agregarHijo("]");
+        }
+        else {
+            nodo = new nodoAST_1.nodoAST("VECTOR");
+            nodo.agregarHijo(this.nombre);
+            nodo.agregarHijo("[");
+            nodo.agregarHijo(undefined, undefined, this.posicion.getNodo());
+            nodo.agregarHijo("]");
+        }
+        return nodo;
     }
 }
 exports.default = VECTOR;

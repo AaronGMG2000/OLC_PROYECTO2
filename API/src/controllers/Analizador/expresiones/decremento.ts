@@ -1,3 +1,4 @@
+import { nodoAST } from "../Abstract/nodoAST";
 import Excepcion from "../exceptions/Excepcion";
 import ArbolAST from "../tablaSimbolo/ArbolAST";
 import Entorno from "../tablaSimbolo/Entorno";
@@ -50,6 +51,13 @@ export default class DECREMENTO extends Expresion {
         arbol.num_error++;
         arbol.errores.push(new Excepcion(arbol.num_error,"SEMANTICO","Se esperaba un valor numerico",this.linea, this.columna));
         return new Literal(this.linea, this.columna, "ERROR", tipos.ERROR);
+    }
+
+    getNodo():nodoAST{
+        let nodo = new nodoAST("DECREMENTO");
+        nodo.agregarHijo(undefined, undefined, this.exp.getNodo());
+        nodo.agregarHijo("--");
+        return nodo;
     }
 
 }

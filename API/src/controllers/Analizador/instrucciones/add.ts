@@ -1,16 +1,18 @@
 import { Instruccion } from "../Abstract/instruccion";
+import { nodoAST } from "../Abstract/nodoAST";
 import Excepcion from "../exceptions/Excepcion";
 import { Expresion } from "../expresiones/expresion";
 import DECLARAR from "../instrucciones/DECLARAR";
 import ArbolAST from "../tablaSimbolo/ArbolAST";
 import Entorno from "../tablaSimbolo/Entorno";
+import Simbolo from "../tablaSimbolo/simbolo";
 import Tipo, { tipos } from "../tablaSimbolo/tipo";
 
 export default class ADD extends Instruccion {
     
     public ID:string;
     public exp:Expresion;
-    
+    public ast:boolean=false;
     constructor(linea:number, columna:number, ID:string, exp:Expresion){
         super(linea, columna);
         this.ID = ID;
@@ -31,6 +33,7 @@ export default class ADD extends Instruccion {
                 arbol.errores.push(new Excepcion(arbol.num_error, "SEMANTICO", "El tipo de la lista y la expresión no coinciden", this.linea, this.columna));
                 return;
             }
+            this.ast = true;
             comprobar.valor.valor.push(valor.valor);
             comprobar.CANTIDAD++;
             tabla.update(this.ID, comprobar);
@@ -42,4 +45,16 @@ export default class ADD extends Instruccion {
         // ERROR
     }
 
+    getNodo():nodoAST{
+        let nodo:nodoAST = new nodoAST("ADD");
+        let nodo2:nodoAST = new nodoAST("ID");
+        nodo2.agregarHijo(this.ID);
+        nodo.agregarHijo(undefined, undefined, nodo2);
+        nodo.agregarHijo("add");
+        nodo.agregarHijo(".");
+        nodo.agregarHijo("(");
+        nodo.agregarHijo(undefined,undefined,this.exp.getNodo());
+        nodo.agregarHijo(")");
+        return nodo;
+    }
 }

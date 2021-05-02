@@ -40,7 +40,7 @@ export class IndexComponent implements OnInit {
         icon: 'image',
         hint: 'AST',
         stylingMode: 'contained',
-        // onClick: this.obtenerVariable.bind(this),
+        onClick: this.GRAFICAR.bind(this),
       },
     },
     {
@@ -173,6 +173,18 @@ export class IndexComponent implements OnInit {
         this.actual.consola = this.CONSOLA;
         this.errores = res.Errores;
         this.simbolos = res.Simbolo;
+      },
+      (err: any) => console.log(err)
+    );
+  }
+
+  GRAFICAR(): void{
+    const cont:Contenido = {
+      Contenido: this.CONTENT
+    };
+    this.compilador.GRAFICAR(cont).subscribe(
+      (res: any) => {
+        console.log("correcto");
       },
       (err: any) => console.log(err)
     );

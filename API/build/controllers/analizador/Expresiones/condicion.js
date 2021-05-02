@@ -22,6 +22,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const nodoAST_1 = require("../Abstract/nodoAST");
 const Excepcion_1 = __importDefault(require("../exceptions/Excepcion"));
 const tipo_1 = __importStar(require("../tablaSimbolo/tipo"));
 const expresion_1 = require("./expresion");
@@ -859,6 +860,19 @@ class condicion extends expresion_1.Expresion {
                 arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "Se esperaba tipo booleano", this.linea, this.columna));
         }
         return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+    }
+    getNodo() {
+        let nodo = new nodoAST_1.nodoAST("CONDICION");
+        if (this.ExpresionDerecha && this.ExpresionIzquierda) {
+            nodo.agregarHijo(undefined, undefined, this.ExpresionIzquierda.getNodo());
+            nodo.agregarHijo(this.operador);
+            nodo.agregarHijo(undefined, undefined, this.ExpresionDerecha.getNodo());
+        }
+        else if (this.ExpresionIzquierda) {
+            nodo.agregarHijo(this.operador);
+            nodo.agregarHijo(undefined, undefined, this.ExpresionIzquierda.getNodo());
+        }
+        return nodo;
     }
 }
 exports.default = condicion;

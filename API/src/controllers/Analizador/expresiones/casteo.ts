@@ -1,3 +1,4 @@
+import { nodoAST } from "../Abstract/nodoAST";
 import Excepcion from "../exceptions/Excepcion";
 import ArbolAST from "../tablaSimbolo/ArbolAST";
 import Entorno from "../tablaSimbolo/Entorno";
@@ -83,5 +84,14 @@ export default class CASTEO extends Expresion {
         arbol.num_error++;
         arbol.errores.push(new Excepcion(arbol.num_error, "SINTACTICO","La variable indicada no esta declarada", this.linea, this.columna));
         return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
+    }
+
+    getNodo():nodoAST{
+        let nodo = new nodoAST("CASTEO");
+        nodo.agregarHijo("(");
+        nodo.agregarHijo(undefined, undefined, this.Tipo.getNodo());
+        nodo.agregarHijo(")");
+        nodo.agregarHijo(undefined, undefined, this.exp?.getNodo());
+        return nodo;
     }
 }

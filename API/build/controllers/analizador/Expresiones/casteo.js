@@ -22,6 +22,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const nodoAST_1 = require("../Abstract/nodoAST");
 const Excepcion_1 = __importDefault(require("../exceptions/Excepcion"));
 const tipo_1 = __importStar(require("../tablaSimbolo/tipo"));
 const expresion_1 = require("./expresion");
@@ -102,6 +103,15 @@ class CASTEO extends expresion_1.Expresion {
         arbol.num_error++;
         arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SINTACTICO", "La variable indicada no esta declarada", this.linea, this.columna));
         return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+    }
+    getNodo() {
+        var _a;
+        let nodo = new nodoAST_1.nodoAST("CASTEO");
+        nodo.agregarHijo("(");
+        nodo.agregarHijo(undefined, undefined, this.Tipo.getNodo());
+        nodo.agregarHijo(")");
+        nodo.agregarHijo(undefined, undefined, (_a = this.exp) === null || _a === void 0 ? void 0 : _a.getNodo());
+        return nodo;
     }
 }
 exports.default = CASTEO;

@@ -9,6 +9,7 @@ class IndexRoutes {
 
     public config(): void {
         this.router.post("/Compilar", IndexController.interpretar);
+        this.router.post("/GRAFICAR", IndexController.open);
     }
 }
 const indexRoutes = new IndexRoutes();

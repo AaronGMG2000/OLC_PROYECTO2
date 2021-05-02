@@ -29,6 +29,7 @@ const tipo_1 = __importStar(require("../tablaSimbolo/tipo"));
 const literal_1 = __importDefault(require("./literal"));
 const ListaSimbolos_1 = __importDefault(require("../tablaSimbolo/ListaSimbolos"));
 const funcion_1 = __importDefault(require("../instrucciones/funcion"));
+const nodoAST_1 = require("../Abstract/nodoAST");
 class FUNCION extends expresion_1.Expresion {
     constructor(linea, columna, nombre, parametros) {
         const tip = new tipo_1.default(tipo_1.tipos.ENTERO);
@@ -144,6 +145,22 @@ class FUNCION extends expresion_1.Expresion {
         arbol.num_error++;
         arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se encontro la función", this.linea, this.columna));
         return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+    }
+    getNodo() {
+        let nodo = new nodoAST_1.nodoAST("LLAMADA");
+        nodo.agregarHijo(this.nombre);
+        nodo.agregarHijo("(");
+        if (this.parametros) {
+            let nodo2 = new nodoAST_1.nodoAST("PARAMETROS");
+            for (let element of this.parametros) {
+                if (typeof (this.parametros) !== typeof ("")) {
+                    nodo2.agregarHijo(undefined, undefined, element.getNodo());
+                }
+            }
+            nodo.agregarHijo(undefined, undefined, nodo2);
+        }
+        nodo.agregarHijo(")");
+        return nodo;
     }
 }
 exports.default = FUNCION;

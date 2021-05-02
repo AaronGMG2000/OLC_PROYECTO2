@@ -1,3 +1,4 @@
+import { nodoAST } from "../Abstract/nodoAST";
 import ArbolAST from "../tablaSimbolo/ArbolAST";
 import Entorno from "../tablaSimbolo/Entorno";
 import Tipo, { tipos } from "../tablaSimbolo/tipo";
@@ -34,4 +35,9 @@ export default class Literal extends Expresion {
         return this;
     }
 
+    public getNodo():nodoAST{
+        let nodo:nodoAST = new nodoAST(this.Tipo.tipos);
+        nodo.agregarHijo(String(this.valor));
+        return nodo;
+    }
 }

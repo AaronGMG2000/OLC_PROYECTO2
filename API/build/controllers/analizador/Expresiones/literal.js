@@ -19,6 +19,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const nodoAST_1 = require("../Abstract/nodoAST");
 const tipo_1 = __importStar(require("../tablaSimbolo/tipo"));
 const expresion_1 = require("./expresion");
 class Literal extends expresion_1.Expresion {
@@ -49,6 +50,11 @@ class Literal extends expresion_1.Expresion {
     }
     getValor(arbol, tabla) {
         return this;
+    }
+    getNodo() {
+        let nodo = new nodoAST_1.nodoAST(this.Tipo.tipos);
+        nodo.agregarHijo(String(this.valor));
+        return nodo;
     }
 }
 exports.default = Literal;

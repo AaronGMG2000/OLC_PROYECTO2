@@ -22,6 +22,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const nodoAST_1 = require("../Abstract/nodoAST");
 const Excepcion_1 = __importDefault(require("../exceptions/Excepcion"));
 const tipo_1 = __importStar(require("../tablaSimbolo/tipo"));
 const expresion_1 = require("./expresion");
@@ -49,6 +50,14 @@ class DECREMENTO extends expresion_1.Expresion {
             return new literal_1.default(this.linea, this.columna, "ERROR", tipo_1.tipos.ERROR);
         }
         return new literal_1.default(this.linea, this.columna, "ERROR", tipo_1.tipos.ERROR);
+    }
+    getNodo() {
+        let nodo = new nodoAST_1.nodoAST("TOUPPER");
+        nodo.agregarHijo("ToUpper");
+        nodo.agregarHijo("(");
+        nodo.agregarHijo(undefined, undefined, this.exp.getNodo());
+        nodo.agregarHijo(")");
+        return nodo;
     }
 }
 exports.default = DECREMENTO;

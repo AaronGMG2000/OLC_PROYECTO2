@@ -1,4 +1,5 @@
 import { node } from "../Abstract/nodo";
+import { nodoAST } from "../Abstract/nodoAST";
 import ArbolAST from "../tablaSimbolo/ArbolAST";
 import Entorno from "../tablaSimbolo/Entorno";
 import Tipo from "../tablaSimbolo/tipo";
@@ -22,5 +23,6 @@ export abstract class Expresion extends node {
     }
 
     abstract getValor(arbol: ArbolAST, tabla: Entorno):Expresion;
+    public abstract getNodo():nodoAST;
     // TODO graficar AST
 }

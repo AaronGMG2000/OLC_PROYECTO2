@@ -1,4 +1,5 @@
 import { Instruccion } from "../Abstract/instruccion";
+import { nodoAST } from "../Abstract/nodoAST";
 import Excepcion from "../exceptions/Excepcion";
 import { Expresion } from "../expresiones/expresion";
 import Literal from "../expresiones/literal";
@@ -15,6 +16,9 @@ export default class DECLARAR extends Instruccion {
     public tipo2:Tipo | any;
     public DIMENSION:Expresion|any;
     public CANTIDAD:Expresion|any;
+    public lista:any[] = [];
+    public v1 = 0;
+    public v2 = 0;
     constructor(linea:number, columna:number, ID:string, Tipo:Tipo, DIMENSION?:Expresion, CANTIDAD?:Expresion, exp?:Expresion, tipo2?:Tipo){
         super(linea, columna);
         if(!exp && typeof(DIMENSION)!==typeof(-1)  && typeof(DIMENSION)!==typeof(undefined)){
@@ -60,12 +64,14 @@ export default class DECLARAR extends Instruccion {
                         return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
                     }
                     nueva.push(value.valor);
+                    this.lista.push(new Literal(this.linea, this.columna, value.valor, this.tipo.tipos));
                 }else{
                     arbol.num_error++;
                     arbol.errores.push(new Excepcion(arbol.num_error, "SINTACTICO","fallo al obtener el valor", valores.linea, valores.columna));
                     return new Literal(this.linea, this.columna, undefined, tipos.ERROR); 
                 }
             }
+            this.lista = nueva;
             nueva_variable = new Literal(this.linea, this.columna, nueva, this.tipo.tipos, true);
         }
         if(comprobar.tipo.tipos===tipos.ERROR){
@@ -80,6 +86,7 @@ export default class DECLARAR extends Instruccion {
             let v2 = -1;
             if (typeof(this.DIMENSION)!==typeof(-1)) {
                 v1 = this.DIMENSION.getValor(arbol, tabla).valor;
+                this.v1 = v1;
             }
             if (typeof(this.CANTIDAD)!==typeof(-1)) {
                 v2 = this.CANTIDAD.getValor(arbol, tabla).valor;
@@ -121,6 +128,7 @@ export default class DECLARAR extends Instruccion {
                     arbol.lista_simbolos.push(new ListaSimbolo(arbol.lista_simbolos.length,this.ID, "VARIABLE", this.tipo.getTipo(), this.linea, this.columna, tabla.nombre));        
                 }
             }
+            this.ast = true;
             tabla.set(this.ID, ex, this.tipo, v1, v2);
             return true;
         }
@@ -129,4 +137,74 @@ export default class DECLARAR extends Instruccion {
         return false;
     }
 
+    getNodo():nodoAST{
+        let nodo:nodoAST = new nodoAST("DECLARAR");
+        if (typeof(this.DIMENSION)!==typeof(-1) && this.exp instanceof Array) {
+            nodo.agregarHijo(undefined, undefined,this.tipo.getNodo())
+            nodo.agregarHijo("[");
+            nodo.agregarHijo("]");
+            nodo.agregarHijo(this.ID);
+            nodo.agregarHijo("=");
+            nodo.agregarHijo("{");
+            let nodo2 = new nodoAST("EXPRESIONES")
+            for(let element of this.exp){
+                nodo2.agregarHijo(undefined, undefined,element.getNodo());
+            }
+            nodo.agregarHijo(undefined, undefined, nodo2);
+            nodo.agregarHijo("}");
+            nodo.agregarHijo(";")
+        }
+        else if (typeof(this.DIMENSION)!==typeof(-1)) {
+            nodo.agregarHijo(undefined, undefined,this.tipo.getNodo())
+            nodo.agregarHijo("[");
+            nodo.agregarHijo("]");
+            nodo.agregarHijo(this.ID);
+            nodo.agregarHijo("=");
+            nodo.agregarHijo("new");
+            nodo.agregarHijo(undefined, undefined,this.tipo2.getNodo());
+            nodo.agregarHijo("[");
+            let g = new Literal(this.linea, this.columna, this.v1, this.tipo.tipos);
+            nodo.agregarHijo(undefined,undefined,g.getNodo());
+            nodo.agregarHijo("]");
+            nodo.agregarHijo(";");
+        }
+        else if (typeof(this.CANTIDAD)!==typeof(-1)) {
+            if (!this.exp) {
+                nodo.agregarHijo("LIST");
+                nodo.agregarHijo("<");
+                nodo.agregarHijo(undefined, undefined,this.tipo.getNodo())
+                nodo.agregarHijo(">");
+                nodo.agregarHijo(this.ID);
+                nodo.agregarHijo("=");
+                nodo.agregarHijo("new");
+                nodo.agregarHijo("LIST");
+                nodo.agregarHijo("<");
+                nodo.agregarHijo(undefined, undefined,this.tipo2.getNodo());
+                nodo.agregarHijo(">");
+                nodo.agregarHijo(";");
+            }else{
+                nodo.agregarHijo("LIST");
+                nodo.agregarHijo("<");
+                nodo.agregarHijo(undefined, undefined,this.tipo.getNodo())
+                nodo.agregarHijo(">");
+                nodo.agregarHijo(this.ID);
+                nodo.agregarHijo("=");
+                nodo.agregarHijo(undefined, undefined,this.exp.getNodo());
+                nodo.agregarHijo(";");
+            }
+        }else{
+            if (this.exp) {
+                nodo.agregarHijo(this.tipo.getTipo());
+                nodo.agregarHijo(this.ID);
+                nodo.agregarHijo("=");
+                nodo.agregarHijo(undefined,undefined,this.exp.getNodo());
+                nodo.agregarHijo(";");
+            }else{
+                nodo.agregarHijo(this.tipo.getTipo());
+                nodo.agregarHijo(this.ID);
+                nodo.agregarHijo(";");
+            }
+        }
+        return nodo;
+    }
 }

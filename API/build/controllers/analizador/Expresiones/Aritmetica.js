@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OperadorAritmetico = void 0;
+const nodoAST_1 = require("../Abstract/nodoAST");
 const Excepcion_1 = __importDefault(require("../exceptions/Excepcion"));
 const tipo_1 = require("../tablaSimbolo/tipo");
 const expresion_1 = require("./expresion");
@@ -531,15 +532,28 @@ class Aritmetica extends expresion_1.Expresion {
         }
         return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
     }
+    getNodo() {
+        let nodo = new nodoAST_1.nodoAST("ARITMETICA");
+        if (!this.ExpresionDerecha && this.ExpresionIzquierda) {
+            nodo.agregarHijo(this.operador + "");
+            nodo.agregarHijo(undefined, undefined, this.ExpresionIzquierda.getNodo());
+        }
+        else if (this.ExpresionDerecha && this.ExpresionIzquierda) {
+            nodo.agregarHijo(undefined, undefined, this.ExpresionIzquierda.getNodo());
+            nodo.agregarHijo(this.operador + "");
+            nodo.agregarHijo(undefined, undefined, this.ExpresionDerecha.getNodo());
+        }
+        return nodo;
+    }
 }
 exports.default = Aritmetica;
 var OperadorAritmetico;
 (function (OperadorAritmetico) {
-    OperadorAritmetico[OperadorAritmetico["SUMA"] = 0] = "SUMA";
-    OperadorAritmetico[OperadorAritmetico["RESTA"] = 1] = "RESTA";
-    OperadorAritmetico[OperadorAritmetico["MULTIPLICACION"] = 2] = "MULTIPLICACION";
-    OperadorAritmetico[OperadorAritmetico["DIVISION"] = 3] = "DIVISION";
-    OperadorAritmetico[OperadorAritmetico["POTENCIA"] = 4] = "POTENCIA";
-    OperadorAritmetico[OperadorAritmetico["MODULO"] = 5] = "MODULO";
+    OperadorAritmetico["SUMA"] = "+";
+    OperadorAritmetico["RESTA"] = "-";
+    OperadorAritmetico["MULTIPLICACION"] = "*";
+    OperadorAritmetico["DIVISION"] = "/";
+    OperadorAritmetico["POTENCIA"] = "^";
+    OperadorAritmetico["MODULO"] = "%";
 })(OperadorAritmetico = exports.OperadorAritmetico || (exports.OperadorAritmetico = {}));
 //# sourceMappingURL=aritmetica.js.map

@@ -1,3 +1,5 @@
+import { nodoAST } from "../Abstract/nodoAST";
+
 export default class Tipo
 {
     public tipos: tipos;
@@ -23,14 +25,20 @@ export default class Tipo
         }
         return "";
     }
+
+    public getNodo():nodoAST{
+        let nodo = new nodoAST("TIPO");
+        nodo.agregarHijo(this.tipos);
+        return nodo;
+    }
 }
 
 export enum tipos
 {
-    ENTERO, 
-    DOBLE,
-    CARACTER,
-    BOOLEANO,
-    CADENA,
-    ERROR
+    ENTERO = "ENTERO", 
+    DOBLE = "DOBLE",
+    CARACTER = "CARACTER",
+    BOOLEANO = "BOOLEANO",
+    CADENA = "CADENA",
+    ERROR = "ERROR"
 }

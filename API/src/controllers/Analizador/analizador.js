@@ -111,7 +111,7 @@ case 14: case 70:
 this.$ = new DEC.default(this._$.first_line, this._$.first_column, $$[$0-1]);
 break;
 case 17:
-this.$ = new LLAMADA.default(this._$.first_line, this._$.first_column, $$[$0-1]);
+if($$[$0-1]){this.$ = new LLAMADA.default(this._$.first_line, this._$.first_column, $$[$0-1]);}else{this.$="";}
 break;
 case 19:
 this.$ = new BREAK.default(this._$.first_line, this._$.first_column);
@@ -255,10 +255,10 @@ case 75:
 this.$ = new FUNCION.default(this._$.first_line, this._$.first_column, $$[$0-2], undefined);
 break;
 case 76:
-this.$ = ""; ArbolAST.exec.push(new FUNCION.default(this._$.first_line, this._$.first_column, $$[$0-3], $$[$0-1]));
+this.$ = undefined; ArbolAST.exec.push(new FUNCION.default(this._$.first_line, this._$.first_column, $$[$0-3], $$[$0-1]));
 break;
 case 77:
-this.$ = ""; ArbolAST.exec.push(new FUNCION.default(this._$.first_line, this._$.first_column, $$[$0-2], undefined));
+this.$ = undefined; ArbolAST.exec.push(new FUNCION.default(this._$.first_line, this._$.first_column, $$[$0-2], undefined));
 break;
 case 78:
 this.$ = new Tipo.default(Tipo.tipos.ENTERO);

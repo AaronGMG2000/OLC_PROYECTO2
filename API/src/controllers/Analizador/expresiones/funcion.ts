@@ -7,6 +7,7 @@ import Literal from "./literal";
 import RETURN from "../instrucciones/return";
 import ListaSimbolo from "../tablaSimbolo/ListaSimbolos";
 import FUNCIONF from "../instrucciones/funcion";
+import { nodoAST } from "../Abstract/nodoAST";
 export default class FUNCION extends Expresion {
 
     public nombre:string;
@@ -128,4 +129,20 @@ export default class FUNCION extends Expresion {
         return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
     }
 
+    getNodo():nodoAST{
+        let nodo = new nodoAST("LLAMADA");
+        nodo.agregarHijo(this.nombre);
+        nodo.agregarHijo("(");
+        if (this.parametros) {
+            let nodo2 = new nodoAST("PARAMETROS");
+            for(let element of this.parametros){
+                if (typeof(this.parametros)!==typeof("")) {
+                    nodo2.agregarHijo(undefined, undefined, element.getNodo());
+                }
+            }
+            nodo.agregarHijo(undefined, undefined, nodo2);
+        }
+        nodo.agregarHijo(")");
+        return nodo;
+    }
 }

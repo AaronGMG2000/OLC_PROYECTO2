@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Instruccion = void 0;
 class Instruccion {
     constructor(linea, columna) {
+        this.ast = false;
         this.linea = linea;
         this.columna = columna;
     }

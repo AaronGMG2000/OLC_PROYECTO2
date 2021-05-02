@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const instruccion_1 = require("../Abstract/instruccion");
+const nodoAST_1 = require("../Abstract/nodoAST");
 const Excepcion_1 = __importDefault(require("../exceptions/Excepcion"));
 const ListaSimbolos_1 = __importDefault(require("../tablaSimbolo/ListaSimbolos"));
 const tipo_1 = require("../tablaSimbolo/tipo");
@@ -50,6 +51,50 @@ class FUNCIONF extends instruccion_1.Instruccion {
         arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "Ya existe una función con el nombre indicado", this.linea, this.columna));
         return;
         // ERROR
+    }
+    getNodo() {
+        let nodo = new nodoAST_1.nodoAST("FUNCION");
+        let nodo2 = new nodoAST_1.nodoAST("PARAMETROS");
+        let nodo3 = new nodoAST_1.nodoAST("INSTRUCCIONES");
+        if (this.vector) {
+            nodo.agregarHijo("VOID");
+            nodo.agregarHijo(this.nombre);
+            nodo.agregarHijo("(");
+            if (this.PARAMETRO) {
+                if (this.PARAMETRO.length > 0) {
+                    for (let element of this.PARAMETRO) {
+                        nodo2.agregarHijo(undefined, undefined, element.getNodo());
+                    }
+                    nodo.agregarHijo(undefined, undefined, nodo2);
+                }
+            }
+            nodo.agregarHijo(")");
+            nodo.agregarHijo("{");
+            for (let element of this.INSTRUCCION) {
+                nodo3.agregarHijo(undefined, undefined, element.getNodo());
+            }
+            nodo.agregarHijo(undefined, undefined, nodo3);
+            nodo.agregarHijo("}");
+        }
+        else {
+            nodo.agregarHijo(undefined, undefined, this.tipo.getNodo());
+            nodo.agregarHijo(this.nombre);
+            nodo.agregarHijo("(");
+            if (this.PARAMETRO.length > 0) {
+                for (let element of this.PARAMETRO) {
+                    nodo2.agregarHijo(undefined, undefined, element.getNodo());
+                }
+                nodo.agregarHijo(undefined, undefined, nodo2);
+            }
+            nodo.agregarHijo(")");
+            nodo.agregarHijo("{");
+            for (let element of this.INSTRUCCION) {
+                nodo3.agregarHijo(undefined, undefined, element.getNodo());
+            }
+            nodo.agregarHijo(undefined, undefined, nodo3);
+            nodo.agregarHijo("}");
+        }
+        return nodo;
     }
 }
 exports.default = FUNCIONF;

@@ -15,4 +15,8 @@ export class COMPILADORService {
   COMPILAR(Contenido: Contenido): any{
     return this.http.post<any>(`${this.API_URI}/Compilar/?Contenido=${Contenido}`, Contenido);
   }
+
+  GRAFICAR(Contenido: Contenido): any{
+    return this.http.post<any>(`${this.API_URI}/GRAFICAR/?Contenido=${Contenido}`, Contenido);
+  }
 }

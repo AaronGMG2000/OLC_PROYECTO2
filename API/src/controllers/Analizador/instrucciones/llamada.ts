@@ -1,4 +1,5 @@
 import { Instruccion } from "../Abstract/instruccion";
+import { nodoAST } from "../Abstract/nodoAST";
 import { Expresion } from "../expresiones/expresion";
 import ArbolAST from "../tablaSimbolo/ArbolAST";
 import Entorno from "../tablaSimbolo/Entorno";
@@ -13,9 +14,16 @@ export default class LLAMADA extends Instruccion {
 
     ejecutar(arbol: ArbolAST, tabla: Entorno) {
         if (this.exp) {
-            var result = this.exp.getValor(arbol, tabla);
+            return this.exp.getValor(arbol, tabla);
         }
         //ERROR
+    }
+    getNodo():nodoAST{
+        let nodo:nodoAST = new nodoAST("");
+        console.log(this.exp);
+        nodo = this.exp.getNodo();
+        nodo.agregarHijo(";");
+        return nodo;
     }
 
 }

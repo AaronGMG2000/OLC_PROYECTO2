@@ -1,3 +1,4 @@
+import { nodoAST } from "../Abstract/nodoAST";
 import Excepcion from "../exceptions/Excepcion";
 import ArbolAST from "../tablaSimbolo/ArbolAST";
 import Entorno from "../tablaSimbolo/Entorno";
@@ -528,13 +529,29 @@ export default class Aritmetica extends Expresion {
         }
         return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
     }
+
+    getNodo():nodoAST{
+        let nodo:nodoAST  = new nodoAST("ARITMETICA");
+        if(!this.ExpresionDerecha && this.ExpresionIzquierda)
+        {
+            nodo.agregarHijo(this.operador + "");
+            nodo.agregarHijo(undefined, undefined,this.ExpresionIzquierda.getNodo());
+        }
+        else if(this.ExpresionDerecha && this.ExpresionIzquierda)
+        {
+            nodo.agregarHijo(undefined, undefined,this.ExpresionIzquierda.getNodo());
+            nodo.agregarHijo(this.operador + "");
+            nodo.agregarHijo(undefined, undefined,this.ExpresionDerecha.getNodo());
+        } 
+        return nodo;
+    }
 }
 
 export enum OperadorAritmetico{
-    SUMA,
-    RESTA,
-    MULTIPLICACION,
-    DIVISION,
-    POTENCIA,
-    MODULO
+    SUMA = "+",
+    RESTA = "-",
+    MULTIPLICACION = "*",
+    DIVISION = "/",
+    POTENCIA = "^",
+    MODULO = "%"
 }

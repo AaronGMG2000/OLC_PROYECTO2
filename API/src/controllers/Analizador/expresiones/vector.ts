@@ -1,3 +1,4 @@
+import { nodoAST } from "../Abstract/nodoAST";
 import Excepcion from "../exceptions/Excepcion";
 import ArbolAST from "../tablaSimbolo/ArbolAST";
 import Entorno from "../tablaSimbolo/Entorno";
@@ -44,6 +45,26 @@ export default class VECTOR extends Expresion {
             return new Literal(this.linea, this.columna, "ERROR", tipos.ERROR);
         }
         
+    }
+    getNodo():nodoAST{
+        let nodo = new nodoAST("");
+        if (this.tip==="LIST") {
+            nodo = new nodoAST("LISTA");
+            nodo.agregarHijo(this.nombre);
+            nodo.agregarHijo("[");
+            nodo.agregarHijo("[");
+            nodo.agregarHijo(undefined, undefined, this.posicion.getNodo());
+            nodo.agregarHijo("]");
+            nodo.agregarHijo("]");
+
+        }else{
+            nodo = new nodoAST("VECTOR");
+            nodo.agregarHijo(this.nombre);
+            nodo.agregarHijo("[");
+            nodo.agregarHijo(undefined, undefined, this.posicion.getNodo());
+            nodo.agregarHijo("]");
+        }
+        return nodo;
     }
 
 }

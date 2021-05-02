@@ -1,4 +1,5 @@
 import { Instruccion } from "../Abstract/instruccion";
+import { nodoAST } from "../Abstract/nodoAST";
 import Excepcion from "../exceptions/Excepcion";
 import DECLARAR from "../instrucciones/DECLARAR";
 import ArbolAST from "../tablaSimbolo/ArbolAST";
@@ -57,5 +58,48 @@ export default class FUNCIONF extends Instruccion {
         return;
         // ERROR
     }
-
+    getNodo():nodoAST{
+        let nodo:nodoAST = new nodoAST("FUNCION");
+        let nodo2 = new nodoAST("PARAMETROS");
+        let nodo3 = new nodoAST("INSTRUCCIONES");
+        if (this.vector) {
+            nodo.agregarHijo("VOID");
+            nodo.agregarHijo(this.nombre);
+            nodo.agregarHijo("(");
+            if (this.PARAMETRO) {
+                if (this.PARAMETRO.length>0) {
+                    for(let element of this.PARAMETRO){
+                        nodo2.agregarHijo(undefined, undefined, element.getNodo());
+                    }
+                    nodo.agregarHijo(undefined, undefined, nodo2);
+                }
+            }
+            nodo.agregarHijo(")");
+            nodo.agregarHijo("{");
+            
+            for(let element of this.INSTRUCCION){
+                nodo3.agregarHijo(undefined, undefined, element.getNodo());
+            }
+            nodo.agregarHijo(undefined, undefined, nodo3);
+            nodo.agregarHijo("}");
+        }else{
+            nodo.agregarHijo(undefined, undefined,this.tipo.getNodo());
+            nodo.agregarHijo(this.nombre);
+            nodo.agregarHijo("(");
+            if (this.PARAMETRO.length>0) {
+                for(let element of this.PARAMETRO){
+                    nodo2.agregarHijo(undefined, undefined, element.getNodo());
+                }
+                nodo.agregarHijo(undefined, undefined, nodo2);
+            }
+            nodo.agregarHijo(")");
+            nodo.agregarHijo("{");
+            for(let element of this.INSTRUCCION){
+                nodo3.agregarHijo(undefined, undefined, element.getNodo());
+            }
+            nodo.agregarHijo(undefined, undefined, nodo3);
+            nodo.agregarHijo("}");
+        }
+        return nodo;
+    }
 }

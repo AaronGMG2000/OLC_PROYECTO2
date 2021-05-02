@@ -1,4 +1,5 @@
 import { Instruccion } from "../Abstract/instruccion";
+import { nodoAST } from "../Abstract/nodoAST";
 import { Expresion } from "../expresiones/expresion";
 import ArbolAST from "../tablaSimbolo/ArbolAST";
 import Entorno from "../tablaSimbolo/Entorno";
@@ -13,8 +14,14 @@ export default class INCREMENT extends Instruccion {
 
     ejecutar(arbol: ArbolAST, tabla: Entorno) {
         if (this.exp) {
-            this.exp.getValor(arbol, tabla);
+            let v = this.exp.getValor(arbol, tabla);
         }
         //ERROR
+    }
+
+    getNodo():nodoAST{
+        let nodo:nodoAST = this.exp.getNodo();
+        nodo.agregarHijo(";");
+        return nodo;
     }
 }

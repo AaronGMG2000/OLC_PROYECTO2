@@ -1,3 +1,4 @@
+import { nodoAST } from "../Abstract/nodoAST";
 import Excepcion from "../exceptions/Excepcion";
 import ArbolAST from "../tablaSimbolo/ArbolAST";
 import Entorno from "../tablaSimbolo/Entorno";
@@ -17,7 +18,6 @@ export default class TOLOWER extends Expresion {
     public getValor(arbol: ArbolAST, tabla: Entorno): Expresion {
         let comprobar = this.exp.getValor(arbol, tabla);
         if (comprobar.Tipo.tipos!==tipos.ERROR) {
-            console.log(comprobar);
             if (comprobar.Tipo.tipos===tipos.CADENA) {
                 return new Literal(this.linea, this.columna, comprobar.valor.toLowerCase(), tipos.CADENA);
             }
@@ -31,6 +31,16 @@ export default class TOLOWER extends Expresion {
             return new Literal(this.linea, this.columna, "ERROR", tipos.ERROR);
         }
         return new Literal(this.linea, this.columna, "ERROR", tipos.ERROR);
+    }
+
+    getNodo():nodoAST{
+        let nodo = new nodoAST("TOLOWER");
+        nodo.agregarHijo("ToLower");
+        nodo.agregarHijo("(");
+        nodo.agregarHijo(undefined, undefined, this.exp.getNodo());
+        nodo.agregarHijo(")");
+
+        return nodo;
     }
 
 }

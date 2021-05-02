@@ -1,3 +1,4 @@
+import { nodoAST } from "../Abstract/nodoAST";
 import Excepcion from "../exceptions/Excepcion";
 import ArbolAST from "../tablaSimbolo/ArbolAST";
 import Entorno from "../tablaSimbolo/Entorno";
@@ -848,4 +849,18 @@ export default class condicion extends Expresion {
         }
         return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
     }
+
+    getNodo():nodoAST{
+        let nodo = new nodoAST("CONDICION");
+        if (this.ExpresionDerecha && this.ExpresionIzquierda) {
+            nodo.agregarHijo(undefined,undefined,this.ExpresionIzquierda.getNodo());
+            nodo.agregarHijo(this.operador);
+            nodo.agregarHijo(undefined,undefined,this.ExpresionDerecha.getNodo());
+        }else if (this.ExpresionIzquierda) {
+            nodo.agregarHijo(this.operador);
+            nodo.agregarHijo(undefined,undefined,this.ExpresionIzquierda.getNodo());
+        }
+        return nodo;
+    }
+    
 }

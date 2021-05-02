@@ -1,4 +1,5 @@
 import { Instruccion } from "../Abstract/instruccion";
+import { nodoAST } from "../Abstract/nodoAST";
 import Excepcion from "../exceptions/Excepcion";
 import { Expresion } from "../expresiones/expresion";
 import ArbolAST from "../tablaSimbolo/ArbolAST";
@@ -49,5 +50,15 @@ export default class TERNARIO extends Expresion {
         arbol.num_error++;
         arbol.errores.push(new Excepcion(arbol.num_error, "SINTACTICO","la variable indicada en la condición no existe",this.linea, this.columna))
         return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
+    }
+
+    getNodo():nodoAST{
+        let nodo = new nodoAST("TERNARIO");
+        nodo.agregarHijo(undefined, undefined, this.condicion.getNodo());
+        nodo.agregarHijo("?");
+        nodo.agregarHijo(undefined, undefined,this.exp1.getNodo());
+        nodo.agregarHijo(":")
+        nodo.agregarHijo(undefined, undefined,this.exp2.getNodo());
+        return nodo;
     }
 }
