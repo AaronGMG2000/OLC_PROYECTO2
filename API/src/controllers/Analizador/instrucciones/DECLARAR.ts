@@ -81,6 +81,7 @@ export default class DECLARAR extends Instruccion {
                 ex = nueva_variable;
             }else{
                 ex = this.exp?.getValor(arbol, tabla);
+                
             }
             let v1 = -1;
             let v2 = -1;
@@ -129,6 +130,9 @@ export default class DECLARAR extends Instruccion {
                 }
             }
             this.ast = true;
+            if (ex.valor instanceof Array && this.CANTIDAD) {
+                v2 = ex.valor.length;        
+            }
             tabla.set(this.ID, ex, this.tipo, v1, v2);
             return true;
         }

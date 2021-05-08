@@ -157,6 +157,8 @@ export class IndexComponent implements OnInit {
     this.CONSOLA = e.addedItems[0].consola;
     this.CONTENT = e.addedItems[0].content;
     this.actual = e.addedItems[0];
+    this.errores = e.addedItems[0].errores;
+    this.simbolos = e.addedItems[0].simbolo;
   }
 
   LlenarContent(text: string): void{
@@ -173,6 +175,8 @@ export class IndexComponent implements OnInit {
         this.actual.consola = this.CONSOLA;
         this.errores = res.Errores;
         this.simbolos = res.Simbolo;
+        this.actual.simbolo = res.Simbolo;
+        this.actual.errores = res.Errores;
       },
       (err: any) => console.log(err)
     );

@@ -26,6 +26,11 @@ class ArbolAST {
         this.consola = `${this.consola}${update}\n`;
     }
     EjecutarBloque() {
+        if (this.exec.length === 0) {
+            this.num_error++;
+            this.errores.push(new Excepcion_1.default(this.num_error, "SEMANTICO", "No existe ninguna función principal exec", -1, -1));
+            return;
+        }
         if (this.exec.length > 1) {
             this.num_error++;
             this.errores.push(new Excepcion_1.default(this.num_error, "SEMANTICO", "Existen 2 exec en la ejecución", -1, -1));
@@ -36,13 +41,20 @@ class ArbolAST {
                 elemento.ejecutar(this, this.global);
             }
         }
-        if (this.exec.length === 1) {
-            this.exec[0].getValor(this, this.global);
-        }
         for (let elemento of this.instrucciones) {
             if (typeof (elemento) !== typeof ("")) {
-                elemento.ejecutar(this, this.global);
+                let valor = elemento;
+                if (valor.ID && !valor.UBICACION && valor.CANTIDAD && valor.DIMENSION) {
+                    elemento.ejecutar(this, this.global);
+                }
+                else {
+                    this.num_error++;
+                    this.errores.push(new Excepcion_1.default(this.num_error, "SEMANTICO", "no se puede ejecutar una instrucción fuera de una función o metodo", elemento.linea, elemento.columna));
+                }
             }
+        }
+        if (this.exec.length === 1) {
+            this.exec[0].getValor(this, this.global);
         }
     }
     graphAST() {

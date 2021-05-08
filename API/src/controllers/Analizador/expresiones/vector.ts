@@ -16,6 +16,7 @@ export default class VECTOR extends Expresion {
     }
     public getValor(arbol: ArbolAST, tabla: Entorno): Expresion {
         let expre = tabla.get(this.nombre);
+        console.log(expre);
         if (expre.tipo.tipos !== tipos.ERROR){
             if (this.tip ==="VECTOR" && expre.DIMENSION===-1) {
                 arbol.num_error++;

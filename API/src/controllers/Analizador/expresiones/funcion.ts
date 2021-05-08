@@ -18,20 +18,22 @@ export default class FUNCION extends Expresion {
         this.nombre = nombre;
         this.parametros = parametros;
     }
-    public getValor(arbol: ArbolAST, tabla: Entorno): Expresion {
+    public getValor(arbol: ArbolAST, tabla: Entorno): any {
         
-        let Nuevo_Entorno = new Entorno(this.nombre,arbol.global);
+        let Nuevo_Entorno = new Entorno(this.nombre,tabla);
         let nombre_nuevo = this.nombre+"#";
         let nombre_nuevo2 = this.nombre+"#";
+        let calculo:any[] = [];
         if (this.parametros) {
             for(let par of this.parametros){
-                let varr = par.getValor(arbol, tabla);
+                let varr = par.getValor(arbol,tabla);
                 nombre_nuevo+=""+varr.Tipo.tipos;
                 if (varr.Tipo.tipos===tipos.ENTERO) {
                     nombre_nuevo2+=""+tipos.DOBLE;
                 }else{
                     nombre_nuevo2+=""+varr.Tipo.tipos;
                 }
+                calculo.push(varr);
             }
         }
         var comprobar = arbol.global.get(nombre_nuevo);
@@ -46,7 +48,7 @@ export default class FUNCION extends Expresion {
             if (func.PARAMETRO) {
                 let x = 0;
                 for(let declaracion of func.PARAMETRO){
-                    let yy = this.parametros[x].getValor(arbol, tabla)
+                    let yy = calculo[x];
                     yy.linea = declaracion.linea;
                     yy.columna =declaracion.columna;
                     declaracion.exp = yy;
@@ -58,7 +60,7 @@ export default class FUNCION extends Expresion {
             for(let element of func.INSTRUCCION){
                 if(typeof(element) !== typeof("")){
                     let res = element.ejecutar(arbol, Nuevo_Entorno);
-                    if (typeof(res)===typeof([])) {
+                    if (typeof(res)===typeof({}) && !(res instanceof Expresion)) {
                         if (res.nombre==="RETURN") {
                             if(arbol.pilaFuncion.length>0){
                                 let retorno = res.retorno;
@@ -66,15 +68,19 @@ export default class FUNCION extends Expresion {
                                     if (func.tipo.tipos===retorno.Tipo.tipos ||
                                         (func.tipo.tipos===tipos.ENTERO && retorno.Tipo.tipos===tipos.DOBLE
                                         || func.tipo.tipos===tipos.DOBLE && retorno.Tipo.tipos===tipos.ENTERO)) {
-                                        
-                                            let rest = retorno.getValor(tabla, Nuevo_Entorno);
+                                            let rest = retorno.getValor(arbol, Nuevo_Entorno);
                                             if(rest.Tipo.tipos===tipos.ERROR){
                                                 arbol.num_error++;
                                                 arbol.errores.push(new Excepcion(arbol.num_error, "SINTACTIO", "Error en valor de retorno",this.linea, this.columna));
                                                 return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
                                             }
                                             rest.nombre = "FUNCION";
+                                            arbol.pilaFuncion.pop();
                                             return rest;
+                                    }else{
+                                        arbol.num_error++;
+                                        arbol.errores.push(new Excepcion(arbol.num_error, "SINTACTIO", "El tipo del retorno no coincide con el de la función",this.linea, this.columna));
+                                        return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
                                     }
                                 }
                                 return new Literal(this.linea, this.columna, undefined, tipos.CADENA);
@@ -99,34 +105,18 @@ export default class FUNCION extends Expresion {
                     }
                 }
             }
-            if (!func.registrada) {
-                for(let sim of Nuevo_Entorno.tabla){
-                    let valor = sim[1];
-                    if (valor.CANTIDAD!==-1) {
-                        arbol.lista_simbolos.push(new ListaSimbolo(arbol.lista_simbolos.length,valor.getIdentificador(), "LISTA", valor.tipo.getTipo(), valor.valor.linea, valor.valor.columna, Nuevo_Entorno.nombre)); 
-                    }else if(valor.DIMENSION!==-1){
-                        arbol.lista_simbolos.push(new ListaSimbolo(arbol.lista_simbolos.length,valor.getIdentificador(), "VECTOR", valor.tipo.getTipo(), valor.valor.linea, valor.valor.columna, Nuevo_Entorno.nombre)); 
-                    }else{
-                        if (valor.valor instanceof FUNCIONF) {
-                            arbol.lista_simbolos.push(new ListaSimbolo(arbol.lista_simbolos.length,valor.getIdentificador(), "FUNCION", valor.tipo.getTipo(), valor.valor.linea, valor.valor.columna, Nuevo_Entorno.nombre)); 
-                        }
-                        arbol.lista_simbolos.push(new ListaSimbolo(arbol.lista_simbolos.length,valor.getIdentificador(), "VARIABLE", valor.tipo.getTipo(), valor.valor.linea, valor.valor.columna, Nuevo_Entorno.nombre)); 
-
-                    }
-                }
-            }
             if (!func.vector) {
                 arbol.num_error++;
                 arbol.errores.push(new Excepcion(arbol.num_error,"SEMANTICO","Se esperaba return",this.linea, this.columna));
                 return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
             }
-            if(func.vector){
-                return new Literal(this.linea, this.columna, undefined, tipos.CADENA, true);
-            }
+            arbol.pilaFuncion.pop();
+            return;
+        }else{
+            arbol.num_error++;
+            arbol.errores.push(new Excepcion(arbol.num_error,"SEMANTICO","No se encontro la función",this.linea, this.columna));
+            return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
         }
-        arbol.num_error++;
-        arbol.errores.push(new Excepcion(arbol.num_error,"SEMANTICO","No se encontro la función",this.linea, this.columna));
-        return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
     }
 
     getNodo():nodoAST{

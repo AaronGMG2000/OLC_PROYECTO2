@@ -35,10 +35,6 @@ class Entorno {
         if (!this.tabla.has(simbolo)) {
             this.tabla.set(simbolo, new simbolo_1.default(tipo, simbolo, valor, DIMENSION, CANTIDAD));
         }
-        else {
-            //Error
-            console.log("error");
-        }
     }
     update(simbolo, valor, POSICION = -1) {
         simbolo = simbolo.toUpperCase();
@@ -74,6 +70,7 @@ class Entorno {
     }
     get(variable) {
         variable = variable.toUpperCase();
+        let x = 0;
         for (var temp = this; temp != null; temp = temp.anterior) {
             if (temp.tabla.has(variable)) {
                 var result = temp.tabla.get(variable);
@@ -81,6 +78,7 @@ class Entorno {
                     return result;
                 }
             }
+            x++;
         }
         //Error
         return new simbolo_1.default(new tipo_1.default(tipo_1.tipos.ERROR), 'ERROR', undefined);

@@ -11,7 +11,7 @@ export default class Aritmetica extends Expresion {
     public ExpresionDerecha: Expresion|undefined;
     private operador:OperadorAritmetico;
     constructor(operador:OperadorAritmetico, linea:number, columna:number, valor:any, Tipo:Tipo, iz:Expresion, der?:Expresion){
-        super(linea,columna,valor,Tipo);
+        super(linea,columna,valor,iz.Tipo);
         if (der) {
             this.ExpresionDerecha =der;
         }
@@ -35,14 +35,19 @@ export default class Aritmetica extends Expresion {
                         case tipos.ENTERO:
                             switch (derecha.Tipo.tipos) {
                                 case tipos.ENTERO:
+                                    this.Tipo = new Tipo(tipos.ENTERO);
                                     return new Literal(this.linea, this.columna, izquierda.valor + derecha.valor, tipos.ENTERO);
                                 case tipos.DOBLE:
+                                    this.Tipo = new Tipo(tipos.DOBLE);
                                     return new Literal(this.linea, this.columna, izquierda.valor + derecha.valor, tipos.DOBLE);
                                 case tipos.BOOLEANO:
+                                    this.Tipo = new Tipo(tipos.ENTERO);
                                     return new Literal(this.linea, this.columna, izquierda.valor + derecha.valor, tipos.ENTERO);
                                 case tipos.CADENA:
+                                    this.Tipo = new Tipo(tipos.CADENA);
                                     return new Literal(this.linea, this.columna, izquierda.valor + derecha.valor, tipos.CADENA);
                                 case tipos.CARACTER:
+                                    this.Tipo = new Tipo(tipos.ENTERO);
                                     return new Literal(this.linea, this.columna, izquierda.valor + derecha.valor.charCodeAt(), tipos.ENTERO);
                                 default:
                                     return new Literal(this.linea, this.columna, undefined, tipos.ERROR);                           
@@ -50,14 +55,19 @@ export default class Aritmetica extends Expresion {
                         case tipos.DOBLE:
                             switch (derecha.Tipo.tipos) {
                                 case tipos.ENTERO:
+                                    this.Tipo = new Tipo(tipos.DOBLE);
                                     return new Literal(this.linea, this.columna, izquierda.valor + derecha.valor, tipos.DOBLE);
                                 case tipos.DOBLE:
+                                    this.Tipo = new Tipo(tipos.DOBLE);
                                     return new Literal(this.linea, this.columna, izquierda.valor + derecha.valor, tipos.DOBLE);
                                 case tipos.BOOLEANO:
+                                    this.Tipo = new Tipo(tipos.DOBLE);
                                     return new Literal(this.linea, this.columna, izquierda.valor + derecha.valor, tipos.DOBLE);
                                 case tipos.CADENA:
+                                    this.Tipo = new Tipo(tipos.CADENA);
                                     return new Literal(this.linea, this.columna, izquierda.valor + derecha.valor, tipos.CADENA);
                                 case tipos.CARACTER:
+                                    this.Tipo = new Tipo(tipos.DOBLE);
                                     return new Literal(this.linea, this.columna, izquierda.valor + derecha.valor.charCodeAt(), tipos.DOBLE);
                                 default:
                                     return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
@@ -66,10 +76,13 @@ export default class Aritmetica extends Expresion {
                         case tipos.BOOLEANO:
                             switch (derecha.Tipo.tipos) {
                                 case tipos.ENTERO:
+                                    this.Tipo = new Tipo(tipos.ENTERO);
                                     return new Literal(this.linea, this.columna, izquierda.valor + derecha.valor, tipos.ENTERO);
                                 case tipos.DOBLE:
+                                    this.Tipo = new Tipo(tipos.DOBLE);
                                     return new Literal(this.linea, this.columna, izquierda.valor + derecha.valor, tipos.DOBLE);
                                 case tipos.CADENA:
+                                    this.Tipo = new Tipo(tipos.ENTERO);
                                     return new Literal(this.linea, this.columna, izquierda.valor + derecha.valor, tipos.CADENA);
                                 case tipos.BOOLEANO:
                                     arbol.num_error++;
@@ -86,14 +99,19 @@ export default class Aritmetica extends Expresion {
                         case tipos.CADENA:
                             switch (derecha.Tipo.tipos) {
                                 case tipos.ENTERO:
+                                    this.Tipo = new Tipo(tipos.CADENA);
                                     return new Literal(this.linea, this.columna, izquierda.valor + derecha.valor, tipos.CADENA);
                                 case tipos.DOBLE:
+                                    this.Tipo = new Tipo(tipos.CADENA);
                                     return new Literal(this.linea, this.columna, izquierda.valor + derecha.valor, tipos.CADENA);
                                 case tipos.BOOLEANO:
+                                    this.Tipo = new Tipo(tipos.CADENA);
                                     return new Literal(this.linea, this.columna, izquierda.valor + derecha.valor, tipos.CADENA);
                                 case tipos.CADENA:
+                                    this.Tipo = new Tipo(tipos.CADENA);
                                     return new Literal(this.linea, this.columna, izquierda.valor + derecha.valor, tipos.CADENA);
                                 case tipos.CARACTER:
+                                    this.Tipo = new Tipo(tipos.CADENA);
                                     return new Literal(this.linea, this.columna, izquierda.valor + derecha.valor, tipos.CADENA);
                                 default:
                                     return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
@@ -102,12 +120,16 @@ export default class Aritmetica extends Expresion {
                         case tipos.CARACTER:
                             switch (derecha.Tipo.tipos) {
                                 case tipos.ENTERO:
+                                    this.Tipo = new Tipo(tipos.ENTERO);
                                     return new Literal(this.linea, this.columna, izquierda.valor.charCodeAt() + derecha.valor, tipos.ENTERO);
                                 case tipos.DOBLE:
+                                    this.Tipo = new Tipo(tipos.DOBLE);
                                     return new Literal(this.linea, this.columna, izquierda.valor.charCodeAt() + derecha.valor, tipos.DOBLE);
                                 case tipos.CADENA:
+                                    this.Tipo = new Tipo(tipos.CADENA);
                                     return new Literal(this.linea, this.columna, izquierda.valor + derecha.valor, tipos.CADENA);
                                 case tipos.CARACTER:
+                                    this.Tipo = new Tipo(tipos.CADENA);
                                     return new Literal(this.linea, this.columna, izquierda.valor + derecha.valor, tipos.CADENA);
                                 case tipos.BOOLEANO:
                                     arbol.num_error++;
@@ -128,14 +150,18 @@ export default class Aritmetica extends Expresion {
                         case tipos.ENTERO:
                             switch (derecha.Tipo.tipos) {
                                 case tipos.ENTERO:
+                                    this.Tipo = new Tipo(tipos.ENTERO);
                                     return new Literal(this.linea, this.columna, izquierda.valor - derecha.valor, tipos.ENTERO);
                                 case tipos.DOBLE:
+                                    this.Tipo = new Tipo(tipos.DOBLE);
                                     return new Literal(this.linea, this.columna, izquierda.valor - derecha.valor, tipos.DOBLE);
                                 case tipos.BOOLEANO:
+                                    this.Tipo = new Tipo(tipos.ENTERO);
                                     return new Literal(this.linea, this.columna, izquierda.valor - derecha.valor, tipos.ENTERO);
                                 case tipos.CARACTER:
+                                    this.Tipo = new Tipo(tipos.ENTERO);
                                     return new Literal(this.linea, this.columna, izquierda.valor - derecha.valor.charCodeAt(), tipos.ENTERO);
-                                case tipos.BOOLEANO:
+                                case tipos.CADENA:
                                     arbol.num_error++;
                                     arbol.errores.push(new Excepcion(arbol.num_error,"SINTACTICO","No se puede realizar una resta entre int y boolean",this.linea, this.columna));
                                     return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
@@ -147,14 +173,18 @@ export default class Aritmetica extends Expresion {
                         case tipos.DOBLE:
                             switch (derecha.Tipo.tipos) {
                                 case tipos.ENTERO:
+                                    this.Tipo = new Tipo(tipos.DOBLE);
                                     return new Literal(this.linea, this.columna, izquierda.valor - derecha.valor, tipos.DOBLE);
                                 case tipos.DOBLE:
+                                    this.Tipo = new Tipo(tipos.DOBLE);
                                     return new Literal(this.linea, this.columna, izquierda.valor - derecha.valor, tipos.DOBLE);
                                 case tipos.BOOLEANO:
+                                    this.Tipo = new Tipo(tipos.DOBLE);
                                     return new Literal(this.linea, this.columna, izquierda.valor - derecha.valor, tipos.DOBLE);
                                 case tipos.CARACTER:
+                                    this.Tipo = new Tipo(tipos.DOBLE);
                                     return new Literal(this.linea, this.columna, izquierda.valor - derecha.valor.charCodeAt(), tipos.DOBLE);
-                                case tipos.BOOLEANO:
+                                case tipos.CADENA:
                                     arbol.num_error++;
                                     arbol.errores.push(new Excepcion(arbol.num_error,"SINTACTICO","No se puede realizar una resta entre un double y un boolean",this.linea, this.columna));
                                     return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
@@ -188,8 +218,10 @@ export default class Aritmetica extends Expresion {
                         case tipos.CARACTER:
                             switch (derecha.Tipo.tipos) {
                                 case tipos.ENTERO:
+                                    this.Tipo = new Tipo(tipos.ENTERO);
                                     return new Literal(this.linea, this.columna, izquierda.valor.charCodeAt() - derecha.valor, tipos.ENTERO);
                                 case tipos.DOBLE:
+                                    this.Tipo = new Tipo(tipos.DOBLE);
                                     return new Literal(this.linea, this.columna, izquierda.valor.charCodeAt() - derecha.valor, tipos.DOBLE);
                                 case tipos.CARACTER:
                                     arbol.num_error++;
@@ -218,8 +250,10 @@ export default class Aritmetica extends Expresion {
                 }else if(!derecha && izquierda){
                     switch (izquierda.Tipo.tipos) {
                         case tipos.ENTERO:
+                            this.Tipo = new Tipo(tipos.ENTERO);
                             return new Literal(this.linea, this.columna, -izquierda.valor, tipos.ENTERO);
                         case tipos.DOBLE:
+                            this.Tipo = new Tipo(tipos.DOBLE);
                             return new Literal(this.linea, this.columna, -izquierda.valor, tipos.DOBLE);
                         case tipos.CADENA:
                             arbol.num_error++;
@@ -247,10 +281,13 @@ export default class Aritmetica extends Expresion {
                         case tipos.ENTERO:
                             switch (derecha.Tipo.tipos) {
                                 case tipos.ENTERO:
+                                    this.Tipo = new Tipo(tipos.ENTERO);
                                     return new Literal(this.linea, this.columna, izquierda.valor * derecha.valor, tipos.ENTERO);
                                 case tipos.DOBLE:
+                                    this.Tipo = new Tipo(tipos.DOBLE);
                                     return new Literal(this.linea, this.columna, izquierda.valor * derecha.valor, tipos.DOBLE);
                                 case tipos.CARACTER:
+                                    this.Tipo = new Tipo(tipos.ENTERO);
                                     return new Literal(this.linea, this.columna, izquierda.valor * derecha.valor, tipos.ENTERO);
                                 case tipos.CADENA:
                                     arbol.num_error++;
@@ -266,10 +303,13 @@ export default class Aritmetica extends Expresion {
                         case tipos.DOBLE:
                             switch (derecha.Tipo.tipos) {
                                 case tipos.ENTERO:
+                                    this.Tipo = new Tipo(tipos.DOBLE);
                                     return new Literal(this.linea, this.columna, izquierda.valor * derecha.valor, tipos.DOBLE);
                                 case tipos.DOBLE:
+                                    this.Tipo = new Tipo(tipos.DOBLE);
                                     return new Literal(this.linea, this.columna, izquierda.valor * derecha.valor, tipos.DOBLE);
                                 case tipos.CARACTER:
+                                    this.Tipo = new Tipo(tipos.DOBLE);
                                     return new Literal(this.linea, this.columna, izquierda.valor * derecha.valor, tipos.DOBLE);
                                 case tipos.CADENA:
                                     arbol.num_error++;
@@ -285,8 +325,10 @@ export default class Aritmetica extends Expresion {
                         case tipos.CARACTER:
                             switch (derecha.Tipo.tipos) {
                                 case tipos.ENTERO:
+                                    this.Tipo = new Tipo(tipos.ENTERO);
                                     return new Literal(this.linea, this.columna, izquierda.valor.charCodeAt() * derecha.valor, tipos.ENTERO);
                                 case tipos.DOBLE:
+                                    this.Tipo = new Tipo(tipos.DOBLE);
                                     return new Literal(this.linea, this.columna, izquierda.valor.charCodeAt() * derecha.valor, tipos.DOBLE);
                                 case tipos.CARACTER:
                                     arbol.num_error++;
@@ -325,10 +367,28 @@ export default class Aritmetica extends Expresion {
                         case tipos.ENTERO:
                             switch (derecha.Tipo.tipos) {
                                 case tipos.ENTERO:
+                                    if (derecha.valor===0) {
+                                        arbol.num_error++;
+                                        arbol.errores.push(new Excepcion(arbol.num_error, "SEMANTICO","ERROR DIVISIÓN CON 0",this.linea, this.columna));
+                                        return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
+                                    }
+                                    this.Tipo = new Tipo(tipos.DOBLE);
                                     return new Literal(this.linea, this.columna, izquierda.valor / derecha.valor, tipos.DOBLE);
                                 case tipos.DOBLE:
+                                    if (derecha.valor===0) {
+                                        arbol.num_error++;
+                                        arbol.errores.push(new Excepcion(arbol.num_error, "SEMANTICO","ERROR DIVISIÓN CON 0",this.linea, this.columna));
+                                        return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
+                                    }
+                                    this.Tipo = new Tipo(tipos.DOBLE);
                                     return new Literal(this.linea, this.columna, izquierda.valor / derecha.valor, tipos.DOBLE);
                                 case tipos.CARACTER:
+                                    if (derecha.valor===0) {
+                                        arbol.num_error++;
+                                        arbol.errores.push(new Excepcion(arbol.num_error, "SEMANTICO","ERROR DIVISIÓN CON 0",this.linea, this.columna));
+                                        return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
+                                    }
+                                    this.Tipo = new Tipo(tipos.DOBLE);
                                     return new Literal(this.linea, this.columna, izquierda.valor / derecha.valor.charCodeAt(), tipos.DOBLE);
                                 case tipos.CADENA:
                                     arbol.num_error++;
@@ -346,10 +406,28 @@ export default class Aritmetica extends Expresion {
                         case tipos.DOBLE:
                             switch (derecha.Tipo.tipos) {
                                 case tipos.ENTERO:
+                                    if (derecha.valor===0) {
+                                        arbol.num_error++;
+                                        arbol.errores.push(new Excepcion(arbol.num_error, "SEMANTICO","ERROR DIVISIÓN CON 0",this.linea, this.columna));
+                                        return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
+                                    }
+                                    this.Tipo = new Tipo(tipos.DOBLE);
                                     return new Literal(this.linea, this.columna, izquierda.valor / derecha.valor, tipos.DOBLE);
                                 case tipos.DOBLE:
+                                    if (derecha.valor===0) {
+                                        arbol.num_error++;
+                                        arbol.errores.push(new Excepcion(arbol.num_error, "SEMANTICO","ERROR DIVISIÓN CON 0",this.linea, this.columna));
+                                        return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
+                                    }
+                                    this.Tipo = new Tipo(tipos.DOBLE);
                                     return new Literal(this.linea, this.columna, izquierda.valor / derecha.valor, tipos.DOBLE);
                                 case tipos.CARACTER:
+                                    if (derecha.valor===0) {
+                                        arbol.num_error++;
+                                        arbol.errores.push(new Excepcion(arbol.num_error, "SEMANTICO","ERROR DIVISIÓN CON 0",this.linea, this.columna));
+                                        return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
+                                    }
+                                    this.Tipo = new Tipo(tipos.DOBLE);
                                     return new Literal(this.linea, this.columna, izquierda.valor / derecha.valor.charCodeAt(), tipos.DOBLE);
                                 case tipos.CADENA:
                                     arbol.num_error++;
@@ -367,8 +445,20 @@ export default class Aritmetica extends Expresion {
                         case tipos.CARACTER:
                             switch (derecha.Tipo.tipos) {
                                 case tipos.ENTERO:
+                                    if (derecha.valor===0) {
+                                        arbol.num_error++;
+                                        arbol.errores.push(new Excepcion(arbol.num_error, "SEMANTICO","ERROR DIVISIÓN CON 0",this.linea, this.columna));
+                                        return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
+                                    }
+                                    this.Tipo = new Tipo(tipos.ENTERO);
                                     return new Literal(this.linea, this.columna, izquierda.valor.charCodeAt() / derecha.valor, tipos.DOBLE);
                                 case tipos.DOBLE:
+                                    if (derecha.valor===0) {
+                                        arbol.num_error++;
+                                        arbol.errores.push(new Excepcion(arbol.num_error, "SEMANTICO","ERROR DIVISIÓN CON 0",this.linea, this.columna));
+                                        return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
+                                    }
+                                    this.Tipo = new Tipo(tipos.DOBLE);
                                     return new Literal(this.linea, this.columna, izquierda.valor.charCodeAt() / derecha.valor, tipos.DOBLE);
                                 case tipos.CADENA:
                                     arbol.num_error++;
@@ -406,13 +496,23 @@ export default class Aritmetica extends Expresion {
                 if (izquierda && derecha) {
                     switch (izquierda.Tipo.tipos) {
                         case tipos.ENTERO:
+                            
                             switch (derecha.Tipo.tipos) {
                                 case tipos.ENTERO:
-                                    arbol.num_error++;
-                                    console.log(izquierda.valor^derecha.valor);
+                                    if (derecha.valor===0 && izquierda.valor===0) {
+                                        arbol.num_error++;
+                                        arbol.errores.push(new Excepcion(arbol.num_error, "SEMANTICO","ERROR no se puede elevar 0 a la 0",this.linea, this.columna));
+                                        return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
+                                    }
+                                    this.Tipo = new Tipo(tipos.ENTERO);
                                     return new Literal(this.linea, this.columna, Math.pow(izquierda.valor, derecha.valor), tipos.ENTERO);
                                 case tipos.DOBLE:
-                                    arbol.num_error++;
+                                    if (derecha.valor===0 && izquierda.valor===0) {
+                                        arbol.num_error++;
+                                        arbol.errores.push(new Excepcion(arbol.num_error, "SEMANTICO","ERROR no se puede elevar 0 a la 0",this.linea, this.columna));
+                                        return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
+                                    }
+                                    this.Tipo = new Tipo(tipos.DOBLE);
                                     return new Literal(this.linea, this.columna, Math.pow(izquierda.valor, derecha.valor), tipos.DOBLE);
                                 case tipos.BOOLEANO:
                                     arbol.num_error++;
@@ -434,8 +534,20 @@ export default class Aritmetica extends Expresion {
                         case tipos.DOBLE:
                             switch (derecha.Tipo.tipos) {
                                 case tipos.ENTERO:
+                                    if (derecha.valor===0 && izquierda.valor===0) {
+                                        arbol.num_error++;
+                                        arbol.errores.push(new Excepcion(arbol.num_error, "SEMANTICO","ERROR no se puede elevar 0 a la 0",this.linea, this.columna));
+                                        return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
+                                    }
+                                    this.Tipo = new Tipo(tipos.DOBLE);
                                     return new Literal(this.linea, this.columna, Math.pow(izquierda.valor, derecha.valor), tipos.DOBLE);
                                 case tipos.DOBLE:
+                                    if (derecha.valor===0 && izquierda.valor===0) {
+                                        arbol.num_error++;
+                                        arbol.errores.push(new Excepcion(arbol.num_error, "SEMANTICO","ERROR no se puede elevar 0 a la 0",this.linea, this.columna));
+                                        return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
+                                    }
+                                    this.Tipo = new Tipo(tipos.DOBLE);
                                     return new Literal(this.linea, this.columna, Math.pow(izquierda.valor, derecha.valor), tipos.DOBLE);
                                 case tipos.BOOLEANO:
                                     arbol.errores.push(new Excepcion(arbol.num_error,"SINTACTICO","No se puede realizar una potencia entre un double y un boolean",this.linea, this.columna));
@@ -452,12 +564,15 @@ export default class Aritmetica extends Expresion {
                             }
                             break;
                         case tipos.CARACTER:
+                            arbol.num_error++;
                             arbol.errores.push(new Excepcion(arbol.num_error,"SINTACTICO","No se puede realizar una potencia con un string",this.linea, this.columna));
                             return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
                         case tipos.CADENA:
+                            arbol.num_error++;
                             arbol.errores.push(new Excepcion(arbol.num_error,"SINTACTICO","No se puede realizar una potencia con un caracter",this.linea, this.columna));
                             return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
                         case tipos.BOOLEANO:
+                            arbol.num_error++;
                             arbol.errores.push(new Excepcion(arbol.num_error,"SINTACTICO","No se puede realizar una potencia con un booleano",this.linea, this.columna));
                             return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
                         default:
@@ -473,8 +588,20 @@ export default class Aritmetica extends Expresion {
                         case tipos.ENTERO:
                             switch (derecha.Tipo.tipos) {
                                 case tipos.ENTERO:
+                                    if (derecha.valor===0) {
+                                        arbol.num_error++;
+                                        arbol.errores.push(new Excepcion(arbol.num_error, "SEMANTICO","ERROR no se puede hacer mod con 0",this.linea, this.columna));
+                                        return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
+                                    }
+                                    this.Tipo = new Tipo(tipos.ENTERO);
                                     return new Literal(this.linea, this.columna, izquierda.valor % derecha.valor, tipos.DOBLE);
                                 case tipos.DOBLE:
+                                    if (derecha.valor===0) {
+                                        arbol.num_error++;
+                                        arbol.errores.push(new Excepcion(arbol.num_error, "SEMANTICO","ERROR no se puede hacer mod con 0",this.linea, this.columna));
+                                        return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
+                                    }
+                                    this.Tipo = new Tipo(tipos.DOBLE);
                                     return new Literal(this.linea, this.columna, izquierda.valor % derecha.valor, tipos.DOBLE);
                                 case tipos.CARACTER:
                                     arbol.num_error++;
@@ -495,8 +622,20 @@ export default class Aritmetica extends Expresion {
                         case tipos.DOBLE:
                             switch (derecha.Tipo.tipos) {
                                 case tipos.ENTERO:
+                                    if (derecha.valor===0) {
+                                        arbol.num_error++;
+                                        arbol.errores.push(new Excepcion(arbol.num_error, "SEMANTICO","ERROR no se puede hacer mod con 0",this.linea, this.columna));
+                                        return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
+                                    }
+                                    this.Tipo = new Tipo(tipos.DOBLE);
                                     return new Literal(this.linea, this.columna, izquierda.valor % derecha.valor, tipos.DOBLE);
                                 case tipos.DOBLE:
+                                    if (derecha.valor===0) {
+                                        arbol.num_error++;
+                                        arbol.errores.push(new Excepcion(arbol.num_error, "SEMANTICO","ERROR no se puede hacer mod con 0",this.linea, this.columna));
+                                        return new Literal(this.linea, this.columna, undefined, tipos.ERROR);
+                                    }
+                                    this.Tipo = new Tipo(tipos.DOBLE);
                                     return new Literal(this.linea, this.columna, izquierda.valor % derecha.valor, tipos.DOBLE);
                                 case tipos.CARACTER:
                                     arbol.errores.push(new Excepcion(arbol.num_error,"SINTACTICO","No se puede realizar modulo con un double y un string",this.linea, this.columna));

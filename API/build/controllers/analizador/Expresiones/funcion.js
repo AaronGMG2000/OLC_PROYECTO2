@@ -27,8 +27,6 @@ const expresion_1 = require("./expresion");
 const Entorno_1 = __importDefault(require("../tablaSimbolo/Entorno"));
 const tipo_1 = __importStar(require("../tablaSimbolo/tipo"));
 const literal_1 = __importDefault(require("./literal"));
-const ListaSimbolos_1 = __importDefault(require("../tablaSimbolo/ListaSimbolos"));
-const funcion_1 = __importDefault(require("../instrucciones/funcion"));
 const nodoAST_1 = require("../Abstract/nodoAST");
 class FUNCION extends expresion_1.Expresion {
     constructor(linea, columna, nombre, parametros) {
@@ -38,9 +36,10 @@ class FUNCION extends expresion_1.Expresion {
         this.parametros = parametros;
     }
     getValor(arbol, tabla) {
-        let Nuevo_Entorno = new Entorno_1.default(this.nombre, arbol.global);
+        let Nuevo_Entorno = new Entorno_1.default(this.nombre, tabla);
         let nombre_nuevo = this.nombre + "#";
         let nombre_nuevo2 = this.nombre + "#";
+        let calculo = [];
         if (this.parametros) {
             for (let par of this.parametros) {
                 let varr = par.getValor(arbol, tabla);
@@ -51,6 +50,7 @@ class FUNCION extends expresion_1.Expresion {
                 else {
                     nombre_nuevo2 += "" + varr.Tipo.tipos;
                 }
+                calculo.push(varr);
             }
         }
         var comprobar = arbol.global.get(nombre_nuevo);
@@ -66,7 +66,7 @@ class FUNCION extends expresion_1.Expresion {
             if (func.PARAMETRO) {
                 let x = 0;
                 for (let declaracion of func.PARAMETRO) {
-                    let yy = this.parametros[x].getValor(arbol, tabla);
+                    let yy = calculo[x];
                     yy.linea = declaracion.linea;
                     yy.columna = declaracion.columna;
                     declaracion.exp = yy;
@@ -78,7 +78,7 @@ class FUNCION extends expresion_1.Expresion {
             for (let element of func.INSTRUCCION) {
                 if (typeof (element) !== typeof ("")) {
                     let res = element.ejecutar(arbol, Nuevo_Entorno);
-                    if (typeof (res) === typeof ([])) {
+                    if (typeof (res) === typeof ({}) && !(res instanceof expresion_1.Expresion)) {
                         if (res.nombre === "RETURN") {
                             if (arbol.pilaFuncion.length > 0) {
                                 let retorno = res.retorno;
@@ -86,14 +86,20 @@ class FUNCION extends expresion_1.Expresion {
                                     if (func.tipo.tipos === retorno.Tipo.tipos ||
                                         (func.tipo.tipos === tipo_1.tipos.ENTERO && retorno.Tipo.tipos === tipo_1.tipos.DOBLE
                                             || func.tipo.tipos === tipo_1.tipos.DOBLE && retorno.Tipo.tipos === tipo_1.tipos.ENTERO)) {
-                                        let rest = retorno.getValor(tabla, Nuevo_Entorno);
+                                        let rest = retorno.getValor(arbol, Nuevo_Entorno);
                                         if (rest.Tipo.tipos === tipo_1.tipos.ERROR) {
                                             arbol.num_error++;
                                             arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SINTACTIO", "Error en valor de retorno", this.linea, this.columna));
                                             return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
                                         }
                                         rest.nombre = "FUNCION";
+                                        arbol.pilaFuncion.pop();
                                         return rest;
+                                    }
+                                    else {
+                                        arbol.num_error++;
+                                        arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SINTACTIO", "El tipo del retorno no coincide con el de la función", this.linea, this.columna));
+                                        return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
                                     }
                                 }
                                 return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.CADENA);
@@ -116,35 +122,19 @@ class FUNCION extends expresion_1.Expresion {
                     }
                 }
             }
-            if (!func.registrada) {
-                for (let sim of Nuevo_Entorno.tabla) {
-                    let valor = sim[1];
-                    if (valor.CANTIDAD !== -1) {
-                        arbol.lista_simbolos.push(new ListaSimbolos_1.default(arbol.lista_simbolos.length, valor.getIdentificador(), "LISTA", valor.tipo.getTipo(), valor.valor.linea, valor.valor.columna, Nuevo_Entorno.nombre));
-                    }
-                    else if (valor.DIMENSION !== -1) {
-                        arbol.lista_simbolos.push(new ListaSimbolos_1.default(arbol.lista_simbolos.length, valor.getIdentificador(), "VECTOR", valor.tipo.getTipo(), valor.valor.linea, valor.valor.columna, Nuevo_Entorno.nombre));
-                    }
-                    else {
-                        if (valor.valor instanceof funcion_1.default) {
-                            arbol.lista_simbolos.push(new ListaSimbolos_1.default(arbol.lista_simbolos.length, valor.getIdentificador(), "FUNCION", valor.tipo.getTipo(), valor.valor.linea, valor.valor.columna, Nuevo_Entorno.nombre));
-                        }
-                        arbol.lista_simbolos.push(new ListaSimbolos_1.default(arbol.lista_simbolos.length, valor.getIdentificador(), "VARIABLE", valor.tipo.getTipo(), valor.valor.linea, valor.valor.columna, Nuevo_Entorno.nombre));
-                    }
-                }
-            }
             if (!func.vector) {
                 arbol.num_error++;
                 arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "Se esperaba return", this.linea, this.columna));
                 return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
             }
-            if (func.vector) {
-                return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.CADENA, true);
-            }
+            arbol.pilaFuncion.pop();
+            return;
         }
-        arbol.num_error++;
-        arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se encontro la función", this.linea, this.columna));
-        return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+        else {
+            arbol.num_error++;
+            arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se encontro la función", this.linea, this.columna));
+            return new literal_1.default(this.linea, this.columna, undefined, tipo_1.tipos.ERROR);
+        }
     }
     getNodo() {
         let nodo = new nodoAST_1.nodoAST("LLAMADA");

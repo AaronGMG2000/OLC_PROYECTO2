@@ -42,6 +42,7 @@ class indexController {
                 res.json({consola:"", Errores:[], Simbolo:[]});
             }
         } catch (err) {
+            console.log(err);
             res.json({consola:"", Errores:[], Simbolo:[]});
         }
     }

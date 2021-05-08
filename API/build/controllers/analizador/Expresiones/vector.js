@@ -35,6 +35,7 @@ class VECTOR extends expresion_1.Expresion {
     }
     getValor(arbol, tabla) {
         let expre = tabla.get(this.nombre);
+        console.log(expre);
         if (expre.tipo.tipos !== tipo_1.tipos.ERROR) {
             if (this.tip === "VECTOR" && expre.DIMENSION === -1) {
                 arbol.num_error++;

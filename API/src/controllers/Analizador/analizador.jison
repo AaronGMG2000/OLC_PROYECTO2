@@ -217,7 +217,7 @@ DECLARACION
     |LIST MENOR FTIPO MAYOR ID                                         {$$ = new DECLARAR.default(this._$.first_line, this._$.first_column,$5, $2, $4,-1,0)}
     |FTIPO CORIZ CORDER ID IGUAL LLAVEIZ L_EXP LLAVEDER                {$$ = new DECLARAR.default(this._$.first_line, this._$.first_column,$4, $1,new Literal.default(this._$.first_line, this._$.first_column,$7.length,Tipo.tipos.ENTERO),-1, $7)}
     |LIST MENOR FTIPO MAYOR ID IGUAL NEW LIST MENOR FTIPO MAYOR        {$$ = new DECLARAR.default(this._$.first_line, this._$.first_column,$5, $3, -1,new Literal.default(this._$.first_line, this._$.first_column,0,Tipo.tipos.ENTERO),undefined,$10)}
-    |LIST MENOR FTIPO MAYOR ID IGUAL EXP                               {$$ = new DECLARAR.default(this._$.first_line, this._$.first_column,$5, $3,-1,-1,$7)}
+    |LIST MENOR FTIPO MAYOR ID IGUAL EXP                               {$$ = new DECLARAR.default(this._$.first_line, this._$.first_column,$5, $3,-1,new Literal.default(this._$.first_line, this._$.first_column,0,Tipo.tipos.ENTERO),$7)}
 ;
 
 

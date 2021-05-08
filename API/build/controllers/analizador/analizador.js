@@ -147,7 +147,7 @@ case 32:
 this.$ = new DECLARAR.default(this._$.first_line, this._$.first_column,$$[$0-6], $$[$0-8], -1,new Literal.default(this._$.first_line, this._$.first_column,0,Tipo.tipos.ENTERO),undefined,$$[$0-1])
 break;
 case 33:
-this.$ = new DECLARAR.default(this._$.first_line, this._$.first_column,$$[$0-2], $$[$0-4],-1,-1,$$[$0])
+this.$ = new DECLARAR.default(this._$.first_line, this._$.first_column,$$[$0-2], $$[$0-4],-1,new Literal.default(this._$.first_line, this._$.first_column,0,Tipo.tipos.ENTERO),$$[$0])
 break;
 case 34:
 this.$ = new ASIGNAR.default(this._$.first_line, this._$.first_column, $$[$0-2],-1, $$[$0]);

@@ -148,6 +148,9 @@ class DECLARAR extends instruccion_1.Instruccion {
                 }
             }
             this.ast = true;
+            if (ex.valor instanceof Array && this.CANTIDAD) {
+                v2 = ex.valor.length;
+            }
             tabla.set(this.ID, ex, this.tipo, v1, v2);
             return true;
         }

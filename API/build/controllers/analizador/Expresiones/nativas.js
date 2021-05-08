@@ -120,8 +120,8 @@ class NATIVA extends expresion_1.Expresion {
                             return new literal_1.default(this.linea, this.columna, "error", tipo_1.tipos.ERROR);
                     }
                 case "TOSTRING":
-                    if (comp.valor instanceof literal_1.default) {
-                        if (comp.valor.valor instanceof Array) {
+                    if (valor.valor instanceof literal_1.default) {
+                        if (valor.valor.valor instanceof Array) {
                             arbol.num_error++;
                             arbol.errores.push(new Excepcion_1.default(arbol.num_error, "SEMANTICO", "No se puede convertir un vector o lista en string", this.linea, this.columna));
                             return new literal_1.default(this.linea, this.columna, "error", tipo_1.tipos.ERROR);

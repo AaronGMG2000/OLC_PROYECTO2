@@ -97,8 +97,8 @@ export default class NATIVA extends Expresion {
                             return new Literal(this.linea, this.columna, "error", tipos.ERROR);
                     }
                 case "TOSTRING":
-                    if (comp.valor instanceof Literal) {
-                        if (comp.valor.valor instanceof Array) {
+                    if (valor.valor instanceof Literal) {
+                        if (valor.valor.valor instanceof Array) {
                             arbol.num_error++;
                             arbol.errores.push(new Excepcion(arbol.num_error, "SEMANTICO","No se puede convertir un vector o lista en string",this.linea, this.columna));
                             return new Literal(this.linea, this.columna, "error", tipos.ERROR);

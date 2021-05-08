@@ -16,9 +16,6 @@ export default class Entorno
         simbolo = simbolo.toUpperCase();
         if(!this.tabla.has(simbolo)){
             this.tabla.set(simbolo, new Simbolo(tipo, simbolo, valor, DIMENSION, CANTIDAD));
-        }else{
-            //Error
-            console.log("error")
         }
     }
 
@@ -56,6 +53,7 @@ export default class Entorno
 
     public get(variable:String):Simbolo{
         variable = variable.toUpperCase();
+        let x = 0;
         for(var temp:Entorno = this; temp!=null; temp = temp.anterior ){
             if (temp.tabla.has(variable)) {
                 var result = temp.tabla.get(variable);
@@ -63,6 +61,7 @@ export default class Entorno
                     return result;
                 }
             }
+            x++
         }
         //Error
         return new Simbolo(new Tipo(tipos.ERROR), 'ERROR', undefined);
