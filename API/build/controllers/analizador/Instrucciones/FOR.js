@@ -30,6 +30,12 @@ class FOR extends instruccion_1.Instruccion {
         }
         if (dec) {
             let condicion = new literal_1.default(this.linea, this.columna, true, tipo_1.tipos.BOOLEANO);
+            if (this.tipo === "DEC") {
+                condicion = this.condicion.getValor(arbol, Nuevo_Entorno);
+            }
+            else {
+                condicion = this.condicion.getValor(arbol, tabla);
+            }
             if (condicion.Tipo.tipos === tipo_1.tipos.BOOLEANO) {
                 let cont = false;
                 let bre = false;

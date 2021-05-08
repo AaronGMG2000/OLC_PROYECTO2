@@ -32,7 +32,11 @@ export default class FOR extends Instruccion {
         }
         if (dec) {
             let condicion:any= new Literal(this.linea, this.columna,true, tipos.BOOLEANO);
-            
+            if (this.tipo ==="DEC") {
+                condicion = this.condicion.getValor(arbol, Nuevo_Entorno);
+            }else{
+                condicion = this.condicion.getValor(arbol, tabla);
+            }
             if(condicion.Tipo.tipos === tipos.BOOLEANO){
                 let cont = false;
                 let bre = false;
